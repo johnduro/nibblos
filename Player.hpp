@@ -6,25 +6,23 @@
 /*   By: ael-kadh <ael-kadh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/03/16 15:48:46 by ael-kadh          #+#    #+#             */
-//   Updated: 2015/03/16 19:44:38 by mle-roy          ###   ########.fr       //
+/*   Updated: 2015/03/17 16:39:48 by mle-roy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef PLAYER_HPP
 #define PLAYER_HPP
 
-#include "tools/Vector2.class.hpp"
+#include <iterator>
 #include <iostream>
 #include <string>
 #include <list>
+#include "Vector2.class.hpp"
 
-// enum Direction
-// {
-// 	up,
-// 	right,
-// 	down,
-// 	left
-// };
+#define LEFT Vector2(-1, 0)
+#define RIGHT Vector2(1, 0)
+#define DOWN Vector2(0, 1)
+#define UP Vector2(0, -1)
 
 class Player
 {
@@ -37,6 +35,8 @@ private:
 	std::string				_name;
 	Vector2 				_last;
 	Player( void );
+
+	void		_initFirstSnake(Vector2 pos, Vector2 dir);
 
 public:
       /* ------------ Constructors & Destructors ------------- */
@@ -60,7 +60,7 @@ public:
 
 	void	addLink();
 	void	movSnake();
-	void	setDir(Direction dir);
+	void	setDir(Vector2 dir);
 	void	setLast();
 };
 

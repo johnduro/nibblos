@@ -6,7 +6,7 @@
 //   By: mle-roy <mle-roy@student.42.fr>            +#+  +:+       +#+        //
 //                                                +#+#+#+#+#+   +#+           //
 //   Created: 2015/01/18 20:12:49 by mle-roy           #+#    #+#             //
-//   Updated: 2015/01/18 20:55:42 by mle-roy          ###   ########.fr       //
+//   Updated: 2015/03/17 16:47:06 by mle-roy          ###   ########.fr       //
 //                                                                            //
 // ************************************************************************** //
 
@@ -14,6 +14,10 @@
 
 ft_timer::ft_timer(void)
 {
+	this->_tick.tv_sec = 0;
+	this->_tick.tv_usec = 0;
+	this->_add.tv_sec = 0;
+	this->_add.tv_usec = 0;
 }
 
 ft_timer::ft_timer(unsigned int add, char type)

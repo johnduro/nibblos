@@ -6,7 +6,7 @@
 //   By: mle-roy <mle-roy@student.42.fr>            +#+  +:+       +#+        //
 //                                                +#+#+#+#+#+   +#+           //
 //   Created: 2015/03/16 19:55:34 by mle-roy           #+#    #+#             //
-//   Updated: 2015/03/16 20:48:31 by mle-roy          ###   ########.fr       //
+//   Updated: 2015/03/17 20:09:10 by mle-roy          ###   ########.fr       //
 //                                                                            //
 // ************************************************************************** //
 
@@ -17,17 +17,13 @@
 #include <list>
 #include "Player.hpp"
 #include "ft_timer.hpp"
-
-struct t_map
-{
-	Vector2		size;
-	char		**map;
-};
+#include "TMap.hpp"
+#include "IGraphicLib.hpp"
 
 class GameManager
 {
 private:
-	t_map							_map;
+	TMap							_map;
 	int								_players;
 	ft_timer						_timer;
 	std::vector<Player>				_snakes;
@@ -35,9 +31,21 @@ private:
 	std::vector<std::string>		_libs;
 	std::string						_endGame;
 	IGraphicLib *					_lib;
+	bool							_pause;
+	void *							_dl_handle;
+	bool							_isLibInit;
+
 
 	bool			_updateMap( void );
+	void			_eatFood(Player & play);
 	void			_initMap(Vector2 size);
+	void			_checkInput( void );
+	void			_movesSnakes( void );
+	void			_generateFood( void );
+	void			_initLib( std::string lib );
+	void			_closeLib( void );
+	void			_setMap( void );
+
 	GameManager( void );
 	GameManager(GameManager const &src);
 	GameManager &	operator=(GameManager const &rhs);

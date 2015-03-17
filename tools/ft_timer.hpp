@@ -6,7 +6,7 @@
 //   By: mle-roy <mle-roy@student.42.fr>            +#+  +:+       +#+        //
 //                                                +#+#+#+#+#+   +#+           //
 //   Created: 2015/01/18 20:05:10 by mle-roy           #+#    #+#             //
-//   Updated: 2015/01/18 20:55:03 by mle-roy          ###   ########.fr       //
+//   Updated: 2015/03/17 16:46:30 by mle-roy          ###   ########.fr       //
 //                                                                            //
 // ************************************************************************** //
 
@@ -24,11 +24,11 @@ class ft_timer
 private:
 	struct timeval		_tick;
 	struct timeval		_add;
-	ft_timer(void);
 
 	void			_makeNextTick( void );
 
 public:
+	ft_timer(void);
 	ft_timer(unsigned int add, char type);
 	~ft_timer(void);
 	ft_timer(ft_timer const &);
