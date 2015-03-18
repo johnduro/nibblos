@@ -38,8 +38,8 @@ private:
 	void	_drawBorders(WINDOW *screen) const;
 
 public:
-	void	printMap(TMap & map) const;
-	int		getInput( void ) const;
+	void	printMap(TMap & map) ;
+	int		getInput( void );
 	void	gameOver( std::string toPrint ) const;
 	void	initLibrary( TMap & map );
 	void	closeLibrary( void );

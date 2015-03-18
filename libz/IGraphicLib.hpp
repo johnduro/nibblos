@@ -25,8 +25,8 @@
 class IGraphicLib
 {
 public:
-	virtual void	printMap(TMap & map) const = 0;
-	virtual int		getInput( void ) const = 0;
+	virtual void	printMap(TMap & map) = 0;
+	virtual int		getInput( void ) = 0;
 	virtual void	gameOver( std::string toPrint ) const = 0;
 	virtual void	initLibrary( TMap & map ) = 0;
 	virtual void	closeLibrary( void ) = 0;

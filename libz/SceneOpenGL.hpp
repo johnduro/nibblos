@@ -12,21 +12,25 @@
 #include <unistd.h>
 
 #include "glm/glm.hpp"
+#include "IGraphicLib.hpp"
+#include "TMap.hpp"
 
 #include "tools/Vector3.class.hpp"
 
 // Classe
 
-class SceneOpenGL
+class SceneOpenGL : IGraphicLib
 {
     public:
 
-    SceneOpenGL(std::string titreFenetre, int largeurFenetre, int hauteurFenetre);
+    SceneOpenGL();
     ~SceneOpenGL();
 
-    bool initialiserFenetre();
-    bool initGL();
-    void bouclePrincipale(Vector3 **M, int xMax, int yMax);
+    void	initLibrary( TMap & map );
+    void closeLibrary();
+    void printMap(TMap &map);
+    int  getInput();
+    void gameOver( std::string toPrint ) const;
 
    private:
 
@@ -35,6 +39,7 @@ class SceneOpenGL
    std::vector<Vector3> * points_left;
    std::vector<Vector3> * points_right;
 
+   float   echelle;
 	Vector3 scale;
 
     std::string m_titreFenetre;
@@ -45,14 +50,22 @@ class SceneOpenGL
     SDL_GLContext m_contexteOpenGL;
     SDL_Event m_evenements;
 
+    bool initialiserFenetre();
+    bool initGL();
+
    Vector3 setColor(float height, float echelle);
    void drawDot(Vector3 p);
    void drawLine(Vector3 p1, Vector3 p2);
    void drawTriangles(Vector3 p1, Vector3 p2, Vector3 p3, float echelle);
    void drawQuad(Vector3 p1, Vector3 p2, Vector3 p3, Vector3 p4);
-   float*   getTheFucknColor(float r, float g, float b, float a);
-   void     drawVox(Vector3 p, int porn, int type);
-   void     drawFace(Vector3 a, Vector3 b, Vector3 c, Vector3 g, Vector3 h, float echelle);
+   float*   getTheFucknColor(float r, float g, float b, float a) const;
+   void     drawVox(Vector3 p, int type) const;
+   void     drawFace(Vector2 a, Vector2 b, Vector2 c, Vector2 g);
 };
+
+extern "C" {
+	SceneOpenGL		*createLib( void );
+	void			deleteLib( SceneOpenGL * lib );
+}
 
 #endif

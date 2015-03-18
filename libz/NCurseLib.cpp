@@ -53,7 +53,7 @@ void					NCurseLib::_drawBorders(WINDOW *screen) const
 	}
 }
 
-void	NCurseLib::printMap(TMap & map) const
+void	NCurseLib::printMap(TMap & map)
 {
 	int		y = 1;
 	int		x;
@@ -79,7 +79,7 @@ void	NCurseLib::printMap(TMap & map) const
 	this->_refresh();
 }
 
-int		NCurseLib::getInput( void ) const
+int		NCurseLib::getInput( void )
 {
 	int		input;
 
