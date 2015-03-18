@@ -6,7 +6,7 @@
 //   By: mle-roy <mle-roy@student.42.fr>            +#+  +:+       +#+        //
 //                                                +#+#+#+#+#+   +#+           //
 //   Created: 2015/03/17 15:34:58 by mle-roy           #+#    #+#             //
-//   Updated: 2015/03/17 19:06:38 by mle-roy          ###   ########.fr       //
+//   Updated: 2015/03/18 16:11:05 by mle-roy          ###   ########.fr       //
 //                                                                            //
 // ************************************************************************** //
 
@@ -17,7 +17,10 @@
 
 # define STD_LEFT 1
 # define STD_RIGHT 2
-# define STD_EXIT 3
+# define STD_UP 3
+# define STD_DOWN 4
+# define STD_SPACE 5
+# define STD_EXIT 6
 
 class IGraphicLib
 {

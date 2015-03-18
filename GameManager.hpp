@@ -6,7 +6,7 @@
 //   By: mle-roy <mle-roy@student.42.fr>            +#+  +:+       +#+        //
 //                                                +#+#+#+#+#+   +#+           //
 //   Created: 2015/03/16 19:55:34 by mle-roy           #+#    #+#             //
-//   Updated: 2015/03/17 20:09:10 by mle-roy          ###   ########.fr       //
+//   Updated: 2015/03/18 17:29:46 by mle-roy          ###   ########.fr       //
 //                                                                            //
 // ************************************************************************** //
 
@@ -34,12 +34,12 @@ private:
 	bool							_pause;
 	void *							_dl_handle;
 	bool							_isLibInit;
-
+	int								_input;
 
 	bool			_updateMap( void );
 	void			_eatFood(Player & play);
 	void			_initMap(Vector2 size);
-	void			_checkInput( void );
+	bool			_checkInput( void );
 	void			_movesSnakes( void );
 	void			_generateFood( void );
 	void			_initLib( std::string lib );

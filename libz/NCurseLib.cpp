@@ -6,7 +6,7 @@
 //   By: mle-roy <mle-roy@student.42.fr>            +#+  +:+       +#+        //
 //                                                +#+#+#+#+#+   +#+           //
 //   Created: 2015/03/17 17:17:43 by mle-roy           #+#    #+#             //
-//   Updated: 2015/03/17 20:36:08 by mle-roy          ###   ########.fr       //
+//   Updated: 2015/03/18 18:12:14 by mle-roy          ###   ########.fr       //
 //                                                                            //
 // ************************************************************************** //
 
@@ -23,7 +23,6 @@ NCurseLib::~NCurseLib( void )
 	if (this->_isInit)
 		endwin();
 }
-
 
 void					NCurseLib::_refresh( void ) const
 {
@@ -75,6 +74,8 @@ void	NCurseLib::printMap(TMap & map) const
 		}
 		y++;
 	}
+	// wclear(this->_score);
+	mvwprintw(this->_score, 1, 1, map.scores.c_str());
 	this->_refresh();
 }
 
@@ -83,21 +84,30 @@ int		NCurseLib::getInput( void ) const
 	int		input;
 
 	input = getch();
+	// std::cout << "INPUT : " << input << std::endl;
 	switch (input)
 	{
 		case NC_LEFT:
 			return (STD_LEFT);
 		case NC_RIGHT:
 			return (STD_RIGHT);
+		case NC_UP:
+			return (STD_UP);
+		case NC_DOWN:
+			return (STD_DOWN);
 		case NC_EXIT:
 			return (STD_EXIT);
+		case NC_SPACE:
+			return (STD_SPACE);
 	}
 	return (0);
 }
 
 void	NCurseLib::gameOver( std::string toPrint ) const
 {
-
+	// mvwprintw(this->_score, 1, 1, "SCORE : ");
+	// wclear(this->_score);
+	mvwprintw(this->_score, 1, 1, toPrint.c_str());
 }
 
 void	NCurseLib::initLibrary( TMap & map )

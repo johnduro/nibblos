@@ -6,7 +6,7 @@
 //   By: mle-roy <mle-roy@student.42.fr>            +#+  +:+       +#+        //
 //                                                +#+#+#+#+#+   +#+           //
 //   Created: 2015/01/18 20:12:49 by mle-roy           #+#    #+#             //
-//   Updated: 2015/03/17 16:47:06 by mle-roy          ###   ########.fr       //
+//   Updated: 2015/03/18 15:28:06 by mle-roy          ###   ########.fr       //
 //                                                                            //
 // ************************************************************************** //
 
@@ -72,7 +72,7 @@ void			ft_timer::updateTimeAdd( unsigned int add, char type )
 	if (type == SECONDS)
 		this->_add.tv_sec = add;
 	else if (type == MICRO_SECONDS)
-		this->_add.tv_sec = add;
+		this->_add.tv_usec = add;
 }
 
 void			ft_timer::_makeNextTick( void )
