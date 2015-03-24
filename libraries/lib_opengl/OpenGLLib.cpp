@@ -1,15 +1,44 @@
-#include "SceneOpenGL.hpp"
+#include "OpenGLLib.hpp"
 
 // Constructeur de Destucteur
 
-SceneOpenGL::SceneOpenGL(std::string titreFenetre, int largeurFenetre, int hauteurFenetre) : m_titreFenetre(titreFenetre), m_largeurFenetre(largeurFenetre),
-	m_hauteurFenetre(hauteurFenetre), m_fenetre(0), m_contexteOpenGL(0) {
+SceneOpenGL::SceneOpenGL() : m_titreFenetre("SNAKE"), m_largeurFenetre(1200), m_hauteurFenetre(800), m_fenetre(0), m_contexteOpenGL(0) {}
 
-		scale = Vector3(64, 64, 32) / 0.5f;
-		scale.setZ(scale.getZ() * -0.5);
+void 	SceneOpenGL::initLibrary( TMap & map ) {
+
+	scale = Vector3(40, 40, 20) / 0.5f;
+	scale.setZ(scale.getZ() * -0.5);
+
+	if(this->initialiserFenetre() == false)
+	{
+		std::cout << "window init" << std::endl;
+		return;
 	}
+	if(this->initGL() == false)
+	{
+		std::cout << "GL init" << std::endl;
+		return;
+	}
+	// Variables
+	this->echelle = (64/15);
 
-	SceneOpenGL::~SceneOpenGL() {
+	// Boucle principale
+	glEnable (GL_DEPTH_TEST);
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	glOrtho(0, 1, 0, 1, 0, 3);
+	glMatrixMode(GL_MODELVIEW);
+	glTranslatef(0.5, 0.4, -2.); // (0.8, 0.3, -2.)
+	// glRotatef(180, 0, 1, 0);
+	// glRotatef(60, 0, 0, 1);
+	glRotatef(180, 1, 0, 0);
+	// glRotatef(45, 1, 0, 0);
+	glScalef(1/this->scale.getX(), 1/this->scale.getY(), 1/this->scale.getZ());
+}
+
+SceneOpenGL::~SceneOpenGL() {}
+
+void	SceneOpenGL::closeLibrary() {
 
 		SDL_GL_DeleteContext(m_contexteOpenGL);
 		SDL_DestroyWindow(m_fenetre);
@@ -99,7 +128,7 @@ bool SceneOpenGL::initGL() {
 	return true;
 }
 
-Vector3 setColor(float height, float echelle)
+Vector3 SceneOpenGL::setColor(float height, float echelle)
 {
 	height = (height)/echelle;
 	if (height < 0.3f) {
@@ -112,14 +141,14 @@ Vector3 setColor(float height, float echelle)
 	return Vector3();
 }
 
-void drawDot(Vector3 p) {
+void SceneOpenGL::drawDot(Vector3 p) {
 	glBegin(GL_POINTS);
 	glVertex3f(p.getX(), p.getY(), p.getZ());
 	glEnd();
 	glFlush();
 }
 
-void drawLine(Vector3 p1, Vector3 p2) {
+void SceneOpenGL::drawLine(Vector3 p1, Vector3 p2) {
 	glBegin(GL_LINES);
 	glVertex3f(p1.getX(), p1.getY(), p1.getZ());
 	glVertex3f(p2.getX(), p2.getY(), p2.getZ());
@@ -127,7 +156,7 @@ void drawLine(Vector3 p1, Vector3 p2) {
 	glFlush();
 }
 
-void drawTriangles(Vector3 p1, Vector3 p2, Vector3 p3, float echelle) {
+void SceneOpenGL::drawTriangles(Vector3 p1, Vector3 p2, Vector3 p3, float echelle) {
 	glBegin(GL_TRIANGLE_STRIP);
 	setColor(p1.getZ(), echelle);
 	glVertex3f(p1.getX(), p1.getY(), p1.getZ());
@@ -139,7 +168,7 @@ void drawTriangles(Vector3 p1, Vector3 p2, Vector3 p3, float echelle) {
 	glFlush();
 }
 
-void drawQuad(Vector3 p1, Vector3 p2, Vector3 p3, Vector3 p4) {
+void SceneOpenGL::drawQuad(Vector3 p1, Vector3 p2, Vector3 p3, Vector3 p4) {
 	glBegin(GL_QUADS);
 	glVertex3f(p1.getX(), p1.getY(), p1.getZ());
 	glVertex3f(p2.getX(), p2.getY(), p2.getZ());
@@ -149,8 +178,8 @@ void drawQuad(Vector3 p1, Vector3 p2, Vector3 p3, Vector3 p4) {
 	glFlush();
 }
 
-float *getTheFucknColor(float r, float g, float b, float a)
-{
+float *SceneOpenGL::getTheFucknColor(float r, float g, float b, float a) const {
+
 	float *color = new float[120];
 	float co[] =
 	{
@@ -190,7 +219,7 @@ float *getTheFucknColor(float r, float g, float b, float a)
 	return color;
 }
 
-void drawVox(Vector3 p, int porn, int type) {
+void SceneOpenGL::drawVox(Vector3 p, int martinTuneGrosseMerde) const {
 
 	float x0 = p.getX() - 0.5f;
 	float x1 = p.getX() + 0.5f;
@@ -256,23 +285,24 @@ void drawVox(Vector3 p, int porn, int type) {
 		pLBU._x, pLBU._y, pLBU._z, /* sommet 0 */
 		pLFD._x, pLFD._y, pLFD._z, /* sommet 1 */
 		pRFD._x, pRFD._y, pRFD._z, /* sommet 2 */
-
 	};
 
 	float *color;
 
-	if (type == 4)
-		color = getTheFucknColor(1, 0, 0, 1);
-	else if (type == 5)
-		color = getTheFucknColor(0.2f, 0.2f, 0.2f, 1);
-	else
+	switch (martinTuneGrosseMerde)
 	{
-		if (porn >= 0 && porn < 3)
-			color = getTheFucknColor(1, 1, 1, 0.5f);
-		else if (porn >= 3 && porn <= 30)
-				color = getTheFucknColor(0, 0.2, 0.7, 0.4f);
-		else
-			color = getTheFucknColor(0, 0, 1, 0.7f);
+		case 1:
+			color = getTheFucknColor(0, 1, 1, 1);
+			break;
+		case 2:
+			color = getTheFucknColor(1, 1, 1, 1);
+			break;
+		case 3:
+			color = getTheFucknColor(1, 0, 0, 1);
+			break;
+		case 4:
+			color = getTheFucknColor(0.7f, 0.7f, 0, 1);
+			break;
 	}
 
 	glEnableClientState(GL_VERTEX_ARRAY);
@@ -290,25 +320,31 @@ void drawVox(Vector3 p, int porn, int type) {
 	glDisableClientState(GL_COLOR_ARRAY);
 }
 
-void drawFace(Vector3 a, Vector3 b, Vector3 c, Vector3 g, Vector3 h, float echelle) {
+void SceneOpenGL::drawFace(Vector2 a, Vector2 b, Vector2 c, Vector2 g) {
 	GLfloat vertices[] =
 	{
-		a._x, a._y, a._z, /* sommet 0 */
-		b._x, b._y, b._z, /* sommet 1 */
-		c._x, c._y, c._z, /* sommet 2 */
+		a._x, a._y, 0, /* sommet 0 */
+		b._x, b._y, 0, /* sommet 1 */
+		c._x, c._y, 0, /* sommet 2 */
 
-		a._x, a._y, a._z, /* sommet 0 */
-		g._x, g._y, g._z, /* sommet 1 */
-		h._x, h._y, h._z  /* sommet 2 */
+		a._x, a._y, 0, /* sommet 0 */
+		g._x, g._y, 0, /* sommet 1 */
+		c._x, c._y, 0  /* sommet 2 */
 	};
 
-	Vector3 cook = setColor(a._z, echelle);
-	float color[] = {cook._x, cook._y, cook._z};
+	float color[] = {
+		0, 1, 0, 1,
+		0, 1, 0, 1,
+		0, 1, 0, 1,
+		0, 1, 0, 1,
+		0, 1, 0, 1,
+		0, 1, 0, 1
+	};
 
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glEnableClientState(GL_COLOR_ARRAY);
 
-	glColorPointer(3, GL_UNSIGNED_BYTE, 0, color);
+	glColorPointer(4, GL_FLOAT, 0, color);
 	glVertexPointer(3, GL_FLOAT, 0, vertices);
 
 	glDrawArrays(GL_TRIANGLES, 0, 6);
@@ -318,104 +354,69 @@ void drawFace(Vector3 a, Vector3 b, Vector3 c, Vector3 g, Vector3 h, float echel
 	glDisableClientState(GL_COLOR_ARRAY);
 }
 
-void SceneOpenGL::bouclePrincipale(Vector3 **M, int xMax, int yMax) {
-
-	// Variables
-	Water wat = Water(M, xMax, yMax);
-	Volcan vol = Volcan(wat);
-	float echelle = (64/15);
-
-	// Boucle principale
-	glEnable (GL_DEPTH_TEST);
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-	glOrtho(0, 1, 0, 1, 0, 3);
-	glMatrixMode(GL_MODELVIEW);
-	glTranslatef(0.5, 0.3, -2.); // (0.8, 0.3, -2.)
-	glRotatef(180, 0, 1, 0);
-	glRotatef(60, 1, 0, 0);
-	glScalef(1/this->scale.getX(), 1/this->scale.getY(), 1/this->scale.getZ());
-
-	Vector3 height;
-	int pyramide = 0;
-	int z = wat.getZ() - 1;
-	bool flag = false;
-
-	for (;z > 0; z--)
-	{
-		if (flag)
-			break;
-		for (int y=0; y < wat.getY() ; y++)
-		{
-			if (flag)
-				break;
-			for (int x=0; x < wat.getX(); x++)
-			{
-				if (wat._MW[z][y][x].getType() == 1 || wat._MW[z][y][x].getType() == -1)
-				{
-					height = wat._MW[z][y][x].getV3();
-					flag = true;
-					break;
-				}
-			}
-		}
-	}
-
-	while(1)
-	{
-		glRotatef(1, 0, 0, 1);
+int		SceneOpenGL::getInput() {
 		// Gestion des evenements
 
-		SDL_PollEvent(&m_evenements);
+	SDL_PollEvent(&m_evenements);
 
-		if(m_evenements.window.event == SDL_WINDOWEVENT_CLOSE || m_evenements.window.event == SDLK_q)
-			break;
-		if(m_evenements.window.event == SDLK_SPACE)
-			wat.AddWater();
-		if(m_evenements.window.event == SDLK_r)
-			wat.AddRain();
-		if(m_evenements.window.event == SDLK_i)
-			wat.AddIndia();
-		if(m_evenements.window.event == SDLK_v)
-			vol.AddLava(wat, height);
-
-		// Nettoyage de l'ecran
-
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-		glEnable (GL_BLEND);
-		glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-		for(int y=0; y<yMax-1; y++)
-		{
-			for(int x=0; x<xMax-1; x++)
-				drawFace(M[y][x], M[y][x+1], M[y+1][x+1], M[y+1][x+1], M[y+1][x], echelle);
-		}
-		for(int z=0; z<16; z++)
-		{
-			for(int y=0; y<yMax; y++)
-			{
-				for(int x=0; x<xMax; x++)
-				{
-					int type = wat._MW[z][y][x].getType();
-					if (type >= 3)
-					{
-						int porn = wat._MW[z][y][x].getPerc();
-						drawVox(wat._MW[z][y][x].getV3(), porn, type);
-					}
-				}
-			}
-		}
-		wat.MakeFluid();
-		if (pyramide >= 10)
-		{
-			vol.MakeFluid(wat);
-			pyramide = 0;
-		}
-		pyramide++;
-		// Actualisation de la fenetre
-		glFlush();
-		SDL_GL_SwapWindow(m_fenetre);
-	}
-	wat.KILL();
+	if(m_evenements.window.event == SDL_WINDOWEVENT_CLOSE || m_evenements.window.event == SDLK_q)
+		return STD_EXIT;
+	if(m_evenements.window.event == SDLK_SPACE)
+		return STD_SPACE;
+	if(m_evenements.key.keysym.sym == SDLK_RIGHT)
+		return STD_RIGHT;
+	if(m_evenements.key.keysym.sym == SDLK_LEFT)
+		return STD_LEFT;
+	if(m_evenements.key.keysym.sym == SDLK_UP)
+		return STD_UP;
+	if(m_evenements.key.keysym.sym == SDLK_DOWN)
+		return STD_DOWN;
+	return 0;
 }
+
+void SceneOpenGL::printMap(TMap & map) {
+
+	// Nettoyage de l'ecran
+
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	glEnable (GL_BLEND);
+	glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+	int sY = static_cast<int>(round((map.size.getY() + 2) / 2));
+	int sX = static_cast<int>(round((map.size.getX() + 2) / 2));
+
+	this->drawFace(Vector2(-sX, -sY), Vector2(-sX, sY-1), Vector2(sX-1, sY-1), Vector2(sX-1, -sY));
+
+	for(int y = -sY; y<sY; y++)
+	{
+		for(int x = -sX; x<sX; x++)
+		{
+			if((y == -sY || x == -sX) || (y == sY-1 || x == sX-1))
+				this->drawVox(Vector3(x, y, 1), 2);
+		}
+	}
+
+	for(int y = 0; y<map.size.getY(); y++)
+	{
+		for(int x = 0; x<map.size.getX(); x++)
+		{
+			if (map.map[y][x] == 'F')
+				this->drawVox(Vector3(x-sX, y-sY, 1), 1);
+			if (map.map[y][x] == '1')
+				this->drawVox(Vector3(x-sX, y-sY, 1), 3);
+			if (map.map[y][x] == '*')
+				this->drawVox(Vector3(x-sX, y-sY, 1), 4);
+		}
+	}
+
+	// Actualisation de la fenetre
+	glFlush();
+	SDL_GL_SwapWindow(m_fenetre);
+}
+
+void 	SceneOpenGL::gameOver( std::string toPrint ) const {}
+
+SceneOpenGL		*createLib() {return new SceneOpenGL();}
+
+void			deleteLib(SceneOpenGL * lib) {delete lib;}

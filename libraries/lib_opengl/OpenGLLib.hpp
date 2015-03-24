@@ -15,7 +15,7 @@
 #include "IGraphicLib.hpp"
 #include "TMap.hpp"
 
-#include "tools/Vector3.class.hpp"
+#include "Vector3.class.hpp"
 
 // Classe
 
