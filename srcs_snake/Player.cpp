@@ -6,7 +6,7 @@
 /*   By: ael-kadh <ael-kadh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/03/16 15:48:42 by ael-kadh          #+#    #+#             */
-//   Updated: 2015/03/18 18:08:37 by mle-roy          ###   ########.fr       //
+//   Updated: 2015/03/26 13:17:32 by mle-roy          ###   ########.fr       //
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,12 +37,14 @@ void		Player::_initFirstSnake(Vector2 pos, Vector2 dir)
 	// std::cout << "SNK SIZE " << this->_links.size() << std::endl;
 }
 
-Player::Player(std::string name, Vector2 pos) : _length(4), _dir(RIGHT), _name(name), _score(0), _scoreMod(5)
+Player::Player(std::string name, Vector2 pos)
+	: _length(4), _dir(RIGHT), _name(name), _score(0), _scoreMod(5)
 {
 	this->_initFirstSnake(pos, RIGHT);
 }
 
-Player::Player(std::string name, Vector2 pos, Vector2 dir) : _length(4), _dir(dir), _name(name), _score(0), _scoreMod(5)
+Player::Player(std::string name, Vector2 pos, Vector2 dir)
+	: _length(4), _dir(dir), _name(name), _score(0), _scoreMod(5)
 {
 	this->_initFirstSnake(pos, dir);
 }
@@ -50,12 +52,6 @@ Player::Player(std::string name, Vector2 pos, Vector2 dir) : _length(4), _dir(di
 Player::Player(Player const & src)
 {
 	*this = src;
-	// this->_length = src.getLength();
-	// this->_dir = src.getDir();
-	// this->_name = src.getName();
-	// //std::cout << "HHIHIHIHIHIHIHIHIHIHIH" << std::endl;
-	// this->_initFirstSnake(src.getHead(), this->_dir);
-	// this->_links = src.getLinks();
 }
 
 Player &   Player::operator=(Player const & src)
@@ -95,8 +91,8 @@ void					Player::addLink( void )
 	// std::cout << "SCORE " << this->_score << std::endl;
 }
 
-void					Player::setDir(int input) {
-
+void					Player::setDir(int input)
+{
 	if (this->_dir == UP || this->_dir == DOWN)
 	{
 		if (input == STD_LEFT)
@@ -113,30 +109,19 @@ void					Player::setDir(int input) {
 	}
 }
 
-void					Player::setLast( void ){ this->_last = this->_links.back(); }
+void					Player::setLast( void )
+{
+	this->_last = this->_links.back();
+}
 
 /* ------------------------------ Methodes ---------------------------- */
 
 void			Player::movSnake( void )
 {
-	std::list<Vector2>::iterator		it;
-	std::list<Vector2>::iterator		ite = this->_links.end();
-	bool								flag = true;
-	Vector2								tmp;
-	Vector2								tmp2;
+	Vector2								newHead;
 
 	this->_last = this->_links.back();
-	for (it = this->_links.begin(); it != ite; it++)
-	{
-		tmp2 = *it;
-		if (flag)
-		{
-			tmp = *it;
-			*it += this->_dir;
-			flag = false;
-			continue ;
-		}
-		*it = tmp;
-		tmp = tmp2;
-	}
+	newHead = this->_links.front() + this->_dir;
+	this->_links.push_front(newHead);
+	this->_links.pop_back();
 }

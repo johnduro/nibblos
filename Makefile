@@ -32,13 +32,13 @@ TOOLS				=		$(addprefix $(TOOLS_OBJ)/, $(notdir $(SRC_TOOLS:.cpp=.o)))
 
 all: $(NAME)
 
-$(NAME): $(TOOLS) libz $(OBJ)
+$(NAME): | $(TOOLS) libz $(OBJ)
 	$(COMPILER) -o  $@ $(OBJ) $(TOOLS)
 	@echo [ $(NAME) ] " compilation ... " $(OK)
 
 # TOOLS
 
-$(TOOLS): $(TOOLS_OBJ)
+$(TOOLS): | $(TOOLS_OBJ)
 
 $(TOOLS_OBJ):
 	mkdir -p $@
@@ -63,7 +63,7 @@ $(OPENGL_SO): $(wildcard $(SRC_LIB)/$(LIB_OPENGL)/*.cpp) $(wildcard $(SRC_TOOLS_
 
 # OBJ
 
-$(OBJ): $(OBJ_DIR)
+$(OBJ): | $(OBJ_DIR)
 
 $(OBJ_DIR):
 	mkdir -p $@
