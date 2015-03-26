@@ -6,7 +6,7 @@
 //   By: mle-roy <mle-roy@student.42.fr>            +#+  +:+       +#+        //
 //                                                +#+#+#+#+#+   +#+           //
 //   Created: 2015/03/16 19:55:34 by mle-roy           #+#    #+#             //
-//   Updated: 2015/03/26 13:45:11 by mle-roy          ###   ########.fr       //
+//   Updated: 2015/03/26 18:29:53 by mle-roy          ###   ########.fr       //
 //                                                                            //
 // ************************************************************************** //
 
@@ -42,8 +42,8 @@ private:
 
 
 	bool			_updateMap( void );
-	void			_eatFood(Player & play);
-	void			_initMap(Vector2 size);
+	void			_eatFood( Player & play );
+	void			_initMap( Vector2 size );
 	bool			_checkInput( void );
 	void			_movesSnakes( void );
 	void			_generateFood( void );
@@ -51,6 +51,7 @@ private:
 	void			_closeLib( void );
 	void			_setMap( void );
 	void			_changeTimer( int input );
+	bool			_playerCollision( Player & play );
 
 	GameManager( void );
 	GameManager(GameManager const &src);

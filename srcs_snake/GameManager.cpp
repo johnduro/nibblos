@@ -6,7 +6,7 @@
 //   By: mle-roy <mle-roy@student.42.fr>            +#+  +:+       +#+        //
 //                                                +#+#+#+#+#+   +#+           //
 //   Created: 2015/03/16 20:06:33 by mle-roy           #+#    #+#             //
-//   Updated: 2015/03/26 16:49:42 by mle-roy          ###   ########.fr       //
+//   Updated: 2015/03/26 17:00:16 by mle-roy          ###   ########.fr       //
 //                                                                            //
 // ************************************************************************** //
 
@@ -17,6 +17,11 @@
 #include "GameManager.hpp"
 
 // ** PRIVATE FUNCTION ** //
+
+bool			GameManager::_playerCollision(Player & play)
+{
+
+}
 
 bool			GameManager::_updateMap( void )
 {
@@ -162,7 +167,7 @@ void			GameManager::_changeTimer( int input )
 bool			GameManager::_checkInput( void )
 {
 	int		input;
-	bool	ret = false;
+	// bool	ret = false;
 
 	// input = this->_lib->getInput();
 	// std::cout << "INPUT2 : " << input << std::endl;
@@ -177,7 +182,7 @@ bool			GameManager::_checkInput( void )
 		}
 		case STD_SPACE:
 		{
-			std::cout  << "IICICIICIIICICIC"  << std::endl;
+			// std::cout  << "IICICIICIIICICIC"  << std::endl;
 			this->_pause = !(this->_pause);
 			break ;
 		}
@@ -188,13 +193,14 @@ bool			GameManager::_checkInput( void )
 		}
 		case STD_EXIT:
 		{
-			ret = true;
-			break ;
+			return (true);
+			// ret = true;
+			// break ;
 			// std::cout << "exit INPUT" << std::endl;
 			// exit(EXIT_SUCCESS);
 		}
 	}
-	return (ret);
+	return (false);
 }
 
 void			GameManager::_movesSnakes( void )
