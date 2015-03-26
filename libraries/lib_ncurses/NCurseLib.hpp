@@ -6,7 +6,7 @@
 //   By: mle-roy <mle-roy@student.42.fr>            +#+  +:+       +#+        //
 //                                                +#+#+#+#+#+   +#+           //
 //   Created: 2015/03/17 17:07:38 by mle-roy           #+#    #+#             //
-//   Updated: 2015/03/18 17:34:33 by mle-roy          ###   ########.fr       //
+//   Updated: 2015/03/26 14:37:42 by mle-roy          ###   ########.fr       //
 //                                                                            //
 // ************************************************************************** //
 
@@ -22,6 +22,8 @@
 # define NC_DOWN 258
 # define NC_SPACE 32
 # define NC_EXIT 27
+# define NC_PLUS 43
+# define NC_MINUS 45
 
 class NCurseLib : public IGraphicLib
 {

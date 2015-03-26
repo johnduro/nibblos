@@ -6,7 +6,7 @@
 //   By: mle-roy <mle-roy@student.42.fr>            +#+  +:+       +#+        //
 //                                                +#+#+#+#+#+   +#+           //
 //   Created: 2015/03/17 15:34:58 by mle-roy           #+#    #+#             //
-//   Updated: 2015/03/18 16:11:05 by mle-roy          ###   ########.fr       //
+//   Updated: 2015/03/26 13:44:28 by mle-roy          ###   ########.fr       //
 //                                                                            //
 // ************************************************************************** //
 
@@ -21,6 +21,11 @@
 # define STD_DOWN 4
 # define STD_SPACE 5
 # define STD_EXIT 6
+# define STD_PLUS 7
+# define STD_MINUS 8
+# define STD_LIB1 9
+# define STD_LIB2 10
+# define STD_LIB3 11
 
 class IGraphicLib
 {

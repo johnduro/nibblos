@@ -6,7 +6,7 @@
 //   By: mle-roy <mle-roy@student.42.fr>            +#+  +:+       +#+        //
 //                                                +#+#+#+#+#+   +#+           //
 //   Created: 2015/03/16 19:55:34 by mle-roy           #+#    #+#             //
-//   Updated: 2015/03/26 13:26:52 by mle-roy          ###   ########.fr       //
+//   Updated: 2015/03/26 13:45:11 by mle-roy          ###   ########.fr       //
 //                                                                            //
 // ************************************************************************** //
 
@@ -38,6 +38,8 @@ private:
 	void *							_dl_handle;
 	bool							_isLibInit;
 	int								_input;
+	int								_timeTick;
+
 
 	bool			_updateMap( void );
 	void			_eatFood(Player & play);
@@ -48,6 +50,7 @@ private:
 	void			_initLib( std::string lib );
 	void			_closeLib( void );
 	void			_setMap( void );
+	void			_changeTimer( int input );
 
 	GameManager( void );
 	GameManager(GameManager const &src);

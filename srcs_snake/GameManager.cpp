@@ -6,7 +6,7 @@
 //   By: mle-roy <mle-roy@student.42.fr>            +#+  +:+       +#+        //
 //                                                +#+#+#+#+#+   +#+           //
 //   Created: 2015/03/16 20:06:33 by mle-roy           #+#    #+#             //
-//   Updated: 2015/03/26 13:29:03 by mle-roy          ###   ########.fr       //
+//   Updated: 2015/03/26 16:49:42 by mle-roy          ###   ########.fr       //
 //                                                                            //
 // ************************************************************************** //
 
@@ -144,6 +144,21 @@ void			GameManager::_initMap( Vector2 size )
 	// }
 }
 
+void			GameManager::_changeTimer( int input )
+{
+	if (input == STD_PLUS)
+		this->_timeTick -= 100000;
+	if (input == STD_MINUS)
+		this->_timeTick += 100000;
+
+	if (this->_timeTick < 100000)
+		this->_timeTick = 100000;
+	else if (this->_timeTick > 600000)
+		this->_timeTick = 600000;
+
+	this->_timer.updateTimeAdd(this->_timeTick, MICRO_SECONDS);
+}
+
 bool			GameManager::_checkInput( void )
 {
 	int		input;
@@ -164,6 +179,11 @@ bool			GameManager::_checkInput( void )
 		{
 			std::cout  << "IICICIICIIICICIC"  << std::endl;
 			this->_pause = !(this->_pause);
+			break ;
+		}
+		case STD_PLUS: case STD_MINUS:
+		{
+			this->_changeTimer(input);
 			break ;
 		}
 		case STD_EXIT:
@@ -224,7 +244,7 @@ void			GameManager::_closeLib( void )
 // ** CANONICAL ** //
 // GameManager::GameManager( void );
 GameManager::GameManager(int players, Vector2 size, std::vector<std::string> libs)
-	: _players(players), _libs(libs), _pause(false), _isEnded(false), _isLibInit(false), _input(0)
+	: _players(players), _libs(libs), _pause(false), _isEnded(false), _isLibInit(false), _input(0), _timeTick(TIME_BASE)
 {
 	this->_initMap(size);
 	this->_snakes.push_back(Player("ahmed", Vector2(15, 15)));
@@ -260,14 +280,14 @@ GameManager::~GameManager( void )
 void	GameManager::Update( void )
 {
 	int		input = 0;
-	int		timeTick = TIME_BASE;
+	// int		timeTick = TIME_BASE;
 
 	// this->_timer.updateTimeAdd(300000, MICRO_SECONDS);
-	this->_timer.updateTimeAdd(timeTick, MICRO_SECONDS);
+	this->_timer.updateTimeAdd(this->_timeTick, MICRO_SECONDS);
 	// this->_timer.updateTimeAdd(100000, MICRO_SECONDS);
 	this->_lib->initLibrary(this->_map);
 	this->_updateMap();
-	while (1)
+	while (42)
 	{
 		// for(int y=0; y<_map.size._y; y++)
 		// {

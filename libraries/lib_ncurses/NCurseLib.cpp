@@ -6,7 +6,7 @@
 //   By: mle-roy <mle-roy@student.42.fr>            +#+  +:+       +#+        //
 //                                                +#+#+#+#+#+   +#+           //
 //   Created: 2015/03/17 17:17:43 by mle-roy           #+#    #+#             //
-//   Updated: 2015/03/18 18:12:14 by mle-roy          ###   ########.fr       //
+//   Updated: 2015/03/26 14:40:15 by mle-roy          ###   ########.fr       //
 //                                                                            //
 // ************************************************************************** //
 
@@ -84,7 +84,8 @@ int		NCurseLib::getInput( void )
 	int		input;
 
 	input = getch();
-	// std::cout << "INPUT : " << input << std::endl;
+	// if (input != -1)
+	// 	std::cout << "INPUT : " << input << std::endl;
 	switch (input)
 	{
 		case NC_LEFT:
@@ -99,6 +100,10 @@ int		NCurseLib::getInput( void )
 			return (STD_EXIT);
 		case NC_SPACE:
 			return (STD_SPACE);
+		case NC_PLUS:
+			return (STD_PLUS);
+		case NC_MINUS:
+			return (STD_MINUS);
 	}
 	return (0);
 }
