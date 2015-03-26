@@ -6,7 +6,7 @@
 //   By: mle-roy <mle-roy@student.42.fr>            +#+  +:+       +#+        //
 //                                                +#+#+#+#+#+   +#+           //
 //   Created: 2015/03/16 19:55:34 by mle-roy           #+#    #+#             //
-//   Updated: 2015/03/18 17:29:46 by mle-roy          ###   ########.fr       //
+//   Updated: 2015/03/26 13:26:52 by mle-roy          ###   ########.fr       //
 //                                                                            //
 // ************************************************************************** //
 
@@ -20,6 +20,8 @@
 #include "TMap.hpp"
 #include "IGraphicLib.hpp"
 
+# define TIME_BASE 300000
+
 class GameManager
 {
 private:
@@ -32,6 +34,7 @@ private:
 	std::string						_endGame;
 	IGraphicLib *					_lib;
 	bool							_pause;
+	bool							_isEnded;
 	void *							_dl_handle;
 	bool							_isLibInit;
 	int								_input;

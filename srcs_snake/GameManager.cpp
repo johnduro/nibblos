@@ -6,7 +6,7 @@
 //   By: mle-roy <mle-roy@student.42.fr>            +#+  +:+       +#+        //
 //                                                +#+#+#+#+#+   +#+           //
 //   Created: 2015/03/16 20:06:33 by mle-roy           #+#    #+#             //
-//   Updated: 2015/03/18 18:01:54 by mle-roy          ###   ########.fr       //
+//   Updated: 2015/03/26 13:29:03 by mle-roy          ###   ########.fr       //
 //                                                                            //
 // ************************************************************************** //
 
@@ -62,6 +62,7 @@ bool			GameManager::_updateMap( void )
 					// std::cout << "YOLOOOO111GAMELKMDFKLMSDF" << std::endl;
 					this->_endGame = "Player " + itPlayer->getName() + " hit a wall !";
 					this->_pause = true;
+					this->_isEnded = true;
 				}
 				else
 				{
@@ -73,6 +74,7 @@ bool			GameManager::_updateMap( void )
 						// std::cout << "YOLOOOO2GAMEOBER" << std::endl;
 						this->_endGame = "Player " + itPlayer->getName() + " ate himself !";
 						this->_pause = true;
+						this->_isEnded = true;
 					}
 					this->_map.map[itLinks->getY()][itLinks->getX()] = '*';
 				}
@@ -90,16 +92,19 @@ bool			GameManager::_updateMap( void )
 	return (collision);
 }
 
-void	GameManager::_generateFood() {
+void	GameManager::_generateFood( void )
+{
 
-	do {
-	int rx = rand() % this->_map.size._x;
-	int ry = rand() % this->_map.size._y;
+	do
+	{
+		int rx = rand() % this->_map.size._x;
+		int ry = rand() % this->_map.size._y;
 
-	if (this->_map.map[ry][rx] == 32)
-		this->_foods.push_back(Vector2(rx, ry));
+		if (this->_map.map[ry][rx] == 32)
+			this->_foods.push_back(Vector2(rx, ry));
 
-	} while (this->_foods.empty());
+	}
+	while (this->_foods.empty());
 }
 
 void			GameManager::_eatFood(Player & play)
@@ -219,7 +224,7 @@ void			GameManager::_closeLib( void )
 // ** CANONICAL ** //
 // GameManager::GameManager( void );
 GameManager::GameManager(int players, Vector2 size, std::vector<std::string> libs)
-	: _players(players), _libs(libs), _pause(false), _isLibInit(false), _input(0)
+	: _players(players), _libs(libs), _pause(false), _isEnded(false), _isLibInit(false), _input(0)
 {
 	this->_initMap(size);
 	this->_snakes.push_back(Player("ahmed", Vector2(15, 15)));
@@ -255,8 +260,10 @@ GameManager::~GameManager( void )
 void	GameManager::Update( void )
 {
 	int		input = 0;
+	int		timeTick = TIME_BASE;
 
-	this->_timer.updateTimeAdd(300000, MICRO_SECONDS);
+	// this->_timer.updateTimeAdd(300000, MICRO_SECONDS);
+	this->_timer.updateTimeAdd(timeTick, MICRO_SECONDS);
 	// this->_timer.updateTimeAdd(100000, MICRO_SECONDS);
 	this->_lib->initLibrary(this->_map);
 	this->_updateMap();
@@ -281,7 +288,7 @@ void	GameManager::Update( void )
 			// std::cout << "GM5" << std::endl;
 			if (this->_checkInput())
 				break ;
-			if (this->_pause)
+			if (this->_pause || this->_isEnded)
 				continue;
 			// std::cout << "GM6" << std::endl;
 			this->_movesSnakes();
