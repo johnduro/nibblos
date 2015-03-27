@@ -1,3 +1,4 @@
+
 NAME				=		nibbler
 
 SRC_DIR				=		srcs_snake
@@ -7,11 +8,16 @@ INCLUDE_DIR			=		includes
 OBJ_DIR				=		objs
 TOOLS_OBJ			=		objs_tools
 
+
 SRC_LIB				=		libraries
 LIB_NCURSES			=		lib_ncurses
 LIB_OPENGL			=		lib_opengl
+LIB_SDLIMAGES		=		lib_sdlimages
+
 NCURSE_SO			=		NCLIB.so
 OPENGL_SO			=		OGLLIB.so
+SDLIMAGES_SO		=		SDLIMAGESLIB.so
+
 
 OK					=		"\033[35m"OK"\033[00m"
 
@@ -48,8 +54,7 @@ $(TOOLS_OBJ)/%.o: $(SRC_TOOLS_DIR)/%.cpp
 
 # LIBZ
 
-# libz: $(NCURSE_SO) $(OPENGL_SO)
-libz: $(NCURSE_SO) $(OPENGL_SO)
+libz: $(NCURSE_SO) $(OPENGL_SO) $(SDLIMAGES_SO)
 	@echo "Librairies compilation ... " $(OK)
 
 $(NCURSE_SO): $(wildcard $(SRC_LIB)/$(LIB_NCURSES)*.cpp) $(wildcard $(SRC_TOOLS_DIR)/*.cpp)
@@ -60,6 +65,11 @@ $(OPENGL_SO): $(wildcard $(SRC_LIB)/$(LIB_OPENGL)/*.cpp) $(wildcard $(SRC_TOOLS_
 	$(COMPILER) $(DLFLAGS) -F ~/Library/Frameworks -framework SDL2 -I ~/Library/Frameworks/SDL2.framework/Headers -framework OpenGL \
 	-o $(OPENGL_SO) $(wildcard $(SRC_LIB)/$(LIB_OPENGL)/*.cpp) $(TOOLS)
 	@echo "Compiling " [ $(OPENGL_SO) ] " ... " $(OK)
+
+$(SDLIMAGES_SO): $(wildcard $(SRC_LIB)/$(LIB_SDLIMAGES)/*.cpp) $(wildcard $(SRC_TOOLS_DIR)/*.cpp)
+	$(COMPILER) $(DLFLAGS) -F ~/Library/Frameworks -framework SDL2 -I ~/Library/Frameworks/SDL2.framework/Headers -I ~/Library/Frameworks/SDL2_image.framework/Headers -framework SDL2_image \
+	-o $(SDLIMAGES_SO) $(wildcard $(SRC_LIB)/$(LIB_SDLIMAGES)/*.cpp) $(TOOLS)
+	@echo "Compiling " [ $(SDLIMAGES_SO) ] " ... " $(OK)
 
 # OBJ
 

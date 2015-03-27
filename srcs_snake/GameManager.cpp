@@ -6,7 +6,7 @@
 //   By: mle-roy <mle-roy@student.42.fr>            +#+  +:+       +#+        //
 //                                                +#+#+#+#+#+   +#+           //
 //   Created: 2015/03/16 20:06:33 by mle-roy           #+#    #+#             //
-//   Updated: 2015/03/26 17:00:16 by mle-roy          ###   ########.fr       //
+//   Updated: 2015/03/27 16:15:12 by mle-roy          ###   ########.fr       //
 //                                                                            //
 // ************************************************************************** //
 
@@ -20,7 +20,8 @@
 
 bool			GameManager::_playerCollision(Player & play)
 {
-
+	static_cast<void>(play);
+	return (true);
 }
 
 bool			GameManager::_updateMap( void )
