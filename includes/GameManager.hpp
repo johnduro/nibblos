@@ -6,7 +6,7 @@
 //   By: mle-roy <mle-roy@student.42.fr>            +#+  +:+       +#+        //
 //                                                +#+#+#+#+#+   +#+           //
 //   Created: 2015/03/16 19:55:34 by mle-roy           #+#    #+#             //
-//   Updated: 2015/03/26 18:29:53 by mle-roy          ###   ########.fr       //
+//   Updated: 2015/03/27 18:57:25 by mle-roy          ###   ########.fr       //
 //                                                                            //
 // ************************************************************************** //
 
@@ -39,9 +39,10 @@ private:
 	bool							_isLibInit;
 	int								_input;
 	int								_timeTick;
+	// static const std::vector<std::vector<mapBlock>>		_blocks;
 
 
-	bool			_updateMap( void );
+	void			_updateMap( void );
 	void			_eatFood( Player & play );
 	void			_initMap( Vector2 size );
 	bool			_checkInput( void );
@@ -51,7 +52,9 @@ private:
 	void			_closeLib( void );
 	void			_setMap( void );
 	void			_changeTimer( int input );
-	bool			_playerCollision( Player & play );
+	void			_playerCollision( Player & play, std::string reason);
+	TMap::mapBlock	_updateHead(Vector2 const & direction, int player);
+
 
 	GameManager( void );
 	GameManager(GameManager const &src);

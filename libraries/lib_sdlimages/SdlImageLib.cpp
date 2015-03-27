@@ -41,7 +41,6 @@ void 	SdlImageLib::initLibrary( TMap & map )
 	this->head_r = SDL_LoadBMP("libraries/lib_sdlimages/img/head_r.bmp");
 	this->food = SDL_LoadBMP("libraries/lib_sdlimages/img/food.bmp");
 	this->rock = SDL_LoadBMP("libraries/lib_sdlimages/img/rock.bmp");
-
 }
 
 SdlImageLib::~SdlImageLib() {}
@@ -81,36 +80,62 @@ void SdlImageLib::printMap( TMap & map )
 	SDL_Surface		*surfacePtr;
 	bool			print = false;
 
+	// std::cout << "LA !!!!!!!!!" << std::endl;
 	SDL_FillRect(this->m_windowsurface, NULL, SDL_MapRGB(this->m_windowsurface->format, 255, 255, 255));
 
-	SDL_Rect yop;
-	yop.x = 30 * BLOCK_SIZE;
-	yop.y = 30 * BLOCK_SIZE;
-	SDL_BlitSurface(this->rock, NULL, this->m_windowsurface, &yop);
+	// SDL_Rect yop;
+	// yop.x = 30 * BLOCK_SIZE;
+	// yop.y = 30 * BLOCK_SIZE;
+	// SDL_BlitSurface(this->rock, NULL, this->m_windowsurface, &yop);
 
+	// std::cout << "ICI !!!!!!!!!" << std::endl;
 	for (int y = 0; y < map.size.getY(); y++)
 	{
 		for (int x = 0; x < map.size.getX(); x++)
 		{
-			if (map.map[y][x] == 'F')
+			// if (map.map[y][x] == 'F')
+			if (map.map[y][x] == TMap::food)
 			{
 				this->item_form.x = x * BLOCK_SIZE;
 				this->item_form.y = y * BLOCK_SIZE;
 				surfacePtr = this->food;
 				print = true;
 			}
-			else if (map.map[y][x] == '1')
+			// else if (map.map[y][x] == '1')
+			else if (map.map[y][x] == TMap::body_1)
 			{
 				this->item_form.x = x * BLOCK_SIZE;
 				this->item_form.y = y * BLOCK_SIZE;
 				surfacePtr = this->body;
 				print = true;
 			}
-			else if (map.map[y][x] == '*')
+			// else if (map.map[y][x] == '*')
+			else if (map.map[y][x] == TMap::head_u_1)
 			{
 				this->item_form.x = x * BLOCK_SIZE;
 				this->item_form.y = y * BLOCK_SIZE;
 				surfacePtr = this->head_u;
+				print = true;
+			}
+			else if (map.map[y][x] == TMap::head_d_1)
+			{
+				this->item_form.x = x * BLOCK_SIZE;
+				this->item_form.y = y * BLOCK_SIZE;
+				surfacePtr = this->head_d;
+				print = true;
+			}
+			else if (map.map[y][x] == TMap::head_l_1)
+			{
+				this->item_form.x = x * BLOCK_SIZE;
+				this->item_form.y = y * BLOCK_SIZE;
+				surfacePtr = this->head_l;
+				print = true;
+			}
+			else if (map.map[y][x] == TMap::head_r_1)
+			{
+				this->item_form.x = x * BLOCK_SIZE;
+				this->item_form.y = y * BLOCK_SIZE;
+				surfacePtr = this->head_r;
 				print = true;
 			}
 			if (print)
@@ -120,47 +145,16 @@ void SdlImageLib::printMap( TMap & map )
 	}
 
 	SDL_UpdateWindowSurface(this->m_fenetre);
-
-
-	// glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-	// glEnable (GL_BLEND);
-	// glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-	// int sY = static_cast<int>(round((map.size.getY() + 2) / 2));
-	// int sX = static_cast<int>(round((map.size.getX() + 2) / 2));
-
-	// this->drawFace(Vector2(-sX, -sY), Vector2(-sX, sY-1), Vector2(sX-1, sY-1), Vector2(sX-1, -sY));
-
-	// for(int y = -sY; y<sY; y++)
-	// {
-	// 	for(int x = -sX; x<sX; x++)
-	// 	{
-	// 		if((y == -sY || x == -sX) || (y == sY-1 || x == sX-1))
-	// 			this->drawVox(Vector3(x, y, 1), 2);
-	// 	}
-	// }
-
-	// for(int y = 0; y<map.size.getY(); y++)
-	// {
-	// 	for(int x = 0; x<map.size.getX(); x++)
-	// 	{
-	// 		if (map.map[y][x] == 'F')
-	// 			this->drawVox(Vector3(x-sX, y-sY, 1), 1);
-	// 		if (map.map[y][x] == '1')
-	// 			this->drawVox(Vector3(x-sX, y-sY, 1), 3);
-	// 		if (map.map[y][x] == '*')
-	// 			this->drawVox(Vector3(x-sX, y-sY, 1), 4);
-	// 	}
-	// }
-
-	// // Actualisation de la fenetre
-	// glFlush();
-	// SDL_GL_SwapWindow(m_fenetre);
 }
 
 void 	SdlImageLib::gameOver( std::string toPrint ) const {}
 
-SdlImageLib		*createLib() {return new SdlImageLib();}
+SdlImageLib		*createLib( void )
+{
+	return new SdlImageLib();
+}
 
-void			deleteLib(SdlImageLib * lib) {delete lib;}
+void			deleteLib(SdlImageLib * lib)
+{
+	delete lib;
+}

@@ -6,7 +6,7 @@
 //   By: mle-roy <mle-roy@student.42.fr>            +#+  +:+       +#+        //
 //                                                +#+#+#+#+#+   +#+           //
 //   Created: 2015/03/16 20:06:33 by mle-roy           #+#    #+#             //
-//   Updated: 2015/03/27 16:15:12 by mle-roy          ###   ########.fr       //
+//   Updated: 2015/03/27 19:28:26 by mle-roy          ###   ########.fr       //
 //                                                                            //
 // ************************************************************************** //
 
@@ -16,97 +16,133 @@
 #include <dlfcn.h>
 #include "GameManager.hpp"
 
+// const std::vector<std::vector<mapBlock>>		GameManager::_blocks [] =
+// {
+// 	std::vector<mapBlock> [] = {};
+// };
+
 // ** PRIVATE FUNCTION ** //
 
-bool			GameManager::_playerCollision(Player & play)
+void			GameManager::_playerCollision(Player & play, std::string reason)
 {
-	static_cast<void>(play);
-	return (true);
+	this->_endGame = "Player " + play.getName() + reason;
+	// this->_pause = true;
+	this->_isEnded = true;
+	// static_cast<void>(play);
+	// return (true);
 }
 
-bool			GameManager::_updateMap( void )
+TMap::mapBlock		GameManager::_updateHead(Vector2 const & direction, int player)
 {
-	bool								collision = false;
+	if (direction == UP && player == 1)
+		return TMap::mapBlock::head_u_1;
+	else if (direction == DOWN && player == 1)
+		return TMap::mapBlock::head_d_1;
+	else if (direction == LEFT && player == 1)
+		return TMap::mapBlock::head_l_1;
+	else if (direction == RIGHT && player == 1)
+		return TMap::mapBlock::head_r_1;
+	else if (direction == UP && player == 2)
+		return TMap::mapBlock::head_u_2;
+	else if (direction == DOWN && player == 2)
+		return TMap::mapBlock::head_d_2;
+	else if (direction == LEFT && player == 2)
+		return TMap::mapBlock::head_l_2;
+	else if (direction == RIGHT && player == 2)
+		return TMap::mapBlock::head_r_2;
+	return TMap::mapBlock::rock;
+}
+
+void			GameManager::_updateMap( void )
+{
+	// bool								collision = false;
 	std::list<Vector2>::iterator		itFood;
 	std::list<Vector2>::iterator		iteFood = this->_foods.end();
 	std::vector<Player>::iterator		itPlayer;
 	std::vector<Player>::iterator		itePlayer = this->_snakes.end();
+	int									player = 1;
 
-	// std::cout << "11" << std::endl;
+	// std::cout << "INN " << std::endl;
 	this->_setMap();
-	// memset(this->_map.map, 32, (this->_map.size._x * this->_map.size._y) * sizeof(char));
+	// std::cout << "INN2 " << std::endl;
 
-	// std::cout << "22" << std::endl;
 	for (itFood = this->_foods.begin(); itFood != iteFood; itFood++)
-		this->_map.map[itFood->getY()][itFood->getX()] = 'F';
-	// std::cout << "33" << std::endl;
+		this->_map.map[itFood->getY()][itFood->getX()] = TMap::mapBlock::food;
+		// this->_map.map[itFood->getY()][itFood->getX()] = 'F';
+
+	// std::cout << "INN3 " << std::endl;
 
 	char c = '1';
 	for (itPlayer = this->_snakes.begin(); itPlayer != itePlayer; itPlayer++)
 	{
-		// std::list<Vector2> const *				links = &(itPlayer->getLinks());
 		std::list<Vector2>::const_reverse_iterator		itLinks;
 		std::list<Vector2>::const_reverse_iterator		iteLinks = itPlayer->getLinks().rend();
-		// std::list<Vector2>::const_iterator		iteLinks = links->end();
-		//bool											head = true;
-		// std::cout << "44" << std::endl;
-		// std::cout << "size of " << itPlayer->getName() <<  " into the update ==> " << itPlayer->getLinks().size() << std::endl;
-		// std::cout << "55" << std::endl;
-		int pos = 0;
-		int size = itPlayer->getLinks().size();
+		int								pos = 0;
+		int								size = itPlayer->getLinks().size();
+		// std::cout << "FIRST LOOP" << std::endl;
 		this->_map.scores += " " + itPlayer->getName() + " : " + std::to_string(itPlayer->getScore());
-		// for (itLinks = links->begin(); itLinks != iteLinks; itLinks++)
+
 		for (itLinks = itPlayer->getLinks().rbegin(); itLinks != iteLinks; itLinks++)
 		{
-			// std::cout << "YOLOOOO" << std::endl;
-			// std::cout << "Link Y : " << itLinks->getY() << " - X : " << itLinks->getX() << std::endl;
+			// std::cout << "SECOND LOOP" << std::endl;
 			if (pos == (size - 1))
 			{
-				if (itLinks->getY() < 0 || itLinks->getY() >= this->_map.size.getY() || itLinks->getX() < 0 || itLinks->getX() >= this->_map.size.getX())
-				{
-					collision = true;
-					// std::cout << "YOLOOOO111GAMELKMDFKLMSDF" << std::endl;
-					this->_endGame = "Player " + itPlayer->getName() + " hit a wall !";
-					this->_pause = true;
-					this->_isEnded = true;
-				}
+				// std::cout << "HEAD !!!!" << std::endl;
+				if (itLinks->getY() < 0 || itLinks->getY() >= this->_map.size.getY()
+					|| itLinks->getX() < 0 || itLinks->getX() >= this->_map.size.getX())
+					this->_playerCollision(*itPlayer, " hitted a wall !");
+				// {
+				// 	// collision = true;
+				// 	this->_endGame = "Player " + itPlayer->getName() + " hit a wall !";
+				// 	this->_pause = true;
+				// 	this->_isEnded = true;
+				// }
 				else
 				{
-					if (this->_map.map[itLinks->getY()][itLinks->getX()] == 'F')
+					// std::cout << "HERE" << std::endl;
+					if (this->_map.map[itLinks->getY()][itLinks->getX()] == TMap::mapBlock::food)
+					// if (this->_map.map[itLinks->getY()][itLinks->getX()] == 'F')
 						this->_eatFood(*itPlayer);
-					else if (this->_map.map[itLinks->getY()][itLinks->getX()] != 32)
-					{
-						collision = true;
-						// std::cout << "YOLOOOO2GAMEOBER" << std::endl;
-						this->_endGame = "Player " + itPlayer->getName() + " ate himself !";
-						this->_pause = true;
-						this->_isEnded = true;
-					}
-					this->_map.map[itLinks->getY()][itLinks->getX()] = '*';
+					// else if (this->_map.map[itLinks->getY()][itLinks->getX()] != 32)
+					else if (this->_map.map[itLinks->getY()][itLinks->getX()] != TMap::mapBlock::empty)
+						this->_playerCollision(*itPlayer, " ate himself !");
+					// {
+					// 	collision = true;
+					// 	this->_endGame = "Player " + itPlayer->getName() + " ate himself !";
+					// 	this->_pause = true;
+					// 	this->_isEnded = true;
+					// }
+					this->_map.map[itLinks->getY()][itLinks->getX()] = this->_updateHead(itPlayer->getDir(), player);
+					// this->_map.map[itLinks->getY()][itLinks->getX()] = '*';
 				}
-				//head = false;
 			}
-			else
-				this->_map.map[itLinks->getY()][itLinks->getX()] = c;
+			// else
+			// 	this->_map.map[itLinks->getY()][itLinks->getX()] = c;
+			else if (player == 1)
+				this->_map.map[itLinks->getY()][itLinks->getX()] = TMap::mapBlock::body_1;
+			else if (player == 2)
+				this->_map.map[itLinks->getY()][itLinks->getX()] = TMap::mapBlock::body_2;
 			pos++;
 		}
-		// std::cout << "WUT ?????1111" << std::endl;
+		// std::cout << "OUT FINAL " << std::endl;
 		c++;
+		player++;
 	}
 	if (this->_foods.empty())
 		this->_generateFood();
-	return (collision);
+	// std::cout << "FINALLLLLL " << std::endl;
+	// return (collision);
 }
 
 void	GameManager::_generateFood( void )
 {
-
 	do
 	{
 		int rx = rand() % this->_map.size._x;
 		int ry = rand() % this->_map.size._y;
 
-		if (this->_map.map[ry][rx] == 32)
+		// if (this->_map.map[ry][rx] == 32)
+		if (this->_map.map[ry][rx] == TMap::mapBlock::empty)
 			this->_foods.push_back(Vector2(rx, ry));
 
 	}
@@ -126,7 +162,8 @@ void			GameManager::_setMap( void )
 	for (int i = 0; i < this->_map.size.getY(); i++)
 	{
 		for (int x = 0; x < this->_map.size.getX(); x++)
-			this->_map.map[i][x] = 32;
+			this->_map.map[i][x] = TMap::mapBlock::empty;
+			// this->_map.map[i][x] = 32;
 	}
 	this->_map.scores = "";
 }
@@ -292,10 +329,14 @@ void	GameManager::Update( void )
 	// this->_timer.updateTimeAdd(300000, MICRO_SECONDS);
 	this->_timer.updateTimeAdd(this->_timeTick, MICRO_SECONDS);
 	// this->_timer.updateTimeAdd(100000, MICRO_SECONDS);
+	// std::cout << "GM0" << std::endl;
 	this->_lib->initLibrary(this->_map);
+	// std::cout << "GM1" << std::endl;
 	this->_updateMap();
+	// std::cout << "GM2" << std::endl;
 	while (42)
 	{
+		// std::cout << "GM3" << std::endl;
 		// for(int y=0; y<_map.size._y; y++)
 		// {
 		// 	for(int x=0; x<_map.size._x; x++)
@@ -315,16 +356,19 @@ void	GameManager::Update( void )
 			// std::cout << "GM5" << std::endl;
 			if (this->_checkInput())
 				break ;
+			// if (this->_isEnded)
+			// 	continue ;
 			if (this->_pause || this->_isEnded)
 				continue;
 			// std::cout << "GM6" << std::endl;
 			this->_movesSnakes();
 			// std::cout << "GM7" << std::endl;
-			if (this->_updateMap())
-			{
-				this->_lib->gameOver(this->_endGame);
-				// break ;
-			}
+			this->_updateMap();
+			// if (this->_updateMap())
+			// {
+			// 	this->_lib->gameOver(this->_endGame);
+			// 	// break ;
+			// }
 			// input = -1;
 		}
 	}
