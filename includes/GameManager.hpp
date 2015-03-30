@@ -6,7 +6,7 @@
 //   By: mle-roy <mle-roy@student.42.fr>            +#+  +:+       +#+        //
 //                                                +#+#+#+#+#+   +#+           //
 //   Created: 2015/03/16 19:55:34 by mle-roy           #+#    #+#             //
-//   Updated: 2015/03/27 18:57:25 by mle-roy          ###   ########.fr       //
+//   Updated: 2015/03/30 19:43:30 by mle-roy          ###   ########.fr       //
 //                                                                            //
 // ************************************************************************** //
 
@@ -28,13 +28,13 @@ private:
 	TMap							_map;
 	int								_players;
 	ft_timer						_timer;
-	std::vector<Player>				_snakes;
-	std::list<Vector2>				_foods;
+	// std::vector<Player>				_snakes;//MAP
+	// std::list<Vector2>				_foods;//MAP
 	std::vector<std::string>		_libs;
-	std::string						_endGame;
+	// std::string						_endGame;//SUPP
 	IGraphicLib *					_lib;
-	bool							_pause;
-	bool							_isEnded;
+	// bool							_pause;//MAP
+	// bool							_isEnded;//MAP
 	void *							_dl_handle;
 	bool							_isLibInit;
 	int								_input;
@@ -53,7 +53,8 @@ private:
 	void			_setMap( void );
 	void			_changeTimer( int input );
 	void			_playerCollision( Player & play, std::string reason);
-	TMap::mapBlock	_updateHead(Vector2 const & direction, int player);
+	// TMap::mapBlock	_updateHead(Vector2 const & direction, int player);
+	bool			_checkCollision(Vector2 somePlace, std::list<Vector2>::const_iterator it, std::list<Vector2>::const_iterator ite)
 
 
 	GameManager( void );

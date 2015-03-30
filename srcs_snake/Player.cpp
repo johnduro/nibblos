@@ -6,7 +6,7 @@
 /*   By: ael-kadh <ael-kadh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/03/16 15:48:42 by ael-kadh          #+#    #+#             */
-//   Updated: 2015/03/26 13:17:32 by mle-roy          ###   ########.fr       //
+//   Updated: 2015/03/30 19:42:27 by mle-roy          ###   ########.fr       //
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,17 +68,35 @@ Player &   Player::operator=(Player const & src)
 
 /* --------------------------- SETTERS & GETTERS --------------------------- */
 
-int						Player::getLength() const {return this->_length;}
+int						Player::getLength( void ) const
+{
+	return this->_length;
+}
 
-Vector2 const &			Player::getDir() const {return this->_dir;}
+Vector2 const &			Player::getDir( void ) const
+{
+	return this->_dir;
+}
 
-std::string const &		Player::getName() const {return this->_name;}
+std::string const &		Player::getName( void ) const
+{
+	return this->_name;
+}
 
-Vector2 const &			Player::getLast() const {return this->_last;}
+Vector2 const &			Player::getLast( void ) const
+{
+	return this->_last;
+}
 
-Vector2 const &			Player::getHead() const {return this->_links.front();}
+Vector2 const &			Player::getHead( void ) const
+{
+	return this->_links.front();
+}
 
-std::list<Vector2> const &		Player::getLinks( void ) const {return this->_links;}
+std::list<Vector2> const &		Player::getLinks( void ) const
+{
+	return this->_links;
+}
 
 int						Player::getScore( void ) const {return this->_score;}
 

@@ -6,7 +6,7 @@
 /*   By: ael-kadh <ael-kadh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/03/16 15:48:46 by ael-kadh          #+#    #+#             */
-//   Updated: 2015/03/18 17:46:44 by mle-roy          ###   ########.fr       //
+//   Updated: 2015/03/30 18:21:30 by mle-roy          ###   ########.fr       //
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,7 @@ public:
 	std::string const &				getName( void ) const ;
 	Vector2 const &					getLast( void ) const ;
 	Vector2	const &					getHead( void ) const ;
+	// std::list<Vector2>::const_iterator			getBody( void ) const ;
 	std::list<Vector2> const &		getLinks( void ) const ;
 	int								getScore( void ) const ;
 
