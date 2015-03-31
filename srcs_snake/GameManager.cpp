@@ -350,3 +350,21 @@ void	GameManager::Update( void )
 		}
 	}
 }
+
+
+GameManager::GameManagerException::GameManagerException( std::string const & errorMsg ) throw()
+	: std::runtime_error(errorMsg)
+{
+
+}
+
+const char*					GameManager::GameManagerException::what() const throw()
+{
+	std::string ret = "Game Manager exception : " + std::string(std::runtime_error::what());
+	return ret.c_str();
+}
+
+GameManager::GameManagerException::~GameManagerException() throw()
+{
+	return ;
+}

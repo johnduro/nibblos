@@ -82,6 +82,19 @@ public:
 	~GameManager();
 
 	void	Update();
+
+	class GameManagerException : public std::runtime_error
+	{
+	private:
+		GameManagerException const & operator=(GameManagerException const &) throw();
+		GameManagerException() throw();
+
+	public:
+		GameManagerException(std::string const & errorMsg) throw();
+		~GameManagerException() throw();
+		virtual const char* 		what() const throw();
+
+	};
 };
 
 #endif // ** GAMEMANAGER_HPP ** //
