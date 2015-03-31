@@ -6,7 +6,7 @@
 //   By: mle-roy <mle-roy@student.42.fr>            +#+  +:+       +#+        //
 //                                                +#+#+#+#+#+   +#+           //
 //   Created: 2015/03/17 17:17:43 by mle-roy           #+#    #+#             //
-//   Updated: 2015/03/31 17:10:04 by mle-roy          ###   ########.fr       //
+//   Updated: 2015/03/31 19:12:32 by mle-roy          ###   ########.fr       //
 //                                                                            //
 // ************************************************************************** //
 
@@ -165,6 +165,12 @@ int		NCurseLib::getInput( void )
 			return (STD_PLUS);
 		case NC_MINUS:
 			return (STD_MINUS);
+		case KEY_F(1):
+			return (STD_LIB1);
+		case KEY_F(2):
+			return (STD_LIB2);
+		case KEY_F(3):
+			return (STD_LIB3);
 	}
 	return (0);
 }

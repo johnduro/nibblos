@@ -72,6 +72,12 @@ int		SdlImageLib::getInput( void )
 		return STD_UP;
 	if (m_evenements.key.keysym.sym == SDLK_DOWN)
 		return STD_DOWN;
+	if (m_evenements.key.keysym.sym == SDLK_F1)
+		return STD_LIB1;
+	if (m_evenements.key.keysym.sym == SDLK_F2)
+		return STD_LIB2;
+	if (m_evenements.key.keysym.sym == SDLK_F3)
+		return STD_LIB3;
 	return 0;
 }
 

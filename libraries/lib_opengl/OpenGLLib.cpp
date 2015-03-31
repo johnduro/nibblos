@@ -371,18 +371,24 @@ int		SceneOpenGL::getInput( void )
 
 	SDL_PollEvent(&m_evenements);
 
-	if(m_evenements.window.event == SDL_WINDOWEVENT_CLOSE || m_evenements.window.event == SDLK_q)
+	if (m_evenements.window.event == SDL_WINDOWEVENT_CLOSE || m_evenements.window.event == SDLK_q)
 		return STD_EXIT;
-	if(m_evenements.window.event == SDLK_SPACE)
+	if (m_evenements.window.event == SDLK_SPACE)
 		return STD_SPACE;
-	if(m_evenements.key.keysym.sym == SDLK_RIGHT)
+	if (m_evenements.key.keysym.sym == SDLK_RIGHT)
 		return STD_RIGHT;
-	if(m_evenements.key.keysym.sym == SDLK_LEFT)
+	if (m_evenements.key.keysym.sym == SDLK_LEFT)
 		return STD_LEFT;
-	if(m_evenements.key.keysym.sym == SDLK_UP)
+	if (m_evenements.key.keysym.sym == SDLK_UP)
 		return STD_UP;
-	if(m_evenements.key.keysym.sym == SDLK_DOWN)
+	if (m_evenements.key.keysym.sym == SDLK_DOWN)
 		return STD_DOWN;
+	if (m_evenements.key.keysym.sym == SDLK_F1)
+		return STD_LIB1;
+	if (m_evenements.key.keysym.sym == SDLK_F2)
+		return STD_LIB2;
+	if (m_evenements.key.keysym.sym == SDLK_F3)
+		return STD_LIB3;
 	return 0;
 }
 
@@ -400,11 +406,11 @@ void SceneOpenGL::printMap( TMap const & map )
 
 	this->drawFace(Vector2(-sX, -sY), Vector2(-sX, sY - 1), Vector2(sX - 1, sY - 1), Vector2(sX - 1, -sY));
 
-	for (int y = -sY; y < sY; y++)
+	for (int y = -sY-1; y < sY; y++)
 	{
-		for (int x = -sX; x < sX; x++)
+		for (int x = -sX-1; x < sX; x++)
 		{
-			if ((y == -sY || x == -sX) || (y == sY - 1 || x == sX - 1))
+			if ((y == -sY-1 || x == -sX-1) || (y == sY - 1 || x == sX - 1))
 				this->drawVox(Vector3(x, y, 1), 2);
 		}
 	}
@@ -430,7 +436,7 @@ void SceneOpenGL::printMap( TMap const & map )
 		ite = map.foods.end();
 		for (it = map.foods.begin(); it != ite; it++)
 		{
-			std::cout << "x= " <<  it->getX() << ", y= " << it->getY() << std::endl;
+			// std::cout << "x= " <<  it->getX() << ", y= " << it->getY() << std::endl;
 			this->drawVox(Vector3(it->getX() - sX, it->getY() - sY, 1), 1);
 		}
 	}

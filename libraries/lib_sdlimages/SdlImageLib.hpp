@@ -26,8 +26,8 @@ class SdlImageLib : IGraphicLib
 {
 public:
 
-    SdlImageLib();
-    ~SdlImageLib();
+    SdlImageLib( void );
+    ~SdlImageLib( void );
 
     void		initLibrary( TMap & map );
     void		closeLibrary( void );

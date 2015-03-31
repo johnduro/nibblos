@@ -6,7 +6,7 @@
 //   By: mle-roy <mle-roy@student.42.fr>            +#+  +:+       +#+        //
 //                                                +#+#+#+#+#+   +#+           //
 //   Created: 2015/03/16 20:06:33 by mle-roy           #+#    #+#             //
-//   Updated: 2015/03/31 16:37:16 by mle-roy          ###   ########.fr       //
+//   Updated: 2015/03/31 19:52:02 by mle-roy          ###   ########.fr       //
 //                                                                            //
 // ************************************************************************** //
 
@@ -154,7 +154,19 @@ void			GameManager::_gameSpeed( int input )
 
 void			GameManager::_gameLib( int input )
 {
-	static_cast<void>(input);
+	int			lib = 0;
+
+	if (input == STD_LIB1)
+		lib = 0;
+	else if (input == STD_LIB2)
+		lib = 1;
+	else if (input == STD_LIB3)
+		lib = 2;
+	if (this->_libs.size() > static_cast<unsigned long>(lib) && this->_libs[lib] != this->_initiatedLib)
+	{
+		this->_initLib(this->_libs[lib]);
+		this->_lib->initLibrary(this->_map);
+	}
 }
 
 void			GameManager::_playerTwoMvt( int input )
@@ -218,6 +230,11 @@ void			GameManager::_initLib( std::string lib )
 	if (this->_isLibInit == true)
 		this->_closeLib();
 	this->_dl_handle = dlopen(lib.c_str(), RTLD_LAZY | RTLD_LOCAL);
+	if (!this->_dl_handle)
+	{
+		std::cout << "FAIL LIB HANDLE ! " << std::endl;
+		exit(-1);
+	}
 	LibCreator = (IGraphicLib *(*)(void)) dlsym(this->_dl_handle, "createLib");
 	if (!LibCreator)
 	{
@@ -226,6 +243,7 @@ void			GameManager::_initLib( std::string lib )
 	}
 	this->_lib = LibCreator();
 	this->_isLibInit = true;
+	this->_initiatedLib = lib;
 }
 
 void			GameManager::_closeLib( void )

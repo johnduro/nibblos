@@ -6,7 +6,7 @@
 //   By: mle-roy <mle-roy@student.42.fr>            +#+  +:+       +#+        //
 //                                                +#+#+#+#+#+   +#+           //
 //   Created: 2015/03/16 19:55:34 by mle-roy           #+#    #+#             //
-//   Updated: 2015/03/31 15:43:33 by mle-roy          ###   ########.fr       //
+//   Updated: 2015/03/31 19:23:18 by mle-roy          ###   ########.fr       //
 //                                                                            //
 // ************************************************************************** //
 
@@ -45,6 +45,7 @@ private:
 	int								_timeTick;
 	bool							_isExited;
 	std::map<int, inputFunctionPtr>	_inputFunction;
+	std::string						_initiatedLib;
 	// static const std::vector<std::vector<mapBlock>>		_blocks;
 
 
