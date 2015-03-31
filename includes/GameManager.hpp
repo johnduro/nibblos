@@ -6,7 +6,7 @@
 //   By: mle-roy <mle-roy@student.42.fr>            +#+  +:+       +#+        //
 //                                                +#+#+#+#+#+   +#+           //
 //   Created: 2015/03/16 19:55:34 by mle-roy           #+#    #+#             //
-//   Updated: 2015/03/30 19:43:30 by mle-roy          ###   ########.fr       //
+//   Updated: 2015/03/31 15:43:33 by mle-roy          ###   ########.fr       //
 //                                                                            //
 // ************************************************************************** //
 
@@ -15,6 +15,7 @@
 
 #include <vector>
 #include <list>
+#include <map>
 #include "Player.hpp"
 #include "ft_timer.hpp"
 #include "TMap.hpp"
@@ -25,6 +26,9 @@
 class GameManager
 {
 private:
+
+	typedef void  (GameManager::*inputFunctionPtr)(int input);
+
 	TMap							_map;
 	int								_players;
 	ft_timer						_timer;
@@ -39,22 +43,33 @@ private:
 	bool							_isLibInit;
 	int								_input;
 	int								_timeTick;
+	bool							_isExited;
+	std::map<int, inputFunctionPtr>	_inputFunction;
 	// static const std::vector<std::vector<mapBlock>>		_blocks;
+
+
+	void			_playerOneMvt( int input );
+	void			_gamePause( int input );
+	void			_gameExit( int input );
+	void			_gameSpeed( int input );
+	void			_gameLib( int input );
+	void			_playerTwoMvt( int input );
 
 
 	void			_updateMap( void );
 	void			_eatFood( Player & play );
 	void			_initMap( Vector2 size );
-	bool			_checkInput( void );
+	void			_checkInput( void );
 	void			_movesSnakes( void );
 	void			_generateFood( void );
 	void			_initLib( std::string lib );
 	void			_closeLib( void );
 	void			_setMap( void );
 	void			_changeTimer( int input );
-	void			_playerCollision( Player & play, std::string reason);
+	void			_playerCollision( Player & play, std::string const & reason);
 	// TMap::mapBlock	_updateHead(Vector2 const & direction, int player);
-	bool			_checkCollision(Vector2 somePlace, std::list<Vector2>::const_iterator it, std::list<Vector2>::const_iterator ite)
+	bool			_checkCollision(Vector2 somePlace, std::list<Vector2>::const_iterator it, std::list<Vector2>::const_iterator ite);
+
 
 
 	GameManager( void );

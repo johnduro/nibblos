@@ -1,6 +1,6 @@
 
 #include "SdlImageLib.hpp"
-
+#include "Player.hpp"
 // Constructeur de Destucteur
 
 SdlImageLib::SdlImageLib( void )
@@ -75,7 +75,7 @@ int		SdlImageLib::getInput( void )
 	return 0;
 }
 
-void SdlImageLib::printMap( TMap & map )
+void SdlImageLib::printMap( TMap const & map )
 {
 	SDL_Surface		*surfacePtr;
 	bool			print = false;
@@ -88,62 +88,71 @@ void SdlImageLib::printMap( TMap & map )
 	// yop.y = 30 * BLOCK_SIZE;
 	// SDL_BlitSurface(this->rock, NULL, this->m_windowsurface, &yop);
 
-	// std::cout << "ICI !!!!!!!!!" << std::endl;
-	for (int y = 0; y < map.size.getY(); y++)
+	std::list<Vector2>::const_iterator		it;
+	std::list<Vector2>::const_iterator		ite;
+
+	std::vector<Player>::const_iterator		itP;
+	std::vector<Player>::const_iterator		iteP;
+
+
+	if (map.foods.size() > 0)
 	{
-		for (int x = 0; x < map.size.getX(); x++)
+		ite = map.foods.end();
+		for (it = map.foods.begin(); it != ite; it++)
 		{
-			// if (map.map[y][x] == 'F')
-			if (map.map[y][x] == TMap::food)
-			{
-				this->item_form.x = x * BLOCK_SIZE;
-				this->item_form.y = y * BLOCK_SIZE;
-				surfacePtr = this->food;
-				print = true;
-			}
-			// else if (map.map[y][x] == '1')
-			else if (map.map[y][x] == TMap::body_1)
-			{
-				this->item_form.x = x * BLOCK_SIZE;
-				this->item_form.y = y * BLOCK_SIZE;
-				surfacePtr = this->body;
-				print = true;
-			}
-			// else if (map.map[y][x] == '*')
-			else if (map.map[y][x] == TMap::head_u_1)
-			{
-				this->item_form.x = x * BLOCK_SIZE;
-				this->item_form.y = y * BLOCK_SIZE;
-				surfacePtr = this->head_u;
-				print = true;
-			}
-			else if (map.map[y][x] == TMap::head_d_1)
-			{
-				this->item_form.x = x * BLOCK_SIZE;
-				this->item_form.y = y * BLOCK_SIZE;
-				surfacePtr = this->head_d;
-				print = true;
-			}
-			else if (map.map[y][x] == TMap::head_l_1)
-			{
-				this->item_form.x = x * BLOCK_SIZE;
-				this->item_form.y = y * BLOCK_SIZE;
-				surfacePtr = this->head_l;
-				print = true;
-			}
-			else if (map.map[y][x] == TMap::head_r_1)
-			{
-				this->item_form.x = x * BLOCK_SIZE;
-				this->item_form.y = y * BLOCK_SIZE;
-				surfacePtr = this->head_r;
-				print = true;
-			}
-			if (print)
-				SDL_BlitSurface(surfacePtr, NULL, this->m_windowsurface, &this->item_form);
-			print = false;
+			this->item_form.x = it->getX() * BLOCK_SIZE;
+			this->item_form.y = it->getY() * BLOCK_SIZE;
+			SDL_BlitSurface(this->food, NULL, this->m_windowsurface, &this->item_form);
 		}
 	}
+	if (map.rocks.size() > 0)
+	{
+		ite = map.rocks.end();
+		for (it = map.rocks.begin(); it != ite; it++)
+		{
+			this->item_form.x = it->getX() * BLOCK_SIZE;
+			this->item_form.y = it->getY() * BLOCK_SIZE;
+			SDL_BlitSurface(this->rock, NULL, this->m_windowsurface, &this->item_form);
+		}
+	}
+	if (map.snakes.size() > 0)
+	{
+		bool		head;
+		Vector2		dir;
 
+		iteP = map.snakes.end();
+		for (itP = map.snakes.begin(); itP != iteP; itP++)
+		{
+			head = true;
+			dir = itP->getDir();
+			// if (itP != map.snakes.begin())
+			// {
+			// 	headPrint = NC_YELLOW;
+			// 	bodyPrint = NC_MAGENTA;
+			// }
+			ite = itP->getLinks().end();
+			for (it = itP->getLinks().begin(); it != ite; it++)
+			{
+				this->item_form.x = it->getX() * BLOCK_SIZE;
+				this->item_form.y = it->getY() * BLOCK_SIZE;
+				if (head)
+				{
+					if (dir == UP)
+						surfacePtr = this->head_u;
+					else if (dir == DOWN)
+						surfacePtr = this->head_d;
+					else if (dir == LEFT)
+						surfacePtr = this->head_l;
+					else if (dir == RIGHT)
+						surfacePtr = this->head_r;
+					SDL_BlitSurface(surfacePtr, NULL, this->m_windowsurface, &this->item_form);
+					head = false;
+				}
+				else
+					SDL_BlitSurface(this->body, NULL, this->m_windowsurface, &this->item_form);
+			}
+		}
+	}
 	SDL_UpdateWindowSurface(this->m_fenetre);
 }
 

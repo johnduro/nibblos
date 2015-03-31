@@ -6,7 +6,7 @@
 //   By: mle-roy <mle-roy@student.42.fr>            +#+  +:+       +#+        //
 //                                                +#+#+#+#+#+   +#+           //
 //   Created: 2015/03/17 17:07:38 by mle-roy           #+#    #+#             //
-//   Updated: 2015/03/26 14:37:42 by mle-roy          ###   ########.fr       //
+//   Updated: 2015/03/31 13:58:10 by mle-roy          ###   ########.fr       //
 //                                                                            //
 // ************************************************************************** //
 
@@ -25,6 +25,13 @@
 # define NC_PLUS 43
 # define NC_MINUS 45
 
+# define NC_WHITE 1
+# define NC_RED 2
+# define NC_GREEN 3
+# define NC_YELLOW 4
+# define NC_MAGENTA 5
+# define NC_BW 6
+
 class NCurseLib : public IGraphicLib
 {
 private:
@@ -38,9 +45,10 @@ private:
 
 	void	_refresh( void ) const;
 	void	_drawBorders(WINDOW *screen) const;
+	void	_printEntity(Vector2 coord, char toPrint, int colorPair, Vector2 mapSize);
 
 public:
-	void	printMap(TMap & map) ;
+	void	printMap( TMap const & map );
 	int		getInput( void );
 	void	gameOver( std::string toPrint ) const;
 	void	initLibrary( TMap & map );

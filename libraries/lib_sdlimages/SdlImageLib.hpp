@@ -31,7 +31,7 @@ public:
 
     void		initLibrary( TMap & map );
     void		closeLibrary( void );
-    void		printMap( TMap & map );
+    void		printMap( TMap const & map );
     int			getInput( void );
     void		gameOver( std::string toPrint ) const;
 

@@ -21,46 +21,46 @@
 
 class SceneOpenGL : IGraphicLib
 {
-    public:
+public:
 
-    SceneOpenGL();
-    ~SceneOpenGL();
+    SceneOpenGL( void );
+    ~SceneOpenGL( void );
 
     void	initLibrary( TMap & map );
-    void closeLibrary();
-    void printMap(TMap &map);
-    int  getInput();
-    void gameOver( std::string toPrint ) const;
+    void	closeLibrary( void );
+    void	printMap( TMap const & map );
+    int		getInput( void );
+    void	gameOver( std::string toPrint ) const;
 
-   private:
+private:
 
-   std::vector<Vector3> * points_high;
-   std::vector<Vector3> * points_down;
-   std::vector<Vector3> * points_left;
-   std::vector<Vector3> * points_right;
+	std::vector<Vector3> *		points_high;
+	std::vector<Vector3> *		points_down;
+	std::vector<Vector3> *		points_left;
+	std::vector<Vector3> *		points_right;
 
-   float   echelle;
+	float   echelle;
 	Vector3 scale;
 
-    std::string m_titreFenetre;
-    int m_largeurFenetre;
-    int m_hauteurFenetre;
+    std::string		m_titreFenetre;
+    int				m_largeurFenetre;
+    int				m_hauteurFenetre;
 
-    SDL_Window* m_fenetre;
-    SDL_GLContext m_contexteOpenGL;
-    SDL_Event m_evenements;
+    SDL_Window*		m_fenetre;
+    SDL_GLContext	m_contexteOpenGL;
+    SDL_Event		m_evenements;
 
-    bool initialiserFenetre();
-    bool initGL();
+    bool			initialiserFenetre( void );
+    bool			initGL( void );
 
-   Vector3 setColor(float height, float echelle);
-   void drawDot(Vector3 p);
-   void drawLine(Vector3 p1, Vector3 p2);
-   void drawTriangles(Vector3 p1, Vector3 p2, Vector3 p3, float echelle);
-   void drawQuad(Vector3 p1, Vector3 p2, Vector3 p3, Vector3 p4);
-   float*   getTheFucknColor(float r, float g, float b, float a) const;
-   void     drawVox(Vector3 p, int type) const;
-   void     drawFace(Vector2 a, Vector2 b, Vector2 c, Vector2 g);
+	Vector3			setColor(float height, float echelle);
+	void			drawDot(Vector3 p);
+	void			drawLine(Vector3 p1, Vector3 p2);
+	void			drawTriangles(Vector3 p1, Vector3 p2, Vector3 p3, float echelle);
+	void			drawQuad(Vector3 p1, Vector3 p2, Vector3 p3, Vector3 p4);
+	float*			getTheFucknColor(float r, float g, float b, float a) const;
+	void			drawVox(Vector3 p, int type) const;
+	void			drawFace(Vector2 a, Vector2 b, Vector2 c, Vector2 g);
 };
 
 extern "C" {

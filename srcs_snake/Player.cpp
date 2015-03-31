@@ -6,7 +6,7 @@
 /*   By: ael-kadh <ael-kadh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/03/16 15:48:42 by ael-kadh          #+#    #+#             */
-//   Updated: 2015/03/30 19:42:27 by mle-roy          ###   ########.fr       //
+//   Updated: 2015/03/31 12:00:29 by mle-roy          ###   ########.fr       //
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,13 +38,13 @@ void		Player::_initFirstSnake(Vector2 pos, Vector2 dir)
 }
 
 Player::Player(std::string name, Vector2 pos)
-	: _length(4), _dir(RIGHT), _name(name), _score(0), _scoreMod(5)
+	: _length(4), _dir(RIGHT), _name(name), _score(0), _scoreMod(5), _isAlive(true)
 {
 	this->_initFirstSnake(pos, RIGHT);
 }
 
 Player::Player(std::string name, Vector2 pos, Vector2 dir)
-	: _length(4), _dir(dir), _name(name), _score(0), _scoreMod(5)
+	: _length(4), _dir(dir), _name(name), _score(0), _scoreMod(5), _isAlive(true)
 {
 	this->_initFirstSnake(pos, dir);
 }
@@ -98,7 +98,20 @@ std::list<Vector2> const &		Player::getLinks( void ) const
 	return this->_links;
 }
 
-int						Player::getScore( void ) const {return this->_score;}
+int						Player::getScore( void ) const
+{
+	return this->_score;
+}
+
+bool					Player::isAlive( void ) const
+{
+	return (this->_isAlive);
+}
+
+std::string const &		Player::getDeathReason( void ) const
+{
+	return (this->_deathReason);
+}
 
 void					Player::addLink( void )
 {
@@ -130,6 +143,16 @@ void					Player::setDir(int input)
 void					Player::setLast( void )
 {
 	this->_last = this->_links.back();
+}
+
+void					Player::setIsAlive( bool alive )
+{
+	this->_isAlive = alive;
+}
+
+void					Player::setDeathReason( std::string const & reason )
+{
+	this->_deathReason = reason;
 }
 
 /* ------------------------------ Methodes ---------------------------- */

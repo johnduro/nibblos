@@ -38,7 +38,7 @@ TOOLS				=		$(addprefix $(TOOLS_OBJ)/, $(notdir $(SRC_TOOLS:.cpp=.o)))
 
 all: $(NAME)
 
-$(NAME): | $(TOOLS) libz $(OBJ)
+$(NAME): | $(TOOLS)  $(OBJ) libz
 	$(COMPILER) -o  $@ $(OBJ) $(TOOLS)
 	@echo [ $(NAME) ] " compilation ... " $(OK)
 
@@ -58,17 +58,17 @@ libz: $(NCURSE_SO) $(OPENGL_SO) $(SDLIMAGES_SO)
 	@echo "Librairies compilation ... " $(OK)
 
 $(NCURSE_SO): $(wildcard $(SRC_LIB)/$(LIB_NCURSES)*.cpp) $(wildcard $(SRC_TOOLS_DIR)/*.cpp)
-	$(COMPILER) $(DLFLAGS) -lncurses -o $(NCURSE_SO) $(wildcard $(SRC_LIB)/$(LIB_NCURSES)/*.cpp) $(TOOLS)
+	$(COMPILER) $(DLFLAGS) -lncurses -o $(NCURSE_SO) $(wildcard $(SRC_LIB)/$(LIB_NCURSES)/*.cpp) $(OBJ_DIR)/Player.o $(TOOLS)
 	@echo "Compiling " [ $(NCURSE_SO) ] " ... " $(OK)
 
 $(OPENGL_SO): $(wildcard $(SRC_LIB)/$(LIB_OPENGL)/*.cpp) $(wildcard $(SRC_TOOLS_DIR)/*.cpp)
 	$(COMPILER) $(DLFLAGS) -F ~/Library/Frameworks -framework SDL2 -I ~/Library/Frameworks/SDL2.framework/Headers -framework OpenGL \
-	-o $(OPENGL_SO) $(wildcard $(SRC_LIB)/$(LIB_OPENGL)/*.cpp) $(TOOLS)
+	-o $(OPENGL_SO) $(wildcard $(SRC_LIB)/$(LIB_OPENGL)/*.cpp) $(OBJ_DIR)/Player.o $(TOOLS)
 	@echo "Compiling " [ $(OPENGL_SO) ] " ... " $(OK)
 
 $(SDLIMAGES_SO): $(wildcard $(SRC_LIB)/$(LIB_SDLIMAGES)/*.cpp) $(wildcard $(SRC_TOOLS_DIR)/*.cpp)
 	$(COMPILER) $(DLFLAGS) -F ~/Library/Frameworks -framework SDL2 -I ~/Library/Frameworks/SDL2.framework/Headers -I ~/Library/Frameworks/SDL2_image.framework/Headers -framework SDL2_image \
-	-o $(SDLIMAGES_SO) $(wildcard $(SRC_LIB)/$(LIB_SDLIMAGES)/*.cpp) $(TOOLS)
+	-o $(SDLIMAGES_SO) $(wildcard $(SRC_LIB)/$(LIB_SDLIMAGES)/*.cpp) $(OBJ_DIR)/Player.o $(TOOLS)
 	@echo "Compiling " [ $(SDLIMAGES_SO) ] " ... " $(OK)
 
 # OBJ

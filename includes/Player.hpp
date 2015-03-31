@@ -6,7 +6,7 @@
 /*   By: ael-kadh <ael-kadh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/03/16 15:48:46 by ael-kadh          #+#    #+#             */
-//   Updated: 2015/03/30 18:21:30 by mle-roy          ###   ########.fr       //
+//   Updated: 2015/03/31 15:35:21 by mle-roy          ###   ########.fr       //
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,14 +35,16 @@ private:
 	Vector2 				_last;
 	int						_score;
 	int						_scoreMod;
-	Player( void );
+	bool					_isAlive;
+	std::string				_deathReason;
 
+	Player( void );
 	void		_initFirstSnake(Vector2 pos, Vector2 dir);
 
 public:
       /* ------------ Constructors & Destructors ------------- */
 
-	~Player();
+	~Player( void );
       // Player(Vector2 pos);
 	Player(std::string name, Vector2 pos);
 	Player(std::string name, Vector2 pos, Vector2 dir);
@@ -60,11 +62,15 @@ public:
 	// std::list<Vector2>::const_iterator			getBody( void ) const ;
 	std::list<Vector2> const &		getLinks( void ) const ;
 	int								getScore( void ) const ;
+	bool							isAlive( void ) const ;
+	std::string const &				getDeathReason( void ) const ;
 
 	void	addLink( void );
 	void	movSnake( void );
 	void	setDir(int input);
 	void	setLast( void );
+	void	setIsAlive( bool alive);
+	void	setDeathReason( std::string const & reason );
 };
 
-#endif
+#endif // ** PLAYER_HPP ** //

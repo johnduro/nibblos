@@ -6,12 +6,13 @@
 //   By: mle-roy <mle-roy@student.42.fr>            +#+  +:+       +#+        //
 //                                                +#+#+#+#+#+   +#+           //
 //   Created: 2015/03/17 17:17:43 by mle-roy           #+#    #+#             //
-//   Updated: 2015/03/26 14:40:15 by mle-roy          ###   ########.fr       //
+//   Updated: 2015/03/31 17:10:04 by mle-roy          ###   ########.fr       //
 //                                                                            //
 // ************************************************************************** //
 
 #include <stdlib.h>
 #include "NCurseLib.hpp"
+#include "Player.hpp"
 
 NCurseLib::NCurseLib( void ) : _scoreSize(3), _isInit(false)
 {
@@ -53,29 +54,89 @@ void					NCurseLib::_drawBorders(WINDOW *screen) const
 	}
 }
 
-void	NCurseLib::printMap(TMap & map)
+void	NCurseLib::_printEntity(Vector2 coord, char toPrint, int colorPair, Vector2 mapSize)
 {
-	int		y = 1;
-	int		x;
+	if (coord.getX() > 0 && coord.getX() <= mapSize.getX() && coord.getY() > 0 && coord.getY() <= mapSize.getY())
+		mvwaddch(this->_field, coord.getY(), coord.getX(), toPrint | COLOR_PAIR(colorPair));
+}
 
+void	NCurseLib::printMap( TMap const & map )
+{
+	std::list<Vector2>::const_iterator		it;
+	std::list<Vector2>::const_iterator		ite;
+
+	std::vector<Player>::const_iterator		itP;
+	std::vector<Player>::const_iterator		iteP;
+
+	wclear(this->_field);
 	this->_drawBorders(this->_field);
 	this->_drawBorders(this->_score);
-	// std::cout << "mapY : " << map.size.getY() << std::endl << "mapX : " << map.size.getX() << std::endl;
-	while (y <= map.size.getY())
+
+	if (map.rocks.size() > 0)
 	{
-		x = 1;
-		// std::cout << "YY - " << y << std::endl;
-		while (x <= map.size.getX())
-		{
-			// std::cout << "XX - " << x << std::endl;
-			// std::cout << "char ->" << map.map[y][x] << "<-" << std::endl;
-			mvwaddch(this->_field, y, x, map.map[y - 1][x - 1]);
-			x++;
-		}
-		y++;
+		ite = map.rocks.end();
+		for (it = map.rocks.begin(); it != ite; it++)
+			this->_printEntity(*it, '%', NC_RED, map.size);
 	}
-	// wclear(this->_score);
-	mvwprintw(this->_score, 1, 1, map.scores.c_str());
+	if (map.foods.size() > 0)
+	{
+		ite = map.foods.end();
+		for (it = map.foods.begin(); it != ite; it++)
+			this->_printEntity(*it, '@', NC_GREEN, map.size);
+	}
+	if (map.snakes.size() > 0)
+	{
+		bool		head;
+		int			headPrint = NC_MAGENTA;
+		int			bodyPrint = NC_YELLOW;
+
+		iteP = map.snakes.end();
+		for (itP = map.snakes.begin(); itP != iteP; itP++)
+		{
+			head = true;
+			if (itP != map.snakes.begin())
+			{
+				headPrint = NC_YELLOW;
+				bodyPrint = NC_MAGENTA;
+			}
+			ite = itP->getLinks().end();
+			for (it = itP->getLinks().begin(); it != ite; it++)
+			{
+				if (head)
+				{
+					this->_printEntity(*it, '@', headPrint, map.size);
+					head = false;
+				}
+				else
+					this->_printEntity(*it, '#', bodyPrint, map.size);
+			}
+		}
+	}
+
+
+
+
+	// int		y = 1;
+	// int		x;
+
+	// this->_drawBorders(this->_field);
+	// this->_drawBorders(this->_score);
+	// // std::cout << "mapY : " << map.size.getY() << std::endl << "mapX : " << map.size.getX() << std::endl;
+	// while (y <= map.size.getY())
+	// {
+	// 	x = 1;
+	// 	// std::cout << "YY - " << y << std::endl;
+	// 	while (x <= map.size.getX())
+	// 	{
+	// 		// std::cout << "XX - " << x << std::endl;
+	// 		// std::cout << "char ->" << map.map[y][x] << "<-" << std::endl;
+	// 		mvwaddch(this->_field, y, x, map.map[y - 1][x - 1]);
+	// 		x++;
+	// 	}
+	// 	y++;
+	// }
+	// // wclear(this->_score);
+	// mvwprintw(this->_score, 1, 1, map.scores.c_str());
 	this->_refresh();
 }
 
@@ -127,6 +188,13 @@ void	NCurseLib::initLibrary( TMap & map )
 	keypad(stdscr, TRUE);
 	curs_set(0);
 	timeout(0);
+	start_color();
+	init_pair(NC_WHITE, COLOR_WHITE, COLOR_BLACK);
+	init_pair(NC_RED, COLOR_RED, COLOR_BLACK);
+	init_pair(NC_YELLOW, COLOR_YELLOW, COLOR_BLACK);
+	init_pair(NC_MAGENTA, COLOR_MAGENTA, COLOR_BLACK);
+	init_pair(NC_GREEN, COLOR_GREEN, COLOR_BLACK);
+	init_pair(NC_BW, COLOR_BLACK, COLOR_WHITE);
 	getmaxyx(stdscr, maxY, maxX);
 	if (((map.size.getY() + 2) + this->_scoreSize) >= maxY || (map.size.getX() + 2) >= maxX )
 	{
@@ -138,6 +206,7 @@ void	NCurseLib::initLibrary( TMap & map )
 	this->_refresh();
 	this->_drawBorders(this->_field);
 	this->_drawBorders(this->_score);
+	// wbkgd(this->_score, COLOR_PAIR(BW));
 	this->_isInit = true;
 }
 

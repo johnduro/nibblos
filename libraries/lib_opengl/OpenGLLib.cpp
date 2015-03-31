@@ -1,4 +1,5 @@
 #include "OpenGLLib.hpp"
+#include "Player.hpp"
 
 // Constructeur de Destucteur
 
@@ -32,7 +33,7 @@ void 	SceneOpenGL::initLibrary( TMap & map )
 	// glRotatef(180, 0, 1, 0);
 	// glRotatef(60, 0, 0, 1);
 	glRotatef(180, 1, 0, 0);
-	// glRotatef(45, 1, 0, 0);
+	glRotatef(45, 0, 0, 1);
 	glScalef(1/this->scale.getX(), 1/this->scale.getY(), 1/this->scale.getZ());
 }
 
@@ -228,7 +229,7 @@ float *SceneOpenGL::getTheFucknColor(float r, float g, float b, float a) const
 	return color;
 }
 
-void SceneOpenGL::drawVox(Vector3 p, int ahmedlapetitesalope) const
+void SceneOpenGL::drawVox(Vector3 p, int mmm) const
 {
 	float x0 = p.getX() - 0.5f;
 	float x1 = p.getX() + 0.5f;
@@ -298,10 +299,10 @@ void SceneOpenGL::drawVox(Vector3 p, int ahmedlapetitesalope) const
 
 	float *color;
 
-	switch (ahmedlapetitesalope)
+	switch (mmm)
 	{
 		case 1:
-			color = getTheFucknColor(0, 1, 1, 1);
+			color = getTheFucknColor(0, 0, 1, 1);
 			break;
 		case 2:
 			color = getTheFucknColor(1, 1, 1, 1);
@@ -385,7 +386,7 @@ int		SceneOpenGL::getInput( void )
 	return 0;
 }
 
-void SceneOpenGL::printMap(TMap & map)
+void SceneOpenGL::printMap( TMap const & map )
 {
 	// Nettoyage de l'ecran
 
@@ -397,29 +398,83 @@ void SceneOpenGL::printMap(TMap & map)
 	int sY = static_cast<int>(round((map.size.getY() + 2) / 2));
 	int sX = static_cast<int>(round((map.size.getX() + 2) / 2));
 
-	this->drawFace(Vector2(-sX, -sY), Vector2(-sX, sY-1), Vector2(sX-1, sY-1), Vector2(sX-1, -sY));
+	this->drawFace(Vector2(-sX, -sY), Vector2(-sX, sY - 1), Vector2(sX - 1, sY - 1), Vector2(sX - 1, -sY));
 
 	for (int y = -sY; y < sY; y++)
 	{
 		for (int x = -sX; x < sX; x++)
 		{
-			if ((y == -sY || x == -sX) || (y == sY-1 || x == sX-1))
+			if ((y == -sY || x == -sX) || (y == sY - 1 || x == sX - 1))
 				this->drawVox(Vector3(x, y, 1), 2);
 		}
 	}
 
-	for (int y = 0; y < map.size.getY(); y++)
+
+
+/*
+	if (map.rocks.size() > 0)
 	{
-		for (int x = 0; x < map.size.getX(); x++)
+		ite = map.rocks.end();
+		for (it = map.rocks.begin(); it != ite; it++)
+			this->_printEntity(*it, '%', NC_RED, map.size);
+	}*/
+	std::list<Vector2>::const_iterator		it;
+	std::list<Vector2>::const_iterator		ite;
+
+	std::vector<Player>::const_iterator		itP;
+	std::vector<Player>::const_iterator		iteP;
+
+
+	if (map.foods.size() > 0)
+	{
+		ite = map.foods.end();
+		for (it = map.foods.begin(); it != ite; it++)
 		{
-			if (map.map[y][x] == 'F')
-				this->drawVox(Vector3(x - sX, y - sY, 1), 1);
-			if (map.map[y][x] == '1')
-				this->drawVox(Vector3(x - sX, y - sY, 1), 3);
-			if (map.map[y][x] == '*')
-				this->drawVox(Vector3(x - sX, y - sY, 1), 4);
+			std::cout << "x= " <<  it->getX() << ", y= " << it->getY() << std::endl;
+			this->drawVox(Vector3(it->getX() - sX, it->getY() - sY, 1), 1);
 		}
 	}
+
+	if (map.snakes.size() > 0)
+	{
+		bool		head;
+
+		iteP = map.snakes.end();
+		for (itP = map.snakes.begin(); itP != iteP; itP++)
+		{
+			head = true;
+			// if (itP != map.snakes.begin())
+			// {
+			// 	headPrint = NC_YELLOW;
+			// 	bodyPrint = NC_MAGENTA;
+			// }
+			ite = itP->getLinks().end();
+			for (it = itP->getLinks().begin(); it != ite; it++)
+			{
+				if (head)
+				{
+					// std::cout << "x = " << it->getX() << ", y= " << it->getY() << std::endl;
+					this->drawVox(Vector3(it->getX() - sX, it->getY() - sY, 1), 3);
+					head = false;
+				}
+				else
+					this->drawVox(Vector3(it->getX() - sX, it->getY() - sY, 1), 4);
+			}
+		}
+	}
+
+	// for (int y = 0; y < map.size.getY(); y++)
+	// {
+	// 	for (int x = 0; x < map.size.getX(); x++)
+	// 	{
+	// 		if (map.map[y][x] == 'F')
+	// 			this->drawVox(Vector3(x - sX, y - sY, 1), 1);
+	// 		if (map.map[y][x] == '1')
+	// 			this->drawVox(Vector3(x - sX, y - sY, 1), 3);
+	// 		if (map.map[y][x] == '*')
+	// 			this->drawVox(Vector3(x - sX, y - sY, 1), 4);
+	// 	}
+	// }
 
 	// Actualisation de la fenetre
 	glFlush();
