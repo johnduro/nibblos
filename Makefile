@@ -90,6 +90,7 @@ toolsClean:
 libClean:
 	rm -f $(NCURSE_SO)
 	rm -f $(OPENGL_SO)
+	rm -f $(SDLIMAGES_SO)
 
 clean: toolsClean
 	rm -f $(OBJ)
