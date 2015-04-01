@@ -6,6 +6,8 @@
 #include <OpenGL/gl.h>
 #include <OpenGL/glu.h>
 #include <SDL2/SDL.h>
+#include <SDL2_image/SDL_image.h>
+#include <SDL2_ttf/SDL_ttf.h>
 #include <iostream>
 #include <vector>
 #include <string>
@@ -38,6 +40,11 @@ private:
 	std::vector<Vector3> *		points_down;
 	std::vector<Vector3> *		points_left;
 	std::vector<Vector3> *		points_right;
+
+    SDL_Rect position;
+	SDL_Surface *text;
+	TTF_Font *police;
+    SDL_Color couleurNoire = {0, 0, 0}, couleurBlanche = {255, 255, 255};
 
 	float   echelle;
 	Vector3 scale;

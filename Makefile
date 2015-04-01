@@ -64,7 +64,7 @@ $(NCURSE_SO): $(wildcard $(SRC_LIB)/$(LIB_NCURSES)*.cpp) $(wildcard $(SRC_TOOLS_
 	@echo "Compiling " [ $(NCURSE_SO) ] " ... " $(OK)
 
 $(OPENGL_SO): $(wildcard $(SRC_LIB)/$(LIB_OPENGL)/*.cpp) $(wildcard $(SRC_TOOLS_DIR)/*.cpp)
-	$(COMPILER) $(DLFLAGS) -F ~/Library/Frameworks -framework SDL2 -I ~/Library/Frameworks/SDL2.framework/Headers -framework OpenGL \
+	$(COMPILER) $(DLFLAGS) -F ~/Library/Frameworks -framework SDL2 -I ~/Library/Frameworks/SDL2.framework/Headers -framework OpenGL -framework SDL2_ttf -framework SDL2_image \
 	-o $(OPENGL_SO) $(wildcard $(SRC_LIB)/$(LIB_OPENGL)/*.cpp) $(OBJ_DIR)/Player.o $(TOOLS)
 	@echo "Compiling " [ $(OPENGL_SO) ] " ... " $(OK)
 

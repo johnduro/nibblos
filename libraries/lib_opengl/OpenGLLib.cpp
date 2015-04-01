@@ -3,10 +3,14 @@
 
 // Constructeur de Destucteur
 
-SceneOpenGL::SceneOpenGL() : m_titreFenetre("SNAKE"), m_largeurFenetre(1200), m_hauteurFenetre(800), m_fenetre(0), m_contexteOpenGL(0) {}
+SceneOpenGL::SceneOpenGL() : text(NULL), police(NULL), m_titreFenetre("SNAKE"), m_largeurFenetre(1200), m_hauteurFenetre(800), m_fenetre(0), m_contexteOpenGL(0) {}
 
 void 	SceneOpenGL::initLibrary( TMap & map )
 {
+
+	position.x = 60;
+	position.y = 370;
+
 	scale = Vector3(40, 40, 20) / 0.5f;
 	scale.setZ(scale.getZ() * -0.5);
 
@@ -20,6 +24,8 @@ void 	SceneOpenGL::initLibrary( TMap & map )
 		std::cout << "GL init" << std::endl;
 		return;
 	}
+	TTF_Init();
+
 	// Variables
 	this->echelle = (64/15);
 
@@ -35,12 +41,20 @@ void 	SceneOpenGL::initLibrary( TMap & map )
 	glRotatef(180, 1, 0, 0);
 	glRotatef(45, 0, 0, 1);
 	glScalef(1/this->scale.getX(), 1/this->scale.getY(), 1/this->scale.getZ());
+
+    police = TTF_OpenFont("angelina.ttf", 65);
+	text = TTF_RenderText_Shaded(police, "motherfucker", couleurNoire, couleurBlanche);
 }
 
 SceneOpenGL::~SceneOpenGL() {}
 
 void	SceneOpenGL::closeLibrary( void )
 {
+	TTF_CloseFont(police);
+    TTF_Quit();
+
+    SDL_FreeSurface(text);
+
 	SDL_GL_DeleteContext(m_contexteOpenGL);
 	SDL_DestroyWindow(m_fenetre);
 	SDL_Quit();
@@ -469,6 +483,8 @@ void SceneOpenGL::printMap( TMap const & map )
 		}
 	}
 
+	text = TTF_RenderText_Shaded(police, "motherfucker", couleurNoire, couleurBlanche);
+
 	// for (int y = 0; y < map.size.getY(); y++)
 	// {
 	// 	for (int x = 0; x < map.size.getX(); x++)
@@ -483,7 +499,9 @@ void SceneOpenGL::printMap( TMap const & map )
 	// }
 
 	// Actualisation de la fenetre
+
 	glFlush();
+	SDL_BlitSurface(text, NULL, m_fenetre, &position);
 	SDL_GL_SwapWindow(m_fenetre);
 }
 
