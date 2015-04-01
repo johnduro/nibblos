@@ -6,7 +6,7 @@
 //   By: mle-roy <mle-roy@student.42.fr>            +#+  +:+       +#+        //
 //                                                +#+#+#+#+#+   +#+           //
 //   Created: 2015/03/16 20:06:33 by mle-roy           #+#    #+#             //
-//   Updated: 2015/03/31 19:52:02 by mle-roy          ###   ########.fr       //
+//   Updated: 2015/04/01 18:42:34 by mle-roy          ###   ########.fr       //
 //                                                                            //
 // ************************************************************************** //
 
@@ -23,6 +23,7 @@ void			GameManager::_playerCollision(Player & play, std::string const & reason)
 	play.setIsAlive(false);
 	play.setDeathReason(reason);
 	this->_map.isEnded = true;
+	this->_libSound->playDeath();
 }
 
 
@@ -112,7 +113,7 @@ void			GameManager::_eatFood( Player & play )
 
 	this->_map.foods.remove(*head);
 	play.addLink();
-
+	this->_libSound->playEat();
 	this->_timeTick -= 15000;
 	if (this->_timeTick < 100000)
 		this->_timeTick = 100000;
@@ -262,6 +263,26 @@ void			GameManager::_closeLib( void )
 	this->_isLibInit = false;
 }
 
+void			GameManager::_initSoundLib( void )
+{
+	ISoundLib*(*LibCreator)(void);
+
+	this->_dl_handle_sound = dlopen("FMOD.so", RTLD_LAZY | RTLD_LOCAL);
+	if (!this->_dl_handle_sound)
+	{
+		std::cout << "FAIL LIB HANDLE ! " << std::endl;
+		exit(-1);
+	}
+	LibCreator = (ISoundLib *(*)(void)) dlsym(this->_dl_handle_sound, "createLib");
+	if (!LibCreator)
+	{
+		std::cout << "FAIL LIB CREATOR ! " << std::endl;
+		exit(-1);
+	}
+	this->_libSound = LibCreator();
+
+}
+
 // ** CANONICAL ** //
 
 // GameManager::GameManager( void );
@@ -279,6 +300,7 @@ GameManager::GameManager(int players, Vector2 size, std::vector<std::string> lib
 		std::cout << "PAS DE LIB !!!!!" << std::endl;
 		exit(-1);
 	}
+	this->_initSoundLib();
 }
 
 GameManager::~GameManager( void )

@@ -13,10 +13,12 @@ SRC_LIB				=		libraries
 LIB_NCURSES			=		lib_ncurses
 LIB_OPENGL			=		lib_opengl
 LIB_SDLIMAGES		=		lib_sdlimages
+LIB_FMOD			=		lib_fmod
 
 NCURSE_SO			=		NCLIB.so
 OPENGL_SO			=		OGLLIB.so
 SDLIMAGES_SO		=		SDLIMAGESLIB.so
+FMOD_SO				=		FMOD.so
 
 
 OK					=		"\033[35m"OK"\033[00m"
@@ -54,7 +56,7 @@ $(TOOLS_OBJ)/%.o: $(SRC_TOOLS_DIR)/%.cpp
 
 # LIBZ
 
-libz: $(NCURSE_SO) $(OPENGL_SO) $(SDLIMAGES_SO)
+libz: $(NCURSE_SO) $(OPENGL_SO) $(SDLIMAGES_SO) $(FMOD_SO)
 	@echo "Librairies compilation ... " $(OK)
 
 $(NCURSE_SO): $(wildcard $(SRC_LIB)/$(LIB_NCURSES)*.cpp) $(wildcard $(SRC_TOOLS_DIR)/*.cpp)
@@ -70,6 +72,10 @@ $(SDLIMAGES_SO): $(wildcard $(SRC_LIB)/$(LIB_SDLIMAGES)/*.cpp) $(wildcard $(SRC_
 	$(COMPILER) $(DLFLAGS) -F ~/Library/Frameworks -framework SDL2 -I ~/Library/Frameworks/SDL2.framework/Headers -I ~/Library/Frameworks/SDL2_image.framework/Headers -framework SDL2_image \
 	-o $(SDLIMAGES_SO) $(wildcard $(SRC_LIB)/$(LIB_SDLIMAGES)/*.cpp) $(OBJ_DIR)/Player.o $(TOOLS)
 	@echo "Compiling " [ $(SDLIMAGES_SO) ] " ... " $(OK)
+
+$(FMOD_SO): $(wildcard $(SRC_LIB)/$(LIB_FMOD)/*.cpp)
+	$(COMPILER) $(DLFLAGS) -L $(SRC_LIB)/$(LIB_FMOD)/lib -lfmod -o $(FMOD_SO) $(wildcard $(SRC_LIB)/$(LIB_FMOD)/*.cpp)
+	install_name_tool -add_rpath $(SRC_LIB)/$(LIB_FMOD)/lib $(FMOD_SO)
 
 # OBJ
 
@@ -91,6 +97,7 @@ libClean:
 	rm -f $(NCURSE_SO)
 	rm -f $(OPENGL_SO)
 	rm -f $(SDLIMAGES_SO)
+	rm -f $(FMOD_SO)
 
 clean: toolsClean
 	rm -f $(OBJ)

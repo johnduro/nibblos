@@ -6,3 +6,6 @@ g++ -std=c++11 *.cpp tools/*.cpp -I tools -I libz -I .
 
 il faut que tu telecharge la SDL2.dmg du site SDL
 et tu met le dossier SDL2.framework dans Library/Frameworks
+
+g++ -I inc -L lib -lfmod test.cpp
+install_name_tool -add_rpath ./ a.out

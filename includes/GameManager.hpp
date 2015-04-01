@@ -6,7 +6,7 @@
 //   By: mle-roy <mle-roy@student.42.fr>            +#+  +:+       +#+        //
 //                                                +#+#+#+#+#+   +#+           //
 //   Created: 2015/03/16 19:55:34 by mle-roy           #+#    #+#             //
-//   Updated: 2015/03/31 19:23:18 by mle-roy          ###   ########.fr       //
+//   Updated: 2015/04/01 18:40:11 by mle-roy          ###   ########.fr       //
 //                                                                            //
 // ************************************************************************** //
 
@@ -20,6 +20,7 @@
 #include "ft_timer.hpp"
 #include "TMap.hpp"
 #include "IGraphicLib.hpp"
+#include "ISoundLib.hpp"
 
 # define TIME_BASE 300000
 
@@ -37,9 +38,11 @@ private:
 	std::vector<std::string>		_libs;
 	// std::string						_endGame;//SUPP
 	IGraphicLib *					_lib;
+	ISoundLib *						_libSound;
 	// bool							_pause;//MAP
 	// bool							_isEnded;//MAP
 	void *							_dl_handle;
+	void *							_dl_handle_sound;
 	bool							_isLibInit;
 	int								_input;
 	int								_timeTick;
@@ -64,6 +67,7 @@ private:
 	void			_movesSnakes( void );
 	void			_generateFood( void );
 	void			_initLib( std::string lib );
+	void			_initSoundLib( void );
 	void			_closeLib( void );
 	void			_setMap( void );
 	void			_changeTimer( int input );
