@@ -14,11 +14,13 @@ LIB_NCURSES			=		lib_ncurses
 LIB_OPENGL			=		lib_opengl
 LIB_SDLIMAGES		=		lib_sdlimages
 LIB_FMOD			=		lib_fmod
+LIB_MENU			=		lib_menu
 
 NCURSE_SO			=		NCLIB.so
 OPENGL_SO			=		OGLLIB.so
 SDLIMAGES_SO		=		SDLIMAGESLIB.so
 FMOD_SO				=		FMOD.so
+MENU_SO				=		MENU.so
 
 
 OK					=		"\033[35m"OK"\033[00m"
@@ -55,8 +57,8 @@ $(TOOLS_OBJ)/%.o: $(SRC_TOOLS_DIR)/%.cpp
 	$(COMPILER) $(CFLAGS) -o $@ $<
 
 # LIBZ
-
-libz: $(NCURSE_SO) $(OPENGL_SO) $(SDLIMAGES_SO) $(FMOD_SO)
+# $(OPENGL_SO)
+libz: $(NCURSE_SO) $(SDLIMAGES_SO) $(FMOD_SO)
 	@echo "Librairies compilation ... " $(OK)
 
 $(NCURSE_SO): $(wildcard $(SRC_LIB)/$(LIB_NCURSES)*.cpp) $(wildcard $(SRC_TOOLS_DIR)/*.cpp)
