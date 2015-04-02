@@ -6,14 +6,15 @@
 //   By: mle-roy <mle-roy@student.42.fr>            +#+  +:+       +#+        //
 //                                                +#+#+#+#+#+   +#+           //
 //   Created: 2015/04/02 13:12:27 by mle-roy           #+#    #+#             //
-//   Updated: 2015/04/02 13:40:14 by mle-roy          ###   ########.fr       //
+//   Updated: 2015/04/02 17:49:00 by mle-roy          ###   ########.fr       //
 //                                                                            //
 // ************************************************************************** //
 
 #ifndef IMENULIB_HPP
 # define IMENULIB_HPP
 
-#include <pair>
+#include <utility>
+#include <string>
 
 struct TOption
 {
@@ -27,7 +28,7 @@ struct TOption
 class IMenuLib
 {
 public:
-	virtual void		startMenu( void ) = 0;
+	virtual TOption		startMenu( void ) = 0;
 	// virtual TOption		getMenuOption( void ) const = 0;
 	virtual ~IMenuLib( void ) {};
 };

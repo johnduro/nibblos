@@ -58,7 +58,7 @@ $(TOOLS_OBJ)/%.o: $(SRC_TOOLS_DIR)/%.cpp
 
 # LIBZ
 # $(OPENGL_SO)
-libz: $(NCURSE_SO) $(SDLIMAGES_SO) $(FMOD_SO)
+libz: $(NCURSE_SO) $(SDLIMAGES_SO) $(FMOD_SO) $(MENU_SO)
 	@echo "Librairies compilation ... " $(OK)
 
 $(NCURSE_SO): $(wildcard $(SRC_LIB)/$(LIB_NCURSES)*.cpp) $(wildcard $(SRC_TOOLS_DIR)/*.cpp)
@@ -78,6 +78,11 @@ $(SDLIMAGES_SO): $(wildcard $(SRC_LIB)/$(LIB_SDLIMAGES)/*.cpp) $(wildcard $(SRC_
 $(FMOD_SO): $(wildcard $(SRC_LIB)/$(LIB_FMOD)/*.cpp)
 	$(COMPILER) $(DLFLAGS) -L $(SRC_LIB)/$(LIB_FMOD)/lib -lfmod -o $(FMOD_SO) $(wildcard $(SRC_LIB)/$(LIB_FMOD)/*.cpp)
 	install_name_tool -add_rpath $(SRC_LIB)/$(LIB_FMOD)/lib $(FMOD_SO)
+	@echo "Compiling " [ $(FMOD_SO) ] " ... " $(OK)
+
+$(MENU_SO): $(wildcard $(SRC_LIB)/$(LIB_MENU)*.cpp)
+	$(COMPILER) $(DLFLAGS) -lncurses -o $(MENU_SO) $(wildcard $(SRC_LIB)/$(LIB_MENU)/*.cpp)
+	@echo "Compiling " [ $(MENU_SO) ] " ... " $(OK)
 
 # OBJ
 
@@ -100,6 +105,7 @@ libClean:
 	rm -f $(OPENGL_SO)
 	rm -f $(SDLIMAGES_SO)
 	rm -f $(FMOD_SO)
+	rm -f $(MENU_SO)
 
 clean: toolsClean
 	rm -f $(OBJ)

@@ -6,7 +6,7 @@
 //   By: mle-roy <mle-roy@student.42.fr>            +#+  +:+       +#+        //
 //                                                +#+#+#+#+#+   +#+           //
 //   Created: 2015/03/16 19:55:34 by mle-roy           #+#    #+#             //
-//   Updated: 2015/04/01 18:40:11 by mle-roy          ###   ########.fr       //
+//   Updated: 2015/04/02 17:55:06 by mle-roy          ###   ########.fr       //
 //                                                                            //
 // ************************************************************************** //
 
@@ -21,6 +21,7 @@
 #include "TMap.hpp"
 #include "IGraphicLib.hpp"
 #include "ISoundLib.hpp"
+#include "IMenuLib.hpp"
 
 # define TIME_BASE 300000
 
@@ -39,10 +40,12 @@ private:
 	// std::string						_endGame;//SUPP
 	IGraphicLib *					_lib;
 	ISoundLib *						_libSound;
+	IMenuLib *						_libMenu;
 	// bool							_pause;//MAP
 	// bool							_isEnded;//MAP
 	void *							_dl_handle;
 	void *							_dl_handle_sound;
+	void *							_dl_handle_menu;
 	bool							_isLibInit;
 	int								_input;
 	int								_timeTick;
@@ -68,6 +71,7 @@ private:
 	void			_generateFood( void );
 	void			_initLib( std::string lib );
 	void			_initSoundLib( void );
+	void			_initMenuLib( void );
 	void			_closeLib( void );
 	void			_setMap( void );
 	void			_changeTimer( int input );

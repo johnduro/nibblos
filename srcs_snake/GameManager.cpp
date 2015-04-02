@@ -6,7 +6,7 @@
 //   By: mle-roy <mle-roy@student.42.fr>            +#+  +:+       +#+        //
 //                                                +#+#+#+#+#+   +#+           //
 //   Created: 2015/03/16 20:06:33 by mle-roy           #+#    #+#             //
-//   Updated: 2015/04/01 18:42:34 by mle-roy          ###   ########.fr       //
+//   Updated: 2015/04/02 18:10:15 by mle-roy          ###   ########.fr       //
 //                                                                            //
 // ************************************************************************** //
 
@@ -283,6 +283,25 @@ void			GameManager::_initSoundLib( void )
 
 }
 
+void			GameManager::_initMenuLib( void )
+{
+	IMenuLib*(*LibCreator)(void);
+
+	this->_dl_handle_menu = dlopen("MENU.so", RTLD_LAZY | RTLD_LOCAL);
+	if (!this->_dl_handle_menu)
+	{
+		std::cout << "FAIL LIB MENU HANDLE ! " << std::endl;
+		exit(-1);
+	}
+	LibCreator = (IMenuLib *(*)(void)) dlsym(this->_dl_handle_menu, "createLib");
+	if (!LibCreator)
+	{
+		std::cout << "FAIL LIB MENU CREATOR ! " << std::endl;
+		exit(-1);
+	}
+	this->_libMenu = LibCreator();
+}
+
 // ** CANONICAL ** //
 
 // GameManager::GameManager( void );
@@ -292,15 +311,18 @@ GameManager::GameManager(int players, Vector2 size, std::vector<std::string> lib
 	// : _players(players), _libs(libs), _pause(false), _isEnded(false), _isLibInit(false), _input(0), _timeTick(TIME_BASE)
 {
 	this->_initMap(size);
-	this->_map.snakes.push_back(Player("ahmed", Vector2(15, 15)));
-	if (this->_libs.size() > 0)
-		this->_initLib(this->_libs.front());
-	else
-	{
-		std::cout << "PAS DE LIB !!!!!" << std::endl;
-		exit(-1);
-	}
+	// this->_map.snakes.push_back(Player("ahmed", Vector2(15, 15)));
+	// if (this->_libs.size() > 0)
+	// 	this->_initLib(this->_libs.front());
+	// else
+	// {
+	// 	std::cout << "PAS DE LIB !!!!!" << std::endl;
+	// 	exit(-1);
+	// }
 	this->_initSoundLib();
+	std::cout << "HIPHPIOHPHOPIHIPHPH" << std::endl;
+	this->_initMenuLib();
+	std::cout << "22222222222222HIPHPIOHPHOPIHIPHPH" << std::endl;
 }
 
 GameManager::~GameManager( void )
@@ -326,16 +348,31 @@ GameManager::~GameManager( void )
 void	GameManager::Update( void )
 {
 	int		input = 0;
+	TOption		opt;
 	// int		timeTick = TIME_BASE;
 
 	// this->_timer.updateTimeAdd(300000, MICRO_SECONDS);
 	this->_timer.updateTimeAdd(this->_timeTick, MICRO_SECONDS);
 	// this->_timer.updateTimeAdd(100000, MICRO_SECONDS);
 	// std::cout << "GM0" << std::endl;
-	this->_lib->initLibrary(this->_map);
 	// std::cout << "GM1" << std::endl;
 	this->_updateMap();
 	// std::cout << "GM2" << std::endl;
+	std::cout << "MENU IN" << std::endl;
+	opt = this->_libMenu->startMenu();
+	std::cout << "MENU OUT" << std::endl;
+	static_cast<void>(opt);
+
+	this->_map.snakes.push_back(Player("ahmed", Vector2(15, 15)));
+	if (this->_libs.size() > 0)
+		this->_initLib(this->_libs.front());
+	else
+	{
+		std::cout << "PAS DE LIB !!!!!" << std::endl;
+		exit(-1);
+	}
+
+	this->_lib->initLibrary(this->_map);
 	while (42)
 	{
 		this->_lib->printMap(this->_map);
