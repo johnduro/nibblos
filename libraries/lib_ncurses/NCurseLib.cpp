@@ -6,7 +6,7 @@
 //   By: mle-roy <mle-roy@student.42.fr>            +#+  +:+       +#+        //
 //                                                +#+#+#+#+#+   +#+           //
 //   Created: 2015/03/17 17:17:43 by mle-roy           #+#    #+#             //
-//   Updated: 2015/04/03 19:24:22 by mle-roy          ###   ########.fr       //
+//   Updated: 2015/04/03 19:32:23 by mle-roy          ###   ########.fr       //
 //                                                                            //
 // ************************************************************************** //
 
@@ -210,10 +210,10 @@ int		NCurseLib::getInput( void )
 	return (0);
 }
 
-void	NCurseLib::gameOver( std::string toPrint ) const
-{
-	mvwprintw(this->_score, 1, 1, toPrint.c_str());
-}
+// void	NCurseLib::gameOver( std::string toPrint ) const
+// {
+// 	mvwprintw(this->_score, 1, 1, toPrint.c_str());
+// }
 
 void	NCurseLib::initLibrary( TMap & map )
 {

@@ -1,9 +1,13 @@
+
 #include "SdlImageLib.hpp"
 #include "Player.hpp"
 // Constructeur de Destucteur
 
 SdlImageLib::SdlImageLib( void )
-	: m_titreFenetre("SNAKE"), m_largeurFenetre(1200), m_hauteurFenetre(800), m_fenetre(0), police(NULL), texte(NULL) {}
+	: m_titreFenetre("SNAKE"), m_largeurFenetre(1200), m_hauteurFenetre(800), m_fenetre(0)
+{
+
+}
 
 void 	SdlImageLib::initLibrary( TMap & map )
 {
@@ -37,25 +41,12 @@ void 	SdlImageLib::initLibrary( TMap & map )
 	this->head_r = SDL_LoadBMP("libraries/lib_sdlimages/img/head_r.bmp");
 	this->food = SDL_LoadBMP("libraries/lib_sdlimages/img/food.bmp");
 	this->rock = SDL_LoadBMP("libraries/lib_sdlimages/img/rock.bmp");
-
-	if( TTF_Init() == -1 )
-        printf( "SDL_ttf could not initialize! SDL_ttf Error: %s\n", TTF_GetError() );
-
-	/* Chargement de la police */
-	police = TTF_OpenFont("libraries/font/angelina.ttf", 25);
-	police_pause = TTF_OpenFont("libraries/font/angelina.ttf", 70);
-	if( police == NULL || police_pause == NULL)
-		printf( "Failed to load lazy font! SDL_ttf Error: %s\n", TTF_GetError() );
 }
 
 SdlImageLib::~SdlImageLib() {}
 
 void	SdlImageLib::closeLibrary( void )
 {
-	TTF_CloseFont(police);
-	TTF_Quit();
-	SDL_FreeSurface(texte);
-
 	// SDL_GL_DeleteContext(m_contexteOpenGL);
 	SDL_DestroyWindow(m_fenetre);
 	SDL_Quit();
@@ -109,9 +100,6 @@ void SdlImageLib::printMap( TMap const & map )
 	std::vector<Player>::const_iterator		itP;
 	std::vector<Player>::const_iterator		iteP;
 
-	SDL_Color RED = {255, 0, 0};
-	SDL_Color BLUE = {0, 0, 255};
-	SDL_Color GREEN = {0, 150, 0};
 
 	if (map.foods.size() > 0)
 	{
@@ -133,7 +121,6 @@ void SdlImageLib::printMap( TMap const & map )
 			SDL_BlitSurface(this->rock, NULL, this->m_windowsurface, &this->item_form);
 		}
 	}
-	int i = 0;
 	if (map.snakes.size() > 0)
 	{
 		bool		head;
@@ -142,27 +129,13 @@ void SdlImageLib::printMap( TMap const & map )
 		iteP = map.snakes.end();
 		for (itP = map.snakes.begin(); itP != iteP; itP++)
 		{
-			std::stringstream ss;
-			ss << itP->getName() << "     " << itP->getScore();
-			std::string name = ss.str();
-			this->position.x = 25;
-
-			if (i == 0)
-			{
-				texte = TTF_RenderText_Blended(police, name.c_str(), RED);
-				this->position.y = 5;
-			}
-			else
-			{
-				texte = TTF_RenderText_Blended(police, name.c_str(), BLUE);
-				this->position.y = 25;
-			}
-
-			SDL_BlitSurface(this->texte, NULL, this->m_windowsurface, &position); /* Blit du texte */
-
 			head = true;
 			dir = itP->getDir();
-
+			// if (itP != map.snakes.begin())
+			// {
+			// 	headPrint = NC_YELLOW;
+			// 	bodyPrint = NC_MAGENTA;
+			// }
 			ite = itP->getLinks().end();
 			for (it = itP->getLinks().begin(); it != ite; it++)
 			{
@@ -184,20 +157,12 @@ void SdlImageLib::printMap( TMap const & map )
 				else
 					SDL_BlitSurface(this->body, NULL, this->m_windowsurface, &this->item_form);
 			}
-			i++;
 		}
 	}
-
-	if (map.pause)
-	{
-		position.x = 300;
-		position.y = 250;
-		texte = TTF_RenderText_Blended(police_pause, "PAUSE", GREEN);
-		SDL_BlitSurface(this->texte, NULL, this->m_windowsurface, &position);
-	}
-
 	SDL_UpdateWindowSurface(this->m_fenetre);
 }
+
+void 	SdlImageLib::gameOver( std::string toPrint ) const {}
 
 SdlImageLib		*createLib( void )
 {

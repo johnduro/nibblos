@@ -57,8 +57,8 @@ $(TOOLS_OBJ)/%.o: $(SRC_TOOLS_DIR)/%.cpp
 	$(COMPILER) $(CFLAGS) -o $@ $<
 
 # LIBZ
-# $(OPENGL_SO)
-libz: $(NCURSE_SO) $(SDLIMAGES_SO) $(FMOD_SO) $(MENU_SO)
+#
+libz: $(NCURSE_SO) $(SDLIMAGES_SO) $(OPENGL_SO) $(FMOD_SO) $(MENU_SO)
 	@echo "Librairies compilation ... " $(OK)
 
 $(NCURSE_SO): $(wildcard $(SRC_LIB)/$(LIB_NCURSES)*.cpp) $(wildcard $(SRC_TOOLS_DIR)/*.cpp)
@@ -71,7 +71,7 @@ $(OPENGL_SO): $(wildcard $(SRC_LIB)/$(LIB_OPENGL)/*.cpp) $(wildcard $(SRC_TOOLS_
 	@echo "Compiling " [ $(OPENGL_SO) ] " ... " $(OK)
 
 $(SDLIMAGES_SO): $(wildcard $(SRC_LIB)/$(LIB_SDLIMAGES)/*.cpp) $(wildcard $(SRC_TOOLS_DIR)/*.cpp)
-	$(COMPILER) $(DLFLAGS) -F ~/Library/Frameworks -framework SDL2 -I ~/Library/Frameworks/SDL2.framework/Headers -I ~/Library/Frameworks/SDL2_image.framework/Headers -framework SDL2_image \
+	$(COMPILER) $(DLFLAGS) -F ~/Library/Frameworks -framework SDL2 -I ~/Library/Frameworks/SDL2.framework/Headers -I ~/Library/Frameworks/SDL2_image.framework/Headers -framework SDL2_image -I ~/Library/Frameworks/SDL2_ttf.framework/Headers -framework SDL2_ttf \
 	-o $(SDLIMAGES_SO) $(wildcard $(SRC_LIB)/$(LIB_SDLIMAGES)/*.cpp) $(OBJ_DIR)/Player.o $(TOOLS)
 	@echo "Compiling " [ $(SDLIMAGES_SO) ] " ... " $(OK)
 

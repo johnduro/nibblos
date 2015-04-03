@@ -32,7 +32,7 @@ public:
     void	closeLibrary( void );
     void	printMap( TMap const & map );
     int		getInput( void );
-    void	gameOver( std::string toPrint ) const;
+    // void	gameOver( std::string toPrint ) const;
 
 private:
 
@@ -40,11 +40,6 @@ private:
 	std::vector<Vector3> *		points_down;
 	std::vector<Vector3> *		points_left;
 	std::vector<Vector3> *		points_right;
-
-    SDL_Rect position;
-	SDL_Surface *text;
-	TTF_Font *police;
-    SDL_Color couleurNoire = {0, 0, 0}, couleurBlanche = {255, 255, 255};
 
 	float   echelle;
 	Vector3 scale;

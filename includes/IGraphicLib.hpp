@@ -6,7 +6,7 @@
 //   By: mle-roy <mle-roy@student.42.fr>            +#+  +:+       +#+        //
 //                                                +#+#+#+#+#+   +#+           //
 //   Created: 2015/03/17 15:34:58 by mle-roy           #+#    #+#             //
-//   Updated: 2015/03/31 14:58:44 by mle-roy          ###   ########.fr       //
+//   Updated: 2015/04/03 19:48:19 by mle-roy          ###   ########.fr       //
 //                                                                            //
 // ************************************************************************** //
 
@@ -36,7 +36,6 @@ class IGraphicLib
 public:
 	virtual void	printMap( TMap const & map ) = 0;
 	virtual int		getInput( void ) = 0;
-	virtual void	gameOver( std::string toPrint ) const = 0;
 	virtual void	initLibrary( TMap & map ) = 0;
 	virtual void	closeLibrary( void ) = 0;
 	virtual ~IGraphicLib( void ) {};

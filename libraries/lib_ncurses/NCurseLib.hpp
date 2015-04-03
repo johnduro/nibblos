@@ -6,7 +6,7 @@
 //   By: mle-roy <mle-roy@student.42.fr>            +#+  +:+       +#+        //
 //                                                +#+#+#+#+#+   +#+           //
 //   Created: 2015/03/17 17:07:38 by mle-roy           #+#    #+#             //
-//   Updated: 2015/04/03 19:11:12 by mle-roy          ###   ########.fr       //
+//   Updated: 2015/04/03 19:31:07 by mle-roy          ###   ########.fr       //
 //                                                                            //
 // ************************************************************************** //
 
@@ -54,7 +54,7 @@ private:
 public:
 	void	printMap( TMap const & map );
 	int		getInput( void );
-	void	gameOver( std::string toPrint ) const;
+	// void	gameOver( std::string toPrint ) const;
 	void	initLibrary( TMap & map );
 	void	closeLibrary( void );
 	~NCurseLib( void );
