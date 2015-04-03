@@ -6,7 +6,7 @@
 //   By: mle-roy <mle-roy@student.42.fr>            +#+  +:+       +#+        //
 //                                                +#+#+#+#+#+   +#+           //
 //   Created: 2015/03/17 17:07:38 by mle-roy           #+#    #+#             //
-//   Updated: 2015/03/31 13:58:10 by mle-roy          ###   ########.fr       //
+//   Updated: 2015/04/03 19:11:12 by mle-roy          ###   ########.fr       //
 //                                                                            //
 // ************************************************************************** //
 
@@ -46,6 +46,10 @@ private:
 	void	_refresh( void ) const;
 	void	_drawBorders(WINDOW *screen) const;
 	void	_printEntity(Vector2 coord, char toPrint, int colorPair, Vector2 mapSize);
+	// void	_clearField( Vector2 size );
+	void	_clearWin( WINDOW *screen);
+	void	_printScores( TMap const & map );
+	void	_printPause( TMap const & map );
 
 public:
 	void	printMap( TMap const & map );

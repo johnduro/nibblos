@@ -6,7 +6,7 @@
 //   By: mle-roy <mle-roy@student.42.fr>            +#+  +:+       +#+        //
 //                                                +#+#+#+#+#+   +#+           //
 //   Created: 2015/03/17 17:17:43 by mle-roy           #+#    #+#             //
-//   Updated: 2015/04/01 17:13:28 by mle-roy          ###   ########.fr       //
+//   Updated: 2015/04/03 19:24:22 by mle-roy          ###   ########.fr       //
 //                                                                            //
 // ************************************************************************** //
 
@@ -14,7 +14,7 @@
 #include "NCurseLib.hpp"
 #include "Player.hpp"
 
-NCurseLib::NCurseLib( void ) : _scoreSize(3), _isInit(false)
+NCurseLib::NCurseLib( void ) : _scoreSize(4), _isInit(false)
 {
 
 }
@@ -56,8 +56,67 @@ void					NCurseLib::_drawBorders(WINDOW *screen) const
 
 void	NCurseLib::_printEntity(Vector2 coord, char toPrint, int colorPair, Vector2 mapSize)
 {
-	if (coord.getX() > 0 && coord.getX() <= mapSize.getX() && coord.getY() > 0 && coord.getY() <= mapSize.getY())
-		mvwaddch(this->_field, coord.getY(), coord.getX(), toPrint | COLOR_PAIR(colorPair));
+	if (coord.getX() >= 0 && coord.getX() <= mapSize.getX() && coord.getY() >= 0 && coord.getY() <= mapSize.getY())
+		mvwaddch(this->_field, coord.getY() + 1 , coord.getX() + 1, toPrint | COLOR_PAIR(colorPair));
+}
+
+void	NCurseLib::_clearWin( WINDOW *screen )
+{
+	int		y;
+	int		x;
+	int		mY;
+	int		mX;
+
+	getmaxyx(screen, mY, mX);
+	for (y = 1; y <= (mY - 1); y++)
+	{
+		for (x = 1; x <= (mX - 1); x++)
+			mvwaddch(screen, y , x,  ' ');
+	}
+}
+
+
+void	NCurseLib::_printPause( TMap const & map )
+{
+	int		x;
+	int		y;
+
+	x = (map.size.getX() / 2) - 4;
+	y = map.size.getY() / 2;
+	mvwprintw(this->_field, y - 1, x, "*********");
+	mvwprintw(this->_field, y, x, "* PAUSE *");
+	mvwprintw(this->_field, y + 1, x, "*********");
+}
+
+void	NCurseLib::_printScores( TMap const & map )
+{
+	std::string		print;
+
+	this->_clearWin(this->_score);
+	this->_drawBorders(this->_score);
+	if (!(map.isEnded))
+	{
+		print = map.snakes.front().getName() + " : " + std::to_string(map.snakes.front().getScore());
+		mvwprintw(this->_score, 1, 1, print.c_str());
+		if (map.snakes.size() > 1)
+		{
+			print = map.snakes.back().getName() + " : " + std::to_string(map.snakes.back().getScore());
+			mvwprintw(this->_score, 2, 1, print.c_str());
+		}
+	}
+	else
+	{
+		if (!(map.snakes.front().isAlive()))
+		{
+			print = map.snakes.front().getName() + map.snakes.front().getDeathReason();
+			mvwprintw(this->_score, 1, 1, print.c_str());
+		}
+		if (map.snakes.size() > 1 && !(map.snakes.back().isAlive()))
+		{
+			print = map.snakes.back().getName() + map.snakes.back().getDeathReason();
+			mvwprintw(this->_score, 2, 1, print.c_str());
+		}
+	}
 }
 
 void	NCurseLib::printMap( TMap const & map )
@@ -68,9 +127,8 @@ void	NCurseLib::printMap( TMap const & map )
 	std::vector<Player>::const_iterator		itP;
 	std::vector<Player>::const_iterator		iteP;
 
-	wclear(this->_field);
+	this->_clearWin(this->_field);
 	this->_drawBorders(this->_field);
-	this->_drawBorders(this->_score);
 
 	if (map.rocks.size() > 0)
 	{
@@ -113,30 +171,9 @@ void	NCurseLib::printMap( TMap const & map )
 		}
 	}
 
-
-
-
-	// int		y = 1;
-	// int		x;
-
-	// this->_drawBorders(this->_field);
-	// this->_drawBorders(this->_score);
-	// // std::cout << "mapY : " << map.size.getY() << std::endl << "mapX : " << map.size.getX() << std::endl;
-	// while (y <= map.size.getY())
-	// {
-	// 	x = 1;
-	// 	// std::cout << "YY - " << y << std::endl;
-	// 	while (x <= map.size.getX())
-	// 	{
-	// 		// std::cout << "XX - " << x << std::endl;
-	// 		// std::cout << "char ->" << map.map[y][x] << "<-" << std::endl;
-	// 		mvwaddch(this->_field, y, x, map.map[y - 1][x - 1]);
-	// 		x++;
-	// 	}
-	// 	y++;
-	// }
-	// // wclear(this->_score);
-	// mvwprintw(this->_score, 1, 1, map.scores.c_str());
+	this->_printScores(map);
+	if (map.pause)
+		this->_printPause(map);
 	this->_refresh();
 }
 
@@ -145,8 +182,6 @@ int		NCurseLib::getInput( void )
 	int		input;
 
 	input = getch();
-	// if (input != -1)
-	// 	std::cout << "INPUT : " << input << std::endl;
 	switch (input)
 	{
 		case NC_LEFT:
@@ -177,8 +212,6 @@ int		NCurseLib::getInput( void )
 
 void	NCurseLib::gameOver( std::string toPrint ) const
 {
-	// mvwprintw(this->_score, 1, 1, "SCORE : ");
-	// wclear(this->_score);
 	mvwprintw(this->_score, 1, 1, toPrint.c_str());
 }
 
@@ -212,7 +245,6 @@ void	NCurseLib::initLibrary( TMap & map )
 	this->_refresh();
 	this->_drawBorders(this->_field);
 	this->_drawBorders(this->_score);
-	// wbkgd(this->_score, COLOR_PAIR(BW));
 	this->_isInit = true;
 }
 
