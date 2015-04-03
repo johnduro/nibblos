@@ -6,7 +6,7 @@
 //   By: mle-roy <mle-roy@student.42.fr>            +#+  +:+       +#+        //
 //                                                +#+#+#+#+#+   +#+           //
 //   Created: 2015/03/16 19:55:34 by mle-roy           #+#    #+#             //
-//   Updated: 2015/04/03 16:14:10 by mle-roy          ###   ########.fr       //
+//   Updated: 2015/04/03 17:19:47 by mle-roy          ###   ########.fr       //
 //                                                                            //
 // ************************************************************************** //
 
@@ -35,27 +35,23 @@ private:
 	TMap							_map;
 	int								_players;
 	ft_timer						_timer;
-	// std::vector<Player>				_snakes;//MAP
-	// std::list<Vector2>				_foods;//MAP
 	std::vector<std::string>		_libs;
-	// std::string						_endGame;//SUPP
 	IGraphicLib *					_lib;
 	ISoundLib *						_libSound;
 	IMenuLib *						_libMenu;
-	// bool							_pause;//MAP
-	// bool							_isEnded;//MAP
 	void *							_dl_handle;
 	void *							_dl_handle_sound;
 	void *							_dl_handle_menu;
 	bool							_isLibInit;
+	bool							_isLibSoundInit;
+	bool							_isLibMenuInit;
 	int								_input;
 	int								_timeTick;
 	bool							_isExited;
 	std::map<int, inputFunctionPtr>	_inputFunction;
 	std::string						_initiatedLib;
 	TOption							_options;
-	// static const std::vector<std::vector<mapBlock>>		_blocks;
-
+	unsigned long					_nbObstacles;
 
 	void			_playerOneMvt( int input );
 	void			_gamePause( int input );
@@ -71,14 +67,16 @@ private:
 	void			_checkInput( void );
 	void			_movesSnakes( void );
 	void			_generateFood( void );
+	void			_generateRocks( void );
 	void			_initLib( std::string lib );
 	void			_initSoundLib( void );
 	void			_initMenuLib( void );
 	void			_closeLib( void );
+	void			_closeSoundLib( void );
+	void			_closeMenuLib( void );
 	void			_setMap( void );
 	void			_changeTimer( int input );
 	void			_playerCollision( Player & play, std::string const & reason);
-	// TMap::mapBlock	_updateHead(Vector2 const & direction, int player);
 	bool			_checkCollision(Vector2 somePlace, std::list<Vector2>::const_iterator it, std::list<Vector2>::const_iterator ite);
 	void			_generateFirstState( void );
 

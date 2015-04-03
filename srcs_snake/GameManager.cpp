@@ -6,7 +6,7 @@
 //   By: mle-roy <mle-roy@student.42.fr>            +#+  +:+       +#+        //
 //                                                +#+#+#+#+#+   +#+           //
 //   Created: 2015/03/16 20:06:33 by mle-roy           #+#    #+#             //
-//   Updated: 2015/04/03 16:13:05 by mle-roy          ###   ########.fr       //
+//   Updated: 2015/04/03 17:27:35 by mle-roy          ###   ########.fr       //
 //                                                                            //
 // ************************************************************************** //
 
@@ -23,7 +23,8 @@ void			GameManager::_playerCollision(Player & play, std::string const & reason)
 	play.setIsAlive(false);
 	play.setDeathReason(reason);
 	this->_map.isEnded = true;
-	this->_libSound->playDeath();
+	if (this->_options.sound)
+		this->_libSound->playDeath();
 }
 
 
@@ -104,36 +105,38 @@ void	GameManager::_generateFood( void )
 		isOk = true;
 	}
 	while (this->_map.foods.empty());
-	// std::cout << "FOOD X = " << newFood.getX()  << " -- Y = " << newFood.getY() << std::endl;
 }
 
 void	GameManager::_generateRocks( void )
 {
 	std::vector<Player>::const_iterator		itP;
 	std::vector<Player>::const_iterator		iteP = this->_map.snakes.end();
-	Vector2									newFood;
+	Vector2									newRock;
 	bool									isOk = true;
 
 	do
 	{
-		newFood.setX((rand() % this->_map.size._x - 1) + 1);
-		newFood.setY((rand() % this->_map.size._y - 1) + 1);
+		newRock.setX((rand() % this->_map.size._x - 1) + 1);
+		newRock.setY((rand() % this->_map.size._y - 1) + 1);
+		if (newRock.getY() == this->_map.size.getY() / 2)
+			newRock.setY((newRock.getY() - 1));
+		else if (newRock.getY() == (this->_map.size.getY() / 2) + 1)
+			newRock.setY((newRock.getY() + 1));
 
-		if (this->_checkCollision(newFood, this->_map.foods.begin(), this->_map.foods.end())
-			|| this->_checkCollision(newFood, this->_map.rocks.begin(), this->_map.rocks.end()))
+		if (this->_checkCollision(newRock, this->_map.foods.begin(), this->_map.foods.end())
+			|| this->_checkCollision(newRock, this->_map.rocks.begin(), this->_map.rocks.end()))
 			isOk = false;
 
 		for (itP = this->_map.snakes.begin(); itP != iteP; itP++)
 		{
-			if (this->_checkCollision(newFood, itP->getLinks().begin(), itP->getLinks().end()))
+			if (this->_checkCollision(newRock, itP->getLinks().begin(), itP->getLinks().end()))
 				isOk = false;
 		}
 		if (isOk)
-			this->_map.foods.push_back(newFood);
+			this->_map.rocks.push_back(newRock);
 		isOk = true;
 	}
-	while (this->_map.rocks.size() < NBROCKS);
-	// std::cout << "FOOD X = " << newFood.getX()  << " -- Y = " << newFood.getY() << std::endl;
+	while (this->_map.rocks.size() < this->_nbObstacles);
 }
 
 void			GameManager::_eatFood( Player & play )
@@ -142,7 +145,8 @@ void			GameManager::_eatFood( Player & play )
 
 	this->_map.foods.remove(*head);
 	play.addLink();
-	this->_libSound->playEat();
+	if (this->_options.sound)
+		this->_libSound->playEat();
 	this->_timeTick -= 15000;
 	if (this->_timeTick < 100000)
 		this->_timeTick = 100000;
@@ -238,12 +242,9 @@ void			GameManager::_checkInput( void )
 {
 	int		input;
 
-	// std::cout << "INNN" << std::endl;
 	input = this->_input;
 	this->_input = 0;
-	// std::cout << "INNN2222------>" << input << std::endl;
 	(this->*(_inputFunction[input]))(input);
-	// std::cout << "OUTTT" << std::endl;
 }
 
 void			GameManager::_movesSnakes( void )
@@ -257,10 +258,8 @@ void			GameManager::_movesSnakes( void )
 
 void			GameManager::_initLib( std::string lib )
 {
-	// void *		dl_handle;
 	IGraphicLib*(*LibCreator)(void);
 
-	// std::cout << "LIB : " << lib << std::endl;
 	if (this->_isLibInit == true)
 		this->_closeLib();
 	this->_dl_handle = dlopen(lib.c_str(), RTLD_LAZY | RTLD_LOCAL);
@@ -313,7 +312,22 @@ void			GameManager::_initSoundLib( void )
 		exit(-1);
 	}
 	this->_libSound = LibCreator();
+	this->_isLibSoundInit = true;
+}
 
+void			GameManager::_closeSoundLib( void )
+{
+	void    (*LibDestructor)(ISoundLib *);
+
+	LibDestructor = (void(*)(ISoundLib*)) dlsym(this->_dl_handle_sound, "deleteLib");
+	if (!LibDestructor)
+	{
+		std::cout << "FAIL LIB DESTRUCTOR ! " << std::endl;
+		exit(-1);
+	}
+	LibDestructor(this->_libSound);
+	dlclose(this->_dl_handle_sound);
+	this->_isLibSoundInit = false;
 }
 
 void			GameManager::_initMenuLib( void )
@@ -333,6 +347,22 @@ void			GameManager::_initMenuLib( void )
 		exit(-1);
 	}
 	this->_libMenu = LibCreator();
+	this->_isLibMenuInit = true;
+}
+
+void			GameManager::_closeMenuLib( void )
+{
+	void    (*LibDestructor)(IMenuLib *);
+
+	LibDestructor = (void(*)(IMenuLib*)) dlsym(this->_dl_handle_menu, "deleteLib");
+	if (!LibDestructor)
+	{
+		std::cout << "FAIL LIB DESTRUCTOR ! " << std::endl;
+		exit(-1);
+	}
+	LibDestructor(this->_libMenu);
+	dlclose(this->_dl_handle_menu);
+	this->_isLibMenuInit = false;
 }
 
 void			GameManager::_generateFirstState( void )
@@ -345,6 +375,11 @@ void			GameManager::_generateFirstState( void )
 	this->_map.snakes.push_back(Player(this->_options.names.first, Vector2(this->_map.size.getX() / 2, this->_map.size.getY() / 2)));
 	if (this->_options.twoPlayers)
 		this->_map.snakes.push_back(Player(this->_options.names.second, Vector2(this->_map.size.getX() / 2, (this->_map.size.getY() / 2) + 1)));
+	if (this->_options.obstacles)
+	{
+		this->_nbObstacles = (4 * (this->_map.size.getX() * this->_map.size.getY())) / 100;
+		this->_generateRocks();
+	}
 }
 
 
@@ -352,9 +387,7 @@ void			GameManager::_generateFirstState( void )
 
 // GameManager::GameManager( void );
 GameManager::GameManager(int players, Vector2 size, std::vector<std::string> libs)
-	: _players(players), _libs(libs), _isLibInit(false), _input(0), _timeTick(TIME_BASE), _isExited(false)
-	// : _map.size(size), _map.pause(false), _map.isEnded(false), _players(players), _libs(libs), _isLibInit(false), _input(0), _timeTick(TIME_BASE)
-	// : _players(players), _libs(libs), _pause(false), _isEnded(false), _isLibInit(false), _input(0), _timeTick(TIME_BASE)
+	: _players(players), _libs(libs), _isLibInit(false), _isLibSoundInit(false), _isLibMenuInit(false), _input(0), _timeTick(TIME_BASE), _isExited(false)
 {
 	this->_initMap(size);
 	// this->_map.snakes.push_back(Player("ahmed", Vector2(15, 15)));
@@ -373,7 +406,10 @@ GameManager::~GameManager( void )
 {
 	if (this->_isLibInit)
 		this->_closeLib();
-	// delete this->_map.map;
+	if (this->_isLibSoundInit)
+		this->_closeSoundLib();
+	if (this->_isLibMenuInit)
+		this->_closeMenuLib();
 }
 
 // GameManager::GameManager(GameManager const &src)
@@ -392,13 +428,8 @@ GameManager::~GameManager( void )
 void	GameManager::Update( void )
 {
 	int		input = 0;
-	// TOption		opt;
-	// int		timeTick = TIME_BASE;
 
-	// this->_timer.updateTimeAdd(300000, MICRO_SECONDS);
 	this->_timer.updateTimeAdd(this->_timeTick, MICRO_SECONDS);
-	// this->_timer.updateTimeAdd(100000, MICRO_SECONDS);
-	// std::cout << "GM0" << std::endl;
 	// std::cout << "GM1" << std::endl;
 	this->_updateMap();
 	// std::cout << "GM2" << std::endl;
@@ -410,7 +441,6 @@ void	GameManager::Update( void )
 			  << "obstacles : " << this->_options.obstacles << std::endl
 			  << "sound : " << this->_options.sound << std::endl
 			  << "exit : " << this->_options. isExited << std::endl;
-	// static_cast<void>(opt);
 	this->_generateFirstState();
 	if (this->_isExited)
 		return ;
@@ -442,8 +472,6 @@ void	GameManager::Update( void )
 			// std::cout << "ICIICICIICIC" << std::endl;
 			if (this->_isExited)
 				break ;
-			// if (this->_isEnded)
-			// 	continue ;
 			// std::cout << "ICII333333333333CICIICIC" << std::endl;
 			if (this->_map.pause || this->_map.isEnded)
 				continue ;
@@ -451,12 +479,6 @@ void	GameManager::Update( void )
 			this->_movesSnakes();
 			// std::cout << "GM7" << std::endl;
 			this->_updateMap();
-			// if (this->_updateMap())
-			// {
-			// 	this->_lib->gameOver(this->_endGame);
-			// 	// break ;
-			// }
-			// input = -1;
 		}
 	}
 }
