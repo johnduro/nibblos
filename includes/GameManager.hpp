@@ -6,7 +6,7 @@
 //   By: mle-roy <mle-roy@student.42.fr>            +#+  +:+       +#+        //
 //                                                +#+#+#+#+#+   +#+           //
 //   Created: 2015/03/16 19:55:34 by mle-roy           #+#    #+#             //
-//   Updated: 2015/04/02 17:55:06 by mle-roy          ###   ########.fr       //
+//   Updated: 2015/04/03 16:14:10 by mle-roy          ###   ########.fr       //
 //                                                                            //
 // ************************************************************************** //
 
@@ -24,6 +24,7 @@
 #include "IMenuLib.hpp"
 
 # define TIME_BASE 300000
+# define NBROCKS 30
 
 class GameManager
 {
@@ -52,6 +53,7 @@ private:
 	bool							_isExited;
 	std::map<int, inputFunctionPtr>	_inputFunction;
 	std::string						_initiatedLib;
+	TOption							_options;
 	// static const std::vector<std::vector<mapBlock>>		_blocks;
 
 
@@ -78,6 +80,7 @@ private:
 	void			_playerCollision( Player & play, std::string const & reason);
 	// TMap::mapBlock	_updateHead(Vector2 const & direction, int player);
 	bool			_checkCollision(Vector2 somePlace, std::list<Vector2>::const_iterator it, std::list<Vector2>::const_iterator ite);
+	void			_generateFirstState( void );
 
 
 

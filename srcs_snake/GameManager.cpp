@@ -6,7 +6,7 @@
 //   By: mle-roy <mle-roy@student.42.fr>            +#+  +:+       +#+        //
 //                                                +#+#+#+#+#+   +#+           //
 //   Created: 2015/03/16 20:06:33 by mle-roy           #+#    #+#             //
-//   Updated: 2015/04/02 18:10:15 by mle-roy          ###   ########.fr       //
+//   Updated: 2015/04/03 16:13:05 by mle-roy          ###   ########.fr       //
 //                                                                            //
 // ************************************************************************** //
 
@@ -107,6 +107,35 @@ void	GameManager::_generateFood( void )
 	// std::cout << "FOOD X = " << newFood.getX()  << " -- Y = " << newFood.getY() << std::endl;
 }
 
+void	GameManager::_generateRocks( void )
+{
+	std::vector<Player>::const_iterator		itP;
+	std::vector<Player>::const_iterator		iteP = this->_map.snakes.end();
+	Vector2									newFood;
+	bool									isOk = true;
+
+	do
+	{
+		newFood.setX((rand() % this->_map.size._x - 1) + 1);
+		newFood.setY((rand() % this->_map.size._y - 1) + 1);
+
+		if (this->_checkCollision(newFood, this->_map.foods.begin(), this->_map.foods.end())
+			|| this->_checkCollision(newFood, this->_map.rocks.begin(), this->_map.rocks.end()))
+			isOk = false;
+
+		for (itP = this->_map.snakes.begin(); itP != iteP; itP++)
+		{
+			if (this->_checkCollision(newFood, itP->getLinks().begin(), itP->getLinks().end()))
+				isOk = false;
+		}
+		if (isOk)
+			this->_map.foods.push_back(newFood);
+		isOk = true;
+	}
+	while (this->_map.rocks.size() < NBROCKS);
+	// std::cout << "FOOD X = " << newFood.getX()  << " -- Y = " << newFood.getY() << std::endl;
+}
+
 void			GameManager::_eatFood( Player & play )
 {
 	Vector2 const *		head = &(play.getHead());
@@ -123,7 +152,8 @@ void			GameManager::_eatFood( Player & play )
 
 void			GameManager::_playerOneMvt( int input )
 {
-	this->_map.snakes.front().setDir(input);
+	if (!(this->_map.pause))
+		this->_map.snakes.front().setDir(input);
 }
 
 void			GameManager::_gamePause( int input )
@@ -172,8 +202,11 @@ void			GameManager::_gameLib( int input )
 
 void			GameManager::_playerTwoMvt( int input )
 {
-	if (this->_map.snakes.size() > 1)
-		this->_map.snakes.back().setDir(input);
+	if (!(this->_map.pause))
+	{
+		if (this->_map.snakes.size() > 1)
+			this->_map.snakes.back().setDir(input);
+	}
 }
 
 
@@ -302,6 +335,19 @@ void			GameManager::_initMenuLib( void )
 	this->_libMenu = LibCreator();
 }
 
+void			GameManager::_generateFirstState( void )
+{
+	if (this->_options.isExited)
+	{
+		this->_isExited = true;
+		return ;
+	}
+	this->_map.snakes.push_back(Player(this->_options.names.first, Vector2(this->_map.size.getX() / 2, this->_map.size.getY() / 2)));
+	if (this->_options.twoPlayers)
+		this->_map.snakes.push_back(Player(this->_options.names.second, Vector2(this->_map.size.getX() / 2, (this->_map.size.getY() / 2) + 1)));
+}
+
+
 // ** CANONICAL ** //
 
 // GameManager::GameManager( void );
@@ -320,9 +366,7 @@ GameManager::GameManager(int players, Vector2 size, std::vector<std::string> lib
 	// 	exit(-1);
 	// }
 	this->_initSoundLib();
-	std::cout << "HIPHPIOHPHOPIHIPHPH" << std::endl;
 	this->_initMenuLib();
-	std::cout << "22222222222222HIPHPIOHPHOPIHIPHPH" << std::endl;
 }
 
 GameManager::~GameManager( void )
@@ -348,7 +392,7 @@ GameManager::~GameManager( void )
 void	GameManager::Update( void )
 {
 	int		input = 0;
-	TOption		opt;
+	// TOption		opt;
 	// int		timeTick = TIME_BASE;
 
 	// this->_timer.updateTimeAdd(300000, MICRO_SECONDS);
@@ -359,11 +403,18 @@ void	GameManager::Update( void )
 	this->_updateMap();
 	// std::cout << "GM2" << std::endl;
 	std::cout << "MENU IN" << std::endl;
-	opt = this->_libMenu->startMenu();
+	this->_options = this->_libMenu->startMenu();
 	std::cout << "MENU OUT" << std::endl;
-	static_cast<void>(opt);
-
-	this->_map.snakes.push_back(Player("ahmed", Vector2(15, 15)));
+	std::cout << "p1 : " << this->_options.names.first << std::endl
+			  <<  "p2 : " << this->_options.names.second << std::endl
+			  << "obstacles : " << this->_options.obstacles << std::endl
+			  << "sound : " << this->_options.sound << std::endl
+			  << "exit : " << this->_options. isExited << std::endl;
+	// static_cast<void>(opt);
+	this->_generateFirstState();
+	if (this->_isExited)
+		return ;
+	// this->_map.snakes.push_back(Player("ahmed", Vector2(15, 15)));
 	if (this->_libs.size() > 0)
 		this->_initLib(this->_libs.front());
 	else
@@ -395,7 +446,7 @@ void	GameManager::Update( void )
 			// 	continue ;
 			// std::cout << "ICII333333333333CICIICIC" << std::endl;
 			if (this->_map.pause || this->_map.isEnded)
-				continue;
+				continue ;
 			// std::cout << "GM6" << std::endl;
 			this->_movesSnakes();
 			// std::cout << "GM7" << std::endl;

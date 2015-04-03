@@ -41,6 +41,7 @@ void			MenuLib::_drawMenuBorders( void )
 		mvwprintw(this->_menuWin, y - 1, i, "-");
 	}
 	wrefresh(this->_menuWin);
+	refresh();
 }
 
 void		MenuLib::_initNCurses( void )
@@ -54,7 +55,7 @@ void		MenuLib::_initNCurses( void )
 	cbreak();
 	keypad(stdscr, TRUE);
 	curs_set(0);
-	timeout(0);
+	// timeout(0);
 	start_color();
 	init_pair(M_UNSELECTED, COLOR_WHITE, COLOR_BLACK);
 	init_pair(M_SELECTED, COLOR_BLACK, COLOR_WHITE);
@@ -73,107 +74,93 @@ void		MenuLib::_initNCurses( void )
 	// this->_refresh();
 	this->_drawMenuBorders();
 	wrefresh(this->_menuWin);
+	refresh();
 	// this->_drawBorders(this->_score);
 	// wbkgd(this->_score, COLOR_PAIR(BW));
 	// this->_isInit = true;
 }
 
-void		MenuLib::_printString(WINDOW *win, int y, int x, const char *str, int pair)
+// void		MenuLib::_printString(WINDOW *win, int y, int x, const char *str, int pair)
+// {
+// 	wattron(win, COLOR_PAIR(pair));
+// 	mvwprintw(win, y, x, str);
+// 	wattroff(win, COLOR_PAIR(pair));
+// }
+
+void		MenuLib::_printString(WINDOW *win, int y, int x, const char *str, bool selected)
 {
-	attron(COLOR_PAIR(pair));
+	int		pair = M_UNSELECTED;
+
+	if (selected)
+		pair = M_SELECTED;
+	wattron(win, COLOR_PAIR(pair));
 	mvwprintw(win, y, x, str);
-	attroff(COLOR_PAIR(pair));
+	wattroff(win, COLOR_PAIR(pair));
 }
 
 void		MenuLib::_printMain( void )
 {
-	if (this->_mainS.s)
-		this->_printString(this->_menuWin, 4, 18, "START", M_SELECTED);
-	else
-		this->_printString(this->_menuWin, 4, 18, "START", M_UNSELECTED);
-
-	if (this->_mainS.m)
-		this->_printString(this->_menuWin, 5, 15, "MULTIPLAYER", M_SELECTED);
-	else
-		this->_printString(this->_menuWin, 5, 15, "MULTIPLAYER", M_UNSELECTED);
-
-	if (this->_mainS.o)
-		this->_printString(this->_menuWin, 6, 17, "OPTIONS", M_SELECTED);
-	else
-		this->_printString(this->_menuWin, 6, 17, "OPTIONS", M_UNSELECTED);
-
-	if (this->_mainS.e)
-		this->_printString(this->_menuWin, 7, 18, "EXIT", M_SELECTED);
-	else
-		this->_printString(this->_menuWin, 7, 18, "EXIT", M_UNSELECTED);
+	clear();
+	wclear(this->_menuWin);
+	refresh();
 	wrefresh(this->_menuWin);
+	this->_drawMenuBorders();
+	this->_printString(this->_menuWin, 4, 18, "START", this->_mainS.s);
+	this->_printString(this->_menuWin, 5, 15, "MULTIPLAYER", this->_mainS.m);
+	this->_printString(this->_menuWin, 6, 17, "OPTIONS", this->_mainS.o);
+	this->_printString(this->_menuWin, 7, 18, "EXIT", this->_mainS.e);
+	wrefresh(this->_menuWin);
+	refresh();
 }
 
 void		MenuLib::_printMulti( void )
 {
-	if (this->_multiS.m)
-		this->_printString(this->_menuWin, 4, 18, "MULTIPLAYER", M_SELECTED);
-	else
-		this->_printString(this->_menuWin, 4, 18, "MULTIPLAYER", M_UNSELECTED);
-
-	if (this->_opt.twoPlayers)
-		this->_printString(this->_menuWin, 4, 23, " ON", M_UNSELECTED);
-	else
-		this->_printString(this->_menuWin, 4, 23, " OFF", M_UNSELECTED);
-
-	if (this->_multiS.p1)
-		this->_printString(this->_menuWin, 5, 15, "PLAYER 1 NAME", M_SELECTED);
-	else
-		this->_printString(this->_menuWin, 5, 15, "PLAYER 1 NAME", M_UNSELECTED);
-
-	if (this->_multiS.p2)
-		this->_printString(this->_menuWin, 6, 17, "PLAYER 2 NAME", M_SELECTED);
-	else
-		this->_printString(this->_menuWin, 6, 17, "PLAYER 2 NAME", M_UNSELECTED);
-
-	if (this->_multiS.b)
-		this->_printString(this->_menuWin, 7, 18, "BACK", M_SELECTED);
-	else
-		this->_printString(this->_menuWin, 7, 18, "BACK", M_UNSELECTED);
+	clear();
+	wclear(this->_menuWin);
+	refresh();
 	wrefresh(this->_menuWin);
+	this->_drawMenuBorders();
+	this->_printString(this->_menuWin, 4, 12, "MULTIPLAYER", this->_multiS.m);
+	if (this->_opt.twoPlayers)
+		this->_printString(this->_menuWin, 4, 24, " ON", false);
+	else
+		this->_printString(this->_menuWin, 4, 24, " OFF", false);
+	this->_printString(this->_menuWin, 5, 13, "PLAYER 1 NAME", this->_multiS.p1);
+	this->_printString(this->_menuWin, 6, 13, "PLAYER 2 NAME", this->_multiS.p2);
+	this->_printString(this->_menuWin, 7, 18, "BACK",  this->_multiS.b);
+	wrefresh(this->_menuWin);
+	refresh();
 }
 
 void		MenuLib::_printOptions( void )
 {
-	if (this->_optionS.s)
-		this->_printString(this->_menuWin, 4, 17, "SOUND", M_SELECTED);
-	else
-		this->_printString(this->_menuWin, 4, 17, "SOUND", M_UNSELECTED);
-
-	if (this->_opt.sound)
-		this->_printString(this->_menuWin, 4, 23, " ON", M_UNSELECTED);
-	else
-		this->_printString(this->_menuWin, 4, 23, " OFF", M_UNSELECTED);
-
-	if (this->_optionS.o)
-		this->_printString(this->_menuWin, 5, 15, "OBSTACLES", M_SELECTED);
-	else
-		this->_printString(this->_menuWin, 5, 15, "OBSTACLES", M_UNSELECTED);
-
-	if (this->_opt.obstacles)
-		this->_printString(this->_menuWin, 5, 25, " ON", M_UNSELECTED);
-	else
-		this->_printString(this->_menuWin, 5, 25, " OFF", M_UNSELECTED);
-
-	if (this->_optionS.b)
-		this->_printString(this->_menuWin, 6, 19, "BACK", M_SELECTED);
-	else
-		this->_printString(this->_menuWin, 6, 19, "BACK", M_UNSELECTED);
+	clear();
+	wclear(this->_menuWin);
+	refresh();
 	wrefresh(this->_menuWin);
+	this->_drawMenuBorders();
+	this->_printString(this->_menuWin, 4, 17, "SOUND", this->_optionS.s);
+	if (this->_opt.sound)
+		this->_printString(this->_menuWin, 4, 23, " ON", false);
+	else
+		this->_printString(this->_menuWin, 4, 23, " OFF", false);
+	this->_printString(this->_menuWin, 5, 15, "OBSTACLES", this->_optionS.o);
+	if (this->_opt.obstacles)
+		this->_printString(this->_menuWin, 5, 25, " ON", false);
+	else
+		this->_printString(this->_menuWin, 5, 25, " OFF", false);
+	this->_printString(this->_menuWin, 6, 19, "BACK", this->_optionS.b);
+	wrefresh(this->_menuWin);
+	refresh();
 }
 
 void		MenuLib::_mainInput( int input )
 {
-	if (input == KEY_ENTER)
+	if (input == NC_ENTER)
 		this->_main = false;
 	if (this->_mainS.s)
 	{
-		if (input == KEY_ENTER)
+		if (input == NC_ENTER)
 			this->_start = true;
 		else if (input == NC_UP || input == NC_DOWN)
 		{
@@ -186,7 +173,7 @@ void		MenuLib::_mainInput( int input )
 	}
 	else if (this->_mainS.m)
 	{
-		if (input == KEY_ENTER)
+		if (input == NC_ENTER)
 			this->_multi = true;
 		else if (input == NC_UP || input == NC_DOWN)
 		{
@@ -199,7 +186,7 @@ void		MenuLib::_mainInput( int input )
 	}
 	else if (this->_mainS.o)
 	{
-		if (input == KEY_ENTER)
+		if (input == NC_ENTER)
 			this->_options = true;
 		else if (input == NC_UP || input == NC_DOWN)
 		{
@@ -212,7 +199,7 @@ void		MenuLib::_mainInput( int input )
 	}
 	else if (this->_mainS.e)
 	{
-		if (input == KEY_ENTER)
+		if (input == NC_ENTER)
 		{
 			this->_exit = true;
 			this->_opt.isExited = true;
@@ -228,16 +215,24 @@ void		MenuLib::_mainInput( int input )
 	}
 }
 
-void			MenuLib::_getPlayerName( char player, const char *str)
+void			MenuLib::_getPlayerName( char player, const char *str )
 {
 	char		buff[80];
 
 	clear();
-	this->_drawMenuBorders();
-	this->_printString(this->_menuWin, 5, 10, str, M_UNSELECTED);
+	wclear(this->_menuWin);
 	nocbreak();
 	echo();
-	wmove(this->_menuWin, 6, 12);
+	curs_set(1);
+	refresh();
+	// timeout(-1);
+	this->_drawMenuBorders();
+	this->_printString(this->_menuWin, 5, 11, str, false);
+	wrefresh(this->_menuWin);
+	refresh();
+	// wmove(this->_menuWin, 6, 12);
+	move(6, 12);
+	refresh();
 	getnstr(buff, 75);
 	if (player == P1)
 		this->_opt.names.first = std::string(buff);
@@ -245,6 +240,8 @@ void			MenuLib::_getPlayerName( char player, const char *str)
 		this->_opt.names.second = std::string(buff);
 	noecho();
 	cbreak();
+	curs_set(0);
+	// timeout(0);
 }
 
 
@@ -252,7 +249,7 @@ void		MenuLib::_multiInput( int input )
 {
 	if (this->_multiS.m)
 	{
-		if (input == KEY_ENTER)
+		if (input == NC_ENTER)
 			this->_opt.twoPlayers = !(this->_opt.twoPlayers);
 		else if (input == NC_UP || input == NC_DOWN)
 		{
@@ -265,7 +262,7 @@ void		MenuLib::_multiInput( int input )
 	}
 	else if (this->_multiS.p1)
 	{
-		if (input == KEY_ENTER)
+		if (input == NC_ENTER)
 			this->_getPlayerName(P1, "ENTER PLAYER 1 NAME :");
 		else if (input == NC_UP || input == NC_DOWN)
 		{
@@ -278,7 +275,7 @@ void		MenuLib::_multiInput( int input )
 	}
 	else if (this->_multiS.p2)
 	{
-		if (input == KEY_ENTER)
+		if (input == NC_ENTER)
 			this->_getPlayerName(P2, "ENTER PLAYER 2 NAME :");
 		else if (input == NC_UP || input == NC_DOWN)
 		{
@@ -291,7 +288,7 @@ void		MenuLib::_multiInput( int input )
 	}
 	else if (this->_multiS.b)
 	{
-		if (input == KEY_ENTER)
+		if (input == NC_ENTER)
 		{
 			this->_multi = false;
 			this->_main = true;
@@ -311,7 +308,7 @@ void		MenuLib::_optionsInput( int input )
 {
 	if (this->_optionS.s)
 	{
-		if (input == KEY_ENTER)
+		if (input == NC_ENTER)
 			this->_opt.sound = !(this->_opt.sound);
 		else if (input == NC_UP || input == NC_DOWN)
 		{
@@ -324,7 +321,7 @@ void		MenuLib::_optionsInput( int input )
 	}
 	else if (this->_optionS.o)
 	{
-		if (input == KEY_ENTER)
+		if (input == NC_ENTER)
 			this->_opt.obstacles = !(this->_opt.obstacles);
 		else if (input == NC_UP || input == NC_DOWN)
 		{
@@ -337,14 +334,14 @@ void		MenuLib::_optionsInput( int input )
 	}
 	else if (this->_optionS.b)
 	{
-		if (input == KEY_ENTER)
+		if (input == NC_ENTER)
 		{
 			this->_options = false;
 			this->_main = true;
 		}
 		else if (input == NC_UP || input == NC_DOWN)
 		{
-			this->_optionS.o = false;
+			this->_optionS.b = false;
 			if (input == NC_UP)
 				this->_optionS.o = true;
 			else
@@ -358,17 +355,21 @@ void		MenuLib::_mainLoop( void )
 	int		input;
 
 	clear();
-	this->_drawMenuBorders();
+	// this->_drawMenuBorders();
+	// wrefresh(this->_menuWin);
+	refresh();
 	while (42)
 	{
-		if (this->_start || this->_exit)
+		if (this->_start || this->_exit || !this->_main)
 			break ;
 		this->_printMain();
 		input = getch();
+		// input = wgetch(this->_menuWin);
 		if (input == NC_EXIT)
 			this->_exit = true;
 		else if (input != -1)
 			this->_mainInput(input);
+		input = -1;
 	}
 }
 
@@ -377,7 +378,8 @@ void		MenuLib::_multiLoop( void )
 	int		input;
 
 	clear();
-	this->_drawMenuBorders();
+	refresh();
+	// this->_drawMenuBorders();
 	while (42)
 	{
 		if (this->_multi == false)
@@ -391,6 +393,7 @@ void		MenuLib::_multiLoop( void )
 		}
 		else if (input != -1)
 			this->_multiInput(input);
+		input = -1;
 	}
 }
 
@@ -399,7 +402,8 @@ void		MenuLib::_optionsLoop( void )
 	int		input;
 
 	clear();
-	this->_drawMenuBorders();
+	refresh();
+	// this->_drawMenuBorders();
 	while (42)
 	{
 		if (this->_options == false)
@@ -413,6 +417,7 @@ void		MenuLib::_optionsLoop( void )
 		}
 		else if (input != -1)
 			this->_optionsInput(input);
+		input = -1;
 	}
 }
 
@@ -450,15 +455,10 @@ void		MenuLib::_initOpt( void )
 
 TOption		MenuLib::startMenu( void )
 {
-	std::cout << "yyOYOYOYOYOYOYOY" << std::endl;
 	this->_initOpt();
-	std::cout << "22222222222222yyOYOYOYOYOYOYOY" << std::endl;
 	this->_initNCurses();
-	std::cout << "33333333333yyOYOYOYOYOYOYOY" << std::endl;
 	this->_menuLoop();
-	std::cout << "4444444444444yyOYOYOYOYOYOYOY" << std::endl;
 	this->_clearNCurses();
-	std::cout << "5555555555555yyOYOYOYOYOYOYOY" << std::endl;
 	return this->_opt;
 }
 
