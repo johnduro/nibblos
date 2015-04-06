@@ -17,6 +17,6 @@ const char* 		LibraryException::what() const throw()
 {
 	std::string		ret;
 
-	ret = "Graphic Library exception : " + std::string(std::runtime_error::what());
+	ret = "Library exception : " + std::string(std::runtime_error::what());
 	return (ret.c_str());
 }

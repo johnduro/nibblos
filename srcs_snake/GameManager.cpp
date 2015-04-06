@@ -266,17 +266,9 @@ void			GameManager::_initLib( std::string lib )
 	this->_dl_handle = dlopen(lib.c_str(), RTLD_LAZY | RTLD_LOCAL);
 	if (!this->_dl_handle)
 		throw GameManagerException("graphic : Could not get handle for " + lib);
-	// {
-	// 	std::cout << "FAIL LIB HANDLE ! " << std::endl;
-	// 	exit(-1);
-	// }
 	LibCreator = (IGraphicLib *(*)(void)) dlsym(this->_dl_handle, "createLib");
 	if (!LibCreator)
 		throw GameManagerException("graphic : Could not get adress for symbol requested : createLib");
-	// {
-	// 	std::cout << "FAIL LIB CREATOR ! " << std::endl;
-	// 	exit(-1);
-	// }
 	this->_lib = LibCreator();
 	this->_isLibInit = true;
 	this->_initiatedLib = lib;
@@ -290,10 +282,6 @@ void			GameManager::_closeLib( void )
 	LibDestructor = (void(*)(IGraphicLib*)) dlsym(this->_dl_handle, "deleteLib");
 	if (!LibDestructor)
 		throw GameManagerException("graphic : Could not get adress for symbol requested : deleteLib");
-	// {
-	// 	std::cout << "FAIL LIB DESTRUCTOR ! " << std::endl;
-	// 	exit(-1);
-	// }
 	LibDestructor(this->_lib);
 	dlclose(this->_dl_handle);
 	this->_isLibInit = false;
@@ -306,17 +294,9 @@ void			GameManager::_initSoundLib( void )
 	this->_dl_handle_sound = dlopen("FMOD.so", RTLD_LAZY | RTLD_LOCAL);
 	if (!this->_dl_handle_sound)
 		throw GameManagerException("sound : Could not get handle for FMOD.so");
-	// {
-	// 	std::cout << "FAIL LIB HANDLE ! " << std::endl;
-	// 	exit(-1);
-	// }
 	LibCreator = (ISoundLib *(*)(void)) dlsym(this->_dl_handle_sound, "createLib");
 	if (!LibCreator)
 		throw GameManagerException("sound : Could not get adress for symbol requested : createLib");
-	// {
-	// 	std::cout << "FAIL LIB CREATOR ! " << std::endl;
-	// 	exit(-1);
-	// }
 	this->_libSound = LibCreator();
 	this->_isLibSoundInit = true;
 }
@@ -328,10 +308,6 @@ void			GameManager::_closeSoundLib( void )
 	LibDestructor = (void(*)(ISoundLib*)) dlsym(this->_dl_handle_sound, "deleteLib");
 	if (!LibDestructor)
 		throw GameManagerException("sound : Could not get adress for symbol requested : deleteLib");
-	// {
-	// 	std::cout << "FAIL LIB DESTRUCTOR ! " << std::endl;
-	// 	exit(-1);
-	// }
 	LibDestructor(this->_libSound);
 	dlclose(this->_dl_handle_sound);
 	this->_isLibSoundInit = false;
@@ -344,17 +320,9 @@ void			GameManager::_initMenuLib( void )
 	this->_dl_handle_menu = dlopen("MENU.so", RTLD_LAZY | RTLD_LOCAL);
 	if (!this->_dl_handle_menu)
 		throw GameManagerException("menu : Could not get handle for MENU.so");
-	// {
-	// 	std::cout << "FAIL LIB MENU HANDLE ! " << std::endl;
-	// 	exit(-1);
-	// }
 	LibCreator = (IMenuLib *(*)(void)) dlsym(this->_dl_handle_menu, "createLib");
 	if (!LibCreator)
 		throw GameManagerException("menu : Could not get adress for symbol requested : createLib");
-	// {
-	// 	std::cout << "FAIL LIB MENU CREATOR ! " << std::endl;
-	// 	exit(-1);
-	// }
 	this->_libMenu = LibCreator();
 	this->_isLibMenuInit = true;
 }
@@ -366,10 +334,6 @@ void			GameManager::_closeMenuLib( void )
 	LibDestructor = (void(*)(IMenuLib*)) dlsym(this->_dl_handle_menu, "deleteLib");
 	if (!LibDestructor)
 		throw GameManagerException("menu : Could not get adress for symbol requested : deleteLib");
-	// {
-	// 	std::cout << "FAIL LIB DESTRUCTOR ! " << std::endl;
-	// 	exit(-1);
-	// }
 	LibDestructor(this->_libMenu);
 	dlclose(this->_dl_handle_menu);
 	this->_isLibMenuInit = false;
@@ -392,22 +356,12 @@ void			GameManager::_generateFirstState( void )
 	}
 }
 
-
 // ** CANONICAL ** //
 
-// GameManager::GameManager( void );
 GameManager::GameManager(int players, Vector2 size, std::vector<std::string> libs)
 	: _players(players), _libs(libs), _isLibInit(false), _isLibSoundInit(false), _isLibMenuInit(false), _input(0), _timeTick(TIME_BASE), _isExited(false)
 {
 	this->_initMap(size);
-	// this->_map.snakes.push_back(Player("ahmed", Vector2(15, 15)));
-	// if (this->_libs.size() > 0)
-	// 	this->_initLib(this->_libs.front());
-	// else
-	// {
-	// 	std::cout << "PAS DE LIB !!!!!" << std::endl;
-	// 	exit(-1);
-	// }
 	this->_initSoundLib();
 	this->_initMenuLib();
 }
@@ -422,17 +376,6 @@ GameManager::~GameManager( void )
 		this->_closeMenuLib();
 }
 
-// GameManager::GameManager(GameManager const &src)
-// {
-// 	*this = src;
-// }
-
-// GameManager &	GameManager::operator=(GameManager const &rhs)
-// {
-// 	return *this;
-// }
-
-
 // ** PUBLIC FUNCTION ** //
 
 void	GameManager::Update( void )
@@ -440,35 +383,21 @@ void	GameManager::Update( void )
 	int		input = 0;
 
 	this->_timer.updateTimeAdd(this->_timeTick, MICRO_SECONDS);
-	// std::cout << "GM1" << std::endl;
 	this->_updateMap();
-	// std::cout << "GM2" << std::endl;
-	std::cout << "MENU IN" << std::endl;
 	this->_options = this->_libMenu->startMenu();
-	std::cout << "MENU OUT" << std::endl;
-	std::cout << "p1 : " << this->_options.names.first << std::endl
-			  <<  "p2 : " << this->_options.names.second << std::endl
-			  << "obstacles : " << this->_options.obstacles << std::endl
-			  << "sound : " << this->_options.sound << std::endl
-			  << "exit : " << this->_options. isExited << std::endl;
 	this->_generateFirstState();
 	if (this->_isExited)
 		return ;
-	// this->_map.snakes.push_back(Player("ahmed", Vector2(15, 15)));
+
 	if (this->_libs.size() > 0)
 		this->_initLib(this->_libs.front());
 	else
 		throw GameManagerException("no graphic library found");
-	// {
-	// 	std::cout << "PAS DE LIB !!!!!" << std::endl;
-	// 	exit(-1);
-	// }
 
 	this->_lib->initLibrary(this->_map);
 	while (42)
 	{
 		this->_lib->printMap(this->_map);
-		// std::cout << "GM4" << std::endl;
 		input = this->_lib->getInput();
 		if (input != 0)
 		{
@@ -477,18 +406,13 @@ void	GameManager::Update( void )
 		}
 		if (this->_timer.isTick())
 		{
-			// std::cout << "GM5" << std::endl;
 			if (this->_input != 0)
 				this->_checkInput();
-			// std::cout << "ICIICICIICIC" << std::endl;
 			if (this->_isExited)
 				break ;
-			// std::cout << "ICII333333333333CICIICIC" << std::endl;
 			if (this->_map.pause || this->_map.isEnded)
 				continue ;
-			// std::cout << "GM6" << std::endl;
 			this->_movesSnakes();
-			// std::cout << "GM7" << std::endl;
 			this->_updateMap();
 		}
 	}

@@ -3,23 +3,31 @@
 
 // Constructeur de Destucteur
 
-SceneOpenGL::SceneOpenGL() : m_titreFenetre("SNAKE"), m_largeurFenetre(1200), m_hauteurFenetre(800), m_fenetre(0), m_contexteOpenGL(0) {}
+OpenGLLib::OpenGLLib() : m_titreFenetre("SNAKE"), m_largeurFenetre(1200), m_hauteurFenetre(800), m_fenetre(0), m_contexteOpenGL(0) {}
 
-void 	SceneOpenGL::initLibrary( TMap & map )
+void 	OpenGLLib::initLibrary( TMap & map )
 {
+
+	this->_inputArray[SDLK_ESCAPE] = STD_EXIT;
+
+	this->_inputArray[SDLK_RIGHT] = STD_RIGHT;
+	this->_inputArray[SDLK_LEFT] = STD_LEFT;
+	this->_inputArray[SDLK_UP] = STD_UP;
+	this->_inputArray[SDLK_DOWN] = STD_DOWN;
+
+	this->_inputArray[SDLK_d] = STD_RIGHT_P2;
+	this->_inputArray[SDLK_a] = STD_LEFT_P2;
+	this->_inputArray[SDLK_w] = STD_UP_P2;
+	this->_inputArray[SDLK_s] = STD_DOWN_P2;
+
+	this->_inputArray[SDLK_F1] = STD_LIB1;
+	this->_inputArray[SDLK_F2] = STD_LIB2;
+	this->_inputArray[SDLK_F3] = STD_LIB3;
+
 	scale = Vector3(40, 40, 20) / 0.5f;
 	scale.setZ(scale.getZ() * -0.5);
 
-	if(this->initialiserFenetre() == false)
-	{
-		std::cout << "window init" << std::endl;
-		return;
-	}
-	if(this->initGL() == false)
-	{
-		std::cout << "GL init" << std::endl;
-		return;
-	}
+	this->initialiserFenetre();
 
 	// Variables
 	this->echelle = (64/15);
@@ -30,7 +38,7 @@ void 	SceneOpenGL::initLibrary( TMap & map )
 	glLoadIdentity();
 	glOrtho(0, 1, 0, 1, 0, 3);
 	glMatrixMode(GL_MODELVIEW);
-	glTranslatef(0.5, 0.4, -2.); // (0.8, 0.3, -2.)
+	glTranslatef(0.5, 0.48, -2.); // (0.8, 0.3, -2.)
 	// glRotatef(180, 0, 1, 0);
 	// glRotatef(60, 0, 0, 1);
 	glRotatef(180, 1, 0, 0);
@@ -38,9 +46,9 @@ void 	SceneOpenGL::initLibrary( TMap & map )
 	glScalef(1/this->scale.getX(), 1/this->scale.getY(), 1/this->scale.getZ());
 }
 
-SceneOpenGL::~SceneOpenGL() {}
+OpenGLLib::~OpenGLLib() {}
 
-void	SceneOpenGL::closeLibrary( void )
+void	OpenGLLib::closeLibrary( void )
 {
 	SDL_GL_DeleteContext(m_contexteOpenGL);
 	SDL_DestroyWindow(m_fenetre);
@@ -49,16 +57,14 @@ void	SceneOpenGL::closeLibrary( void )
 
 // Methodes
 
-bool SceneOpenGL::initialiserFenetre( void )
+void OpenGLLib::initialiserFenetre( void )
 {
 	// Initialisation de la SDL
 
 	if(SDL_Init(SDL_INIT_VIDEO) < 0)
 	{
-		std::cout << "Erreur lors de l'initialisation de la SDL : " << SDL_GetError() << std::endl;
 		SDL_Quit();
-
-		return false;
+		throw LibraryException(std::string("OpenGL-Lib: Erreur lors de l'initialisation de la SDL : ") + SDL_GetError());
 	}
 
 	// Version d'OpenGL
@@ -77,10 +83,8 @@ bool SceneOpenGL::initialiserFenetre( void )
 
 	if(m_fenetre == 0)
 	{
-		std::cout << "Erreur lors de la creation de la fenetre : " << SDL_GetError() << std::endl;
 		SDL_Quit();
-
-		return false;
+		throw LibraryException(std::string("OpenGL-Lib: Erreur lors de la creation de la fenetre : ") + SDL_GetError());
 	}
 
 	// Creation du contexte OpenGL
@@ -89,48 +93,13 @@ bool SceneOpenGL::initialiserFenetre( void )
 
 	if(m_contexteOpenGL == 0)
 	{
-		std::cout << SDL_GetError() << std::endl;
 		SDL_DestroyWindow(m_fenetre);
 		SDL_Quit();
-
-		return false;
+		throw LibraryException(std::string("OpenGL-Lib: ") + SDL_GetError());
 	}
-
-	return true;
 }
 
-bool SceneOpenGL::initGL( void )
-{
-#ifdef WIN32
-
-	// On initialise GLEW
-
-	GLenum initialisationGLEW(glewInit());
-
-	// Si l'initialisation a echoue :
-
-	if(initialisationGLEW != GLEW_OK)
-	{
-		// On affiche l'erreur grace a la fonction : glewGetErrorString(GLenum code)
-
-		std::cout << "Erreur d'initialisation de GLEW : " << glewGetErrorString(initialisationGLEW) << std::endl;
-
-		// On quitte la SDL
-
-		SDL_GL_DeleteContext(m_contexteOpenGL);
-		SDL_DestroyWindow(m_fenetre);
-		SDL_Quit();
-
-		return false;
-	}
-
-#endif
-
-	// Tout s'est bien passe, on retourne true
-	return true;
-}
-
-Vector3 SceneOpenGL::setColor(float height, float echelle)
+Vector3 OpenGLLib::setColor(float height, float echelle)
 {
 	height = (height) / echelle;
 	if (height < 0.3f)
@@ -143,7 +112,7 @@ Vector3 SceneOpenGL::setColor(float height, float echelle)
 	return Vector3();
 }
 
-void SceneOpenGL::drawDot(Vector3 p)
+void OpenGLLib::drawDot(Vector3 p)
 {
 	glBegin(GL_POINTS);
 	glVertex3f(p.getX(), p.getY(), p.getZ());
@@ -151,7 +120,7 @@ void SceneOpenGL::drawDot(Vector3 p)
 	glFlush();
 }
 
-void SceneOpenGL::drawLine(Vector3 p1, Vector3 p2)
+void OpenGLLib::drawLine(Vector3 p1, Vector3 p2)
 {
 	glBegin(GL_LINES);
 	glVertex3f(p1.getX(), p1.getY(), p1.getZ());
@@ -160,7 +129,7 @@ void SceneOpenGL::drawLine(Vector3 p1, Vector3 p2)
 	glFlush();
 }
 
-void SceneOpenGL::drawTriangles(Vector3 p1, Vector3 p2, Vector3 p3, float echelle)
+void OpenGLLib::drawTriangles(Vector3 p1, Vector3 p2, Vector3 p3, float echelle)
 {
 	glBegin(GL_TRIANGLE_STRIP);
 	setColor(p1.getZ(), echelle);
@@ -173,7 +142,7 @@ void SceneOpenGL::drawTriangles(Vector3 p1, Vector3 p2, Vector3 p3, float echell
 	glFlush();
 }
 
-void SceneOpenGL::drawQuad(Vector3 p1, Vector3 p2, Vector3 p3, Vector3 p4)
+void OpenGLLib::drawQuad(Vector3 p1, Vector3 p2, Vector3 p3, Vector3 p4)
 {
 	glBegin(GL_QUADS);
 	glVertex3f(p1.getX(), p1.getY(), p1.getZ());
@@ -184,7 +153,7 @@ void SceneOpenGL::drawQuad(Vector3 p1, Vector3 p2, Vector3 p3, Vector3 p4)
 	glFlush();
 }
 
-float *SceneOpenGL::getTheFucknColor(float r, float g, float b, float a) const
+float *OpenGLLib::getTheFucknColor(float r, float g, float b, float a) const
 {
 	float *color = new float[120];
 	float co[] =
@@ -225,7 +194,7 @@ float *SceneOpenGL::getTheFucknColor(float r, float g, float b, float a) const
 	return color;
 }
 
-void SceneOpenGL::drawVox(Vector3 p, int mmm) const
+void OpenGLLib::drawVox(Vector3 p, int mmm) const
 {
 	float x0 = p.getX() - 0.5f;
 	float x1 = p.getX() + 0.5f;
@@ -309,9 +278,9 @@ void SceneOpenGL::drawVox(Vector3 p, int mmm) const
 		case 4:
 			color = getTheFucknColor(0.7f, 0.7f, 0, 1);
 			break;
-	case 5:
-		color = getTheFucknColor(0, 0, 0, 1);
-		break;
+		case 5:
+			color = getTheFucknColor(0, 0, 0, 1);
+			break;
 	}
 
 	glEnableClientState(GL_VERTEX_ARRAY);
@@ -329,7 +298,7 @@ void SceneOpenGL::drawVox(Vector3 p, int mmm) const
 	glDisableClientState(GL_COLOR_ARRAY);
 }
 
-void				SceneOpenGL::drawFace(Vector2 a, Vector2 b, Vector2 c, Vector2 g)
+void				OpenGLLib::drawFace(Vector2 a, Vector2 b, Vector2 c, Vector2 g)
 {
 	GLfloat vertices[] =
 	{
@@ -364,34 +333,25 @@ void				SceneOpenGL::drawFace(Vector2 a, Vector2 b, Vector2 c, Vector2 g)
 	glDisableClientState(GL_COLOR_ARRAY);
 }
 
-int		SceneOpenGL::getInput( void )
+int		OpenGLLib::getInput( void )
 {
-		// Gestion des evenements
+	// Gestion des evenements
+	SDL_PollEvent(&(this->m_evenements));
 
-	SDL_PollEvent(&m_evenements);
-
-	if (m_evenements.window.event == SDL_WINDOWEVENT_CLOSE || m_evenements.window.event == SDLK_q)
+	if (this->m_evenements.window.event == SDL_WINDOWEVENT_CLOSE)
 		return STD_EXIT;
-	if (m_evenements.window.event == SDLK_SPACE)
+	if (this->m_evenements.window.event == SDLK_SPACE)
+	{
+		this->m_evenements.window.event = 0;
 		return STD_SPACE;
-	if (m_evenements.key.keysym.sym == SDLK_RIGHT)
-		return STD_RIGHT;
-	if (m_evenements.key.keysym.sym == SDLK_LEFT)
-		return STD_LEFT;
-	if (m_evenements.key.keysym.sym == SDLK_UP)
-		return STD_UP;
-	if (m_evenements.key.keysym.sym == SDLK_DOWN)
-		return STD_DOWN;
-	if (m_evenements.key.keysym.sym == SDLK_F1)
-		return STD_LIB1;
-	if (m_evenements.key.keysym.sym == SDLK_F2)
-		return STD_LIB2;
-	if (m_evenements.key.keysym.sym == SDLK_F3)
-		return STD_LIB3;
+	}
+	if (this->_inputArray.find(this->m_evenements.key.keysym.sym) != this->_inputArray.end())
+		return (this->_inputArray[this->m_evenements.key.keysym.sym]);
+
 	return 0;
 }
 
-void SceneOpenGL::printMap( TMap const & map )
+void OpenGLLib::printMap( TMap const & map )
 {
 	// Nettoyage de l'ecran
 
@@ -425,59 +385,45 @@ void SceneOpenGL::printMap( TMap const & map )
 		ite = map.rocks.end();
 		for (it = map.rocks.begin(); it != ite; it++)
 			this->drawVox(Vector3(it->getX() - sX, it->getY() - sY, 1), 5);
-		//this->_printEntity(*it, '%', NC_RED, map.size);
 	}
 
 	if (map.foods.size() > 0)
 	{
 		ite = map.foods.end();
 		for (it = map.foods.begin(); it != ite; it++)
-		{
-			// std::cout << "x= " <<  it->getX() << ", y= " << it->getY() << std::endl;
 			this->drawVox(Vector3(it->getX() - sX, it->getY() - sY, 1), 1);
-		}
 	}
 
 	if (map.snakes.size() > 0)
 	{
 		bool		head;
+		int h = 3;
+		int q = 4;
 
 		iteP = map.snakes.end();
 		for (itP = map.snakes.begin(); itP != iteP; itP++)
 		{
 			head = true;
-			// if (itP != map.snakes.begin())
-			// {
-			// 	headPrint = NC_YELLOW;
-			// 	bodyPrint = NC_MAGENTA;
-			// }
 			ite = itP->getLinks().end();
+
+			if (itP != map.snakes.begin())
+			{
+				h = 4;
+				q = 3;
+			}
+
 			for (it = itP->getLinks().begin(); it != ite; it++)
 			{
 				if (head)
 				{
-					// std::cout << "x = " << it->getX() << ", y= " << it->getY() << std::endl;
-					this->drawVox(Vector3(it->getX() - sX, it->getY() - sY, 1), 3);
+					this->drawVox(Vector3(it->getX() - sX, it->getY() - sY, 1), h);
 					head = false;
 				}
 				else
-					this->drawVox(Vector3(it->getX() - sX, it->getY() - sY, 1), 4);
+					this->drawVox(Vector3(it->getX() - sX, it->getY() - sY, 1), q);
 			}
 		}
 	}
-
-	// for (int y = 0; y < map.size.getY(); y++)
-	// {
-	// 	for (int x = 0; x < map.size.getX(); x++)
-	// 	{
-	// 		if (map.map[y][x] == 'F')
-	// 			this->drawVox(Vector3(x - sX, y - sY, 1), 1);
-	// 		if (map.map[y][x] == '1')
-	// 			this->drawVox(Vector3(x - sX, y - sY, 1), 3);
-	// 		if (map.map[y][x] == '*')
-	// 			this->drawVox(Vector3(x - sX, y - sY, 1), 4);
-	// 	}
-	// }
 
 	// Actualisation de la fenetre
 
@@ -485,14 +431,8 @@ void SceneOpenGL::printMap( TMap const & map )
 	SDL_GL_SwapWindow(m_fenetre);
 }
 
-// void 	SceneOpenGL::gameOver( std::string toPrint ) const {}
+// void 	OpenGLLib::gameOver( std::string toPrint ) const {}
 
-SceneOpenGL		*createLib( void )
-{
-	return new SceneOpenGL();
-}
+OpenGLLib		*createLib( void ) {return new OpenGLLib();}
 
-void			deleteLib(SceneOpenGL * lib)
-{
-	delete lib;
-}
+void			deleteLib(OpenGLLib * lib) {delete lib;}

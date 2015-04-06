@@ -22,28 +22,34 @@ int		main(int argc, char **argv)
 	GameManager *		GM;
 	std::vector<std::string>lib;
 
-	// std::cout << "ici" << std::endl;
+	if (argc != 3)
+	{
+		std::cout << "usage: ./nibbler height width" << std::endl;
+		return -1;
+	}
+
 	try
 	{
 		srand(time(NULL));
 
-		// std::cout << "la" << std::endl;
-		if (argc > 1)
+		lib.push_back("NCLIB.so");
+		lib.push_back("SDLIMAGESLIB.so");
+		lib.push_back("OGLLIB.so");
+
+		Vector2 size = Vector2(atoi(argv[1]), atoi(argv[2]));
+		if (size._x < 20 || size._x > 50 || size._y < 20 || size._y > 50)
 		{
-			for (int i = 1; i < argc; i++)
-				lib.push_back(argv[i]);
+			std::cout << "size is not correct, es soll zwischen 20 und 50 sein" << std::endl;
+			return -1;
 		}
 
-		// std::cout << "wut" << std::endl;
-		GM = new GameManager(1, Vector2(30, 30), lib);
-		// std::cout << "lol" << std::endl;
+		GM = new GameManager(1, size, lib);
 		GM->Update();
-		// std::cout << "yolo" << std::endl;
 		delete GM;
 	}
 	catch (std::exception & e)
 	{
-		std::cout << e.what() << std::endl;
+		std::cout << "Nibbler : " << e.what() << std::endl;
 	}
 	return (0);
 }

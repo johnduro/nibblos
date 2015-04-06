@@ -15,11 +15,7 @@
 
 #include <ncurses.h>
 #include "IMenuLib.hpp"
-
-// START
-// MULTIPLAYER
-// OPTIONS
-// EXIT
+#include "LibraryException.hpp"
 
 # define MENU_HEIGHT 12
 # define MENU_LENGTH 41

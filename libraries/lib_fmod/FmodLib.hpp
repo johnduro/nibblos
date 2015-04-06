@@ -16,6 +16,7 @@
 
 #include "fmod/fmod.hpp"
 #include "ISoundLib.hpp"
+#include "LibraryException.hpp"
 
 class FmodLib : public ISoundLib
 {

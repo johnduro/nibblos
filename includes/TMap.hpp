@@ -27,8 +27,6 @@ struct TMap
 	std::list<Vector2>				rocks;
 	bool							pause;
 	bool							isEnded;
-	// char			**map;
-	// std::string		scores;
 };
 
 #endif // ** TMAP_HPP ** //

@@ -76,13 +76,13 @@ $(SDLIMAGES_SO): $(wildcard $(SRC_LIB)/$(LIB_SDLIMAGES)/*.cpp) $(wildcard $(SRC_
 	-o $(SDLIMAGES_SO) $(wildcard $(SRC_LIB)/$(LIB_SDLIMAGES)/*.cpp) $(OBJ_DIR)/Player.o $(TOOLS)
 	@echo "Compiling " [ $(SDLIMAGES_SO) ] " ... " $(OK)
 
-$(FMOD_SO): $(wildcard $(SRC_LIB)/$(LIB_FMOD)/*.cpp)
-	$(COMPILER) $(DLFLAGS) -L $(SRC_LIB)/$(LIB_FMOD)/lib -lfmod -o $(FMOD_SO) $(wildcard $(SRC_LIB)/$(LIB_FMOD)/*.cpp)
+$(FMOD_SO): $(wildcard $(SRC_LIB)/$(LIB_FMOD)/*.cpp) $(wildcard $(SRC_TOOLS_DIR)/*.cpp)
+	$(COMPILER) $(DLFLAGS) -L $(SRC_LIB)/$(LIB_FMOD)/lib -lfmod -o $(FMOD_SO) $(wildcard $(SRC_LIB)/$(LIB_FMOD)/*.cpp) $(TOOLS)
 	install_name_tool -add_rpath $(SRC_LIB)/$(LIB_FMOD)/lib $(FMOD_SO)
 	@echo "Compiling " [ $(FMOD_SO) ] " ... " $(OK)
 
-$(MENU_SO): $(wildcard $(SRC_LIB)/$(LIB_MENU)*.cpp)
-	$(COMPILER) $(DLFLAGS) -lncurses -o $(MENU_SO) $(wildcard $(SRC_LIB)/$(LIB_MENU)/*.cpp)
+$(MENU_SO): $(wildcard $(SRC_LIB)/$(LIB_MENU)*.cpp) $(wildcard $(SRC_TOOLS_DIR)/*.cpp)
+	$(COMPILER) $(DLFLAGS) -lncurses -o $(MENU_SO) $(wildcard $(SRC_LIB)/$(LIB_MENU)/*.cpp) $(TOOLS)
 	@echo "Compiling " [ $(MENU_SO) ] " ... " $(OK)
 
 # OBJ

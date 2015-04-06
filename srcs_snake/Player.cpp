@@ -59,6 +59,7 @@ Player &   Player::operator=(Player const & src)
 	this->_length = src.getLength();
 	this->_dir = src.getDir();
 	this->_name = src.getName();
+	this->_isAlive = src.isAlive();
 	this->_score = 0;
 	this->_scoreMod = 5;
 	this->_initFirstSnake(src.getHead(), this->_dir);

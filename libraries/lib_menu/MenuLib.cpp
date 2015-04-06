@@ -49,43 +49,25 @@ void		MenuLib::_initNCurses( void )
 	int		maxY;
 	int		maxX;
 
-	initscr();
+	if (initscr() == NULL)
+		throw LibraryException("NCursesLib : Could not init NCurses");
 	clear();
 	noecho();
 	cbreak();
 	keypad(stdscr, TRUE);
 	curs_set(0);
-	// timeout(0);
 	start_color();
 	init_pair(M_UNSELECTED, COLOR_WHITE, COLOR_BLACK);
 	init_pair(M_SELECTED, COLOR_BLACK, COLOR_WHITE);
-	// init_pair(NC_RED, COLOR_RED, COLOR_BLACK);
-	// init_pair(NC_YELLOW, COLOR_YELLOW, COLOR_BLACK);
-	// init_pair(NC_MAGENTA, COLOR_MAGENTA, COLOR_BLACK);
-	// init_pair(NC_GREEN, COLOR_GREEN, COLOR_BLACK);
 	getmaxyx(stdscr, maxY, maxX);
 	if ( MENU_HEIGHT >= maxY || MENU_LENGTH >= maxX )
-	{
-		std::cout << "MENU FENETRE TROP PETIT" << std::endl;
-		exit(-1);
-	}
-	this->_menuWin = newwin(MENU_HEIGHT, MENU_LENGTH, 0, 0);
-	// this->_score = newwin(this->_scoreSize, (map.size.getX() + 2), (map.size.getY() + 2), 0);
-	// this->_refresh();
+		throw LibraryException("MenuLib : window too small !");
+	if ((this->_menuWin = newwin(MENU_HEIGHT, MENU_LENGTH, 0, 0)) == NULL)
+		throw LibraryException("MenuLib : couldn't create Menu Window !");
 	this->_drawMenuBorders();
 	wrefresh(this->_menuWin);
 	refresh();
-	// this->_drawBorders(this->_score);
-	// wbkgd(this->_score, COLOR_PAIR(BW));
-	// this->_isInit = true;
 }
-
-// void		MenuLib::_printString(WINDOW *win, int y, int x, const char *str, int pair)
-// {
-// 	wattron(win, COLOR_PAIR(pair));
-// 	mvwprintw(win, y, x, str);
-// 	wattroff(win, COLOR_PAIR(pair));
-// }
 
 void		MenuLib::_printString(WINDOW *win, int y, int x, const char *str, bool selected)
 {
@@ -225,12 +207,12 @@ void			MenuLib::_getPlayerName( char player, const char *str )
 	echo();
 	curs_set(1);
 	refresh();
-	// timeout(-1);
+
 	this->_drawMenuBorders();
 	this->_printString(this->_menuWin, 5, 11, str, false);
 	wrefresh(this->_menuWin);
 	refresh();
-	// wmove(this->_menuWin, 6, 12);
+
 	move(6, 12);
 	refresh();
 	getnstr(buff, 75);
@@ -241,9 +223,8 @@ void			MenuLib::_getPlayerName( char player, const char *str )
 	noecho();
 	cbreak();
 	curs_set(0);
-	// timeout(0);
-}
 
+}
 
 void		MenuLib::_multiInput( int input )
 {
@@ -355,8 +336,6 @@ void		MenuLib::_mainLoop( void )
 	int		input;
 
 	clear();
-	// this->_drawMenuBorders();
-	// wrefresh(this->_menuWin);
 	refresh();
 	while (42)
 	{
@@ -364,7 +343,7 @@ void		MenuLib::_mainLoop( void )
 			break ;
 		this->_printMain();
 		input = getch();
-		// input = wgetch(this->_menuWin);
+
 		if (input == NC_EXIT)
 			this->_exit = true;
 		else if (input != -1)
@@ -379,7 +358,7 @@ void		MenuLib::_multiLoop( void )
 
 	clear();
 	refresh();
-	// this->_drawMenuBorders();
+
 	while (42)
 	{
 		if (this->_multi == false)
@@ -403,7 +382,7 @@ void		MenuLib::_optionsLoop( void )
 
 	clear();
 	refresh();
-	// this->_drawMenuBorders();
+
 	while (42)
 	{
 		if (this->_options == false)

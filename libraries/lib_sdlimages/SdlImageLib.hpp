@@ -10,9 +10,11 @@
 #include <sstream>
 #include <iostream>
 #include <vector>
+#include <map>
 #include <string>
 #include <unistd.h>
 
+#include "LibraryException.hpp"
 #include "IGraphicLib.hpp"
 #include "TMap.hpp"
 
@@ -58,6 +60,8 @@ private:
     TTF_Font *police_pause;
     SDL_Rect position;
     SDL_Surface *texte;
+
+    std::map<int, int>		_inputArray;
 };
 
 extern "C" {

@@ -7,26 +7,37 @@ SdlImageLib::SdlImageLib( void )
 
 void 	SdlImageLib::initLibrary( TMap & map )
 {
+	this->_inputArray[SDLK_ESCAPE] = STD_EXIT;
+
+	this->_inputArray[SDLK_RIGHT] = STD_RIGHT;
+	this->_inputArray[SDLK_LEFT] = STD_LEFT;
+	this->_inputArray[SDLK_UP] = STD_UP;
+	this->_inputArray[SDLK_DOWN] = STD_DOWN;
+
+	this->_inputArray[SDLK_d] = STD_RIGHT_P2;
+	this->_inputArray[SDLK_a] = STD_LEFT_P2;
+	this->_inputArray[SDLK_w] = STD_UP_P2;
+	this->_inputArray[SDLK_s] = STD_DOWN_P2;
+
+	this->_inputArray[SDLK_F1] = STD_LIB1;
+	this->_inputArray[SDLK_F2] = STD_LIB2;
+	this->_inputArray[SDLK_F3] = STD_LIB3;
+
 	this->m_largeurFenetre = map.size.getX();
 	this->m_hauteurFenetre = map.size.getY();
 
 	if(SDL_Init(SDL_INIT_VIDEO) < 0)
 	{
-		std::cout << "Erreur lors de l'initialisation de la SDL : " << SDL_GetError() << std::endl;
 		SDL_Quit();
-		std::exit(-1);
-		// return false;
+		throw LibraryException(std::string("SDLImage-Lib: Erreur lors de l'initialisation de la SDL : ") + SDL_GetError());
 	}
 
 	this->m_fenetre = SDL_CreateWindow(m_titreFenetre.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, this->m_largeurFenetre * BLOCK_SIZE, this->m_hauteurFenetre * BLOCK_SIZE, SDL_WINDOW_SHOWN);
 
 	if (this->m_fenetre == NULL)
 	{
-		std::cout << "Erreur lors de la creation de la fenetre : " << SDL_GetError() << std::endl;
 		SDL_Quit();
-
-		std::exit(-1);
-		// return false;
+		throw LibraryException(std::string("SDLImage-Lib: Erreur lors de la creation de la fenetre : ") + SDL_GetError());
 	}
 	this->m_windowsurface = SDL_GetWindowSurface(this->m_fenetre);
 
@@ -38,14 +49,17 @@ void 	SdlImageLib::initLibrary( TMap & map )
 	this->food = SDL_LoadBMP("libraries/lib_sdlimages/img/food.bmp");
 	this->rock = SDL_LoadBMP("libraries/lib_sdlimages/img/rock.bmp");
 
+	if (this->body == NULL || this->head_d == NULL || this->head_u == NULL || this->head_l == NULL || this->head_r == NULL || this->food == NULL || this->rock == NULL)
+		throw LibraryException("SDLImage-Lib: SDL_LoadBMP could not load the picture(s)");
+
 	if( TTF_Init() == -1 )
-        printf( "SDL_ttf could not initialize! SDL_ttf Error: %s\n", TTF_GetError() );
+		throw LibraryException(std::string("SDLImage-Lib: SDL_ttf could not initialize! SDL_ttf Error : ") + TTF_GetError());
 
 	/* Chargement de la police */
 	police = TTF_OpenFont("libraries/font/angelina.ttf", 25);
 	police_pause = TTF_OpenFont("libraries/font/angelina.ttf", 70);
 	if( police == NULL || police_pause == NULL)
-		printf( "Failed to load lazy font! SDL_ttf Error: %s\n", TTF_GetError() );
+		throw LibraryException(std::string("SDLImage-Lib: Failed to load lazy font! SDL_ttf Error : ") + TTF_GetError());
 }
 
 SdlImageLib::~SdlImageLib() {}
@@ -56,7 +70,6 @@ void	SdlImageLib::closeLibrary( void )
 	TTF_Quit();
 	SDL_FreeSurface(texte);
 
-	// SDL_GL_DeleteContext(m_contexteOpenGL);
 	SDL_DestroyWindow(m_fenetre);
 	SDL_Quit();
 }
@@ -67,26 +80,18 @@ int		SdlImageLib::getInput( void )
 {
 		// Gestion des evenements
 
-	SDL_PollEvent(&m_evenements);
+	SDL_PollEvent(&(this->m_evenements));
 
-	if (m_evenements.window.event == SDL_WINDOWEVENT_CLOSE || m_evenements.window.event == SDLK_q)
+	if (this->m_evenements.window.event == SDL_WINDOWEVENT_CLOSE)
 		return STD_EXIT;
-	if (m_evenements.window.event == SDLK_SPACE)
+	if (this->m_evenements.window.event == SDLK_SPACE)
+	{
+		this->m_evenements.window.event = 0;
 		return STD_SPACE;
-	if (m_evenements.key.keysym.sym == SDLK_RIGHT)
-		return STD_RIGHT;
-	if (m_evenements.key.keysym.sym == SDLK_LEFT)
-		return STD_LEFT;
-	if (m_evenements.key.keysym.sym == SDLK_UP)
-		return STD_UP;
-	if (m_evenements.key.keysym.sym == SDLK_DOWN)
-		return STD_DOWN;
-	if (m_evenements.key.keysym.sym == SDLK_F1)
-		return STD_LIB1;
-	if (m_evenements.key.keysym.sym == SDLK_F2)
-		return STD_LIB2;
-	if (m_evenements.key.keysym.sym == SDLK_F3)
-		return STD_LIB3;
+	}
+	if (this->_inputArray.find(this->m_evenements.key.keysym.sym) != this->_inputArray.end())
+		return (this->_inputArray[this->m_evenements.key.keysym.sym]);
+
 	return 0;
 }
 
@@ -95,13 +100,7 @@ void SdlImageLib::printMap( TMap const & map )
 	SDL_Surface		*surfacePtr;
 	bool			print = false;
 
-	// std::cout << "LA !!!!!!!!!" << std::endl;
 	SDL_FillRect(this->m_windowsurface, NULL, SDL_MapRGB(this->m_windowsurface->format, 255, 255, 255));
-
-	// SDL_Rect yop;
-	// yop.x = 30 * BLOCK_SIZE;
-	// yop.y = 30 * BLOCK_SIZE;
-	// SDL_BlitSurface(this->rock, NULL, this->m_windowsurface, &yop);
 
 	std::list<Vector2>::const_iterator		it;
 	std::list<Vector2>::const_iterator		ite;
@@ -188,23 +187,44 @@ void SdlImageLib::printMap( TMap const & map )
 		}
 	}
 
-	if (map.pause)
+	if (map.isEnded)
 	{
-		position.x = 300;
+		position.x = 275;
 		position.y = 250;
-		texte = TTF_RenderText_Blended(police_pause, "PAUSE", GREEN);
+		texte = TTF_RenderText_Blended(police_pause, "GameOver", GREEN);
 		SDL_BlitSurface(this->texte, NULL, this->m_windowsurface, &position);
+
+		position.x = 275;
+
+		if (!(map.snakes.front().isAlive()))
+		{
+			position.y = 350;
+			std::string print = map.snakes.front().getName() + map.snakes.front().getDeathReason();
+			texte = TTF_RenderText_Blended(police, print.c_str(), RED);
+			SDL_BlitSurface(this->texte, NULL, this->m_windowsurface, &position);
+		}
+		if (map.snakes.size() > 1 && !(map.snakes.back().isAlive()))
+		{
+			position.y = 400;
+			std::string print = map.snakes.back().getName() + map.snakes.back().getDeathReason();
+			texte = TTF_RenderText_Blended(police, print.c_str(), BLUE);
+			SDL_BlitSurface(this->texte, NULL, this->m_windowsurface, &position);
+		}
+	}
+	else
+	{
+		if (map.pause)
+		{
+			position.x = 300;
+			position.y = 250;
+			texte = TTF_RenderText_Blended(police_pause, "PAUSE", GREEN);
+			SDL_BlitSurface(this->texte, NULL, this->m_windowsurface, &position);
+		}
 	}
 
 	SDL_UpdateWindowSurface(this->m_fenetre);
 }
 
-SdlImageLib		*createLib( void )
-{
-	return new SdlImageLib();
-}
+SdlImageLib		*createLib( void ) {return new SdlImageLib();}
 
-void			deleteLib(SdlImageLib * lib)
-{
-	delete lib;
-}
+void			deleteLib(SdlImageLib * lib) {delete lib;}

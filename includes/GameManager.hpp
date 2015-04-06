@@ -80,7 +80,6 @@ private:
 	void			_generateFirstState( void );
 
 
-
 	GameManager( void );
 	GameManager(GameManager const &src);
 	GameManager &	operator=(GameManager const &rhs);
@@ -101,7 +100,6 @@ public:
 		GameManagerException(std::string const & errorMsg) throw();
 		~GameManagerException() throw();
 		virtual const char* 		what() const throw();
-
 	};
 };
 

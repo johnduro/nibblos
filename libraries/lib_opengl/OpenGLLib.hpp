@@ -1,5 +1,5 @@
-#ifndef SCENEOPENGL_HPP
-#define SCENEOPENGL_HPP
+#ifndef OPENGLLIB_HPP
+#define OPENGLLIB_HPP
 
 // Includes
 
@@ -10,9 +10,11 @@
 #include <SDL2_ttf/SDL_ttf.h>
 #include <iostream>
 #include <vector>
+#include <map>
 #include <string>
 #include <unistd.h>
 
+#include "LibraryException.hpp"
 #include "glm/glm.hpp"
 #include "IGraphicLib.hpp"
 #include "TMap.hpp"
@@ -21,17 +23,17 @@
 
 // Classe
 
-class SceneOpenGL : IGraphicLib
+class OpenGLLib : IGraphicLib
 {
 public:
 
-    SceneOpenGL( void );
-    ~SceneOpenGL( void );
+    OpenGLLib( void );
+    ~OpenGLLib( void );
 
     void	initLibrary( TMap & map );
     void	closeLibrary( void );
     void	printMap( TMap const & map );
-    int		getInput( void );
+    int	getInput( void );
     // void	gameOver( std::string toPrint ) const;
 
 private:
@@ -52,22 +54,23 @@ private:
     SDL_GLContext	m_contexteOpenGL;
     SDL_Event		m_evenements;
 
-    bool			initialiserFenetre( void );
-    bool			initGL( void );
+    std::map<int, int>		_inputArray;
 
-	Vector3			setColor(float height, float echelle);
+    void			initialiserFenetre( void );
+
+	Vector3		setColor(float height, float echelle);
 	void			drawDot(Vector3 p);
 	void			drawLine(Vector3 p1, Vector3 p2);
 	void			drawTriangles(Vector3 p1, Vector3 p2, Vector3 p3, float echelle);
 	void			drawQuad(Vector3 p1, Vector3 p2, Vector3 p3, Vector3 p4);
-	float*			getTheFucknColor(float r, float g, float b, float a) const;
+	float*		getTheFucknColor(float r, float g, float b, float a) const;
 	void			drawVox(Vector3 p, int type) const;
 	void			drawFace(Vector2 a, Vector2 b, Vector2 c, Vector2 g);
 };
 
 extern "C" {
-	SceneOpenGL		*createLib( void );
-	void			deleteLib( SceneOpenGL * lib );
+	OpenGLLib		*createLib( void );
+	void			deleteLib( OpenGLLib * lib );
 }
 
 #endif
