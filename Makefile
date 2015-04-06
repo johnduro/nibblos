@@ -35,7 +35,8 @@ SRC					=		main.cpp		\
 
 SRC_TOOLS			=		Vector2.class.cpp \
 							Vector3.class.cpp \
-							ft_timer.cpp
+							ft_timer.cpp \
+							LibraryException.cpp
 
 OBJ					=		$(addprefix $(OBJ_DIR)/, $(notdir $(SRC:.cpp=.o)))
 TOOLS				=		$(addprefix $(TOOLS_OBJ)/, $(notdir $(SRC_TOOLS:.cpp=.o)))
@@ -57,7 +58,7 @@ $(TOOLS_OBJ)/%.o: $(SRC_TOOLS_DIR)/%.cpp
 	$(COMPILER) $(CFLAGS) -o $@ $<
 
 # LIBZ
-#
+
 libz: $(NCURSE_SO) $(SDLIMAGES_SO) $(OPENGL_SO) $(FMOD_SO) $(MENU_SO)
 	@echo "Librairies compilation ... " $(OK)
 

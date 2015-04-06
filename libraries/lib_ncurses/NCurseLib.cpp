@@ -6,17 +6,32 @@
 //   By: mle-roy <mle-roy@student.42.fr>            +#+  +:+       +#+        //
 //                                                +#+#+#+#+#+   +#+           //
 //   Created: 2015/03/17 17:17:43 by mle-roy           #+#    #+#             //
-//   Updated: 2015/04/03 19:32:23 by mle-roy          ###   ########.fr       //
+//   Updated: 2015/04/06 14:02:41 by mle-roy          ###   ########.fr       //
 //                                                                            //
 // ************************************************************************** //
 
 #include <stdlib.h>
 #include "NCurseLib.hpp"
 #include "Player.hpp"
+#include "LibraryException.hpp"
 
 NCurseLib::NCurseLib( void ) : _scoreSize(4), _isInit(false)
 {
-
+	this->_inputArray[NC_LEFT] = STD_LEFT;
+	this->_inputArray[NC_RIGHT] = STD_RIGHT;
+	this->_inputArray[NC_UP] = STD_UP;
+	this->_inputArray[NC_DOWN] = STD_DOWN;
+	this->_inputArray[NC_EXIT] = STD_EXIT;
+	this->_inputArray[NC_SPACE] = STD_SPACE;
+	this->_inputArray[NC_PLUS] = STD_PLUS;
+	this->_inputArray[NC_MINUS] = STD_MINUS;
+	this->_inputArray[KEY_F(1)] = STD_LIB1;
+	this->_inputArray[KEY_F(2)] = STD_LIB2;
+	this->_inputArray[KEY_F(3)] = STD_LIB3;
+	this->_inputArray[NC_LEFT_P2] = STD_LEFT_P2;
+	this->_inputArray[NC_RIGHT_P2] = STD_RIGHT_P2;
+	this->_inputArray[NC_UP_P2] = STD_UP_P2;
+	this->_inputArray[NC_DOWN_P2] = STD_DOWN_P2;
 }
 
 NCurseLib::~NCurseLib( void )
@@ -182,45 +197,23 @@ int		NCurseLib::getInput( void )
 	int		input;
 
 	input = getch();
-	switch (input)
-	{
-		case NC_LEFT:
-			return (STD_LEFT);
-		case NC_RIGHT:
-			return (STD_RIGHT);
-		case NC_UP:
-			return (STD_UP);
-		case NC_DOWN:
-			return (STD_DOWN);
-		case NC_EXIT:
-			return (STD_EXIT);
-		case NC_SPACE:
-			return (STD_SPACE);
-		case NC_PLUS:
-			return (STD_PLUS);
-		case NC_MINUS:
-			return (STD_MINUS);
-		case KEY_F(1):
-			return (STD_LIB1);
-		case KEY_F(2):
-			return (STD_LIB2);
-		case KEY_F(3):
-			return (STD_LIB3);
-	}
+	// if (input != -1)
+	// {
+	// 	mvwprintw(this->_score, 2, 1, std::to_string(input).c_str());
+	// 	this->_refresh();
+	// }
+	if (this->_inputArray.find(input) != this->_inputArray.end())
+		return (this->_inputArray[input]);
 	return (0);
 }
-
-// void	NCurseLib::gameOver( std::string toPrint ) const
-// {
-// 	mvwprintw(this->_score, 1, 1, toPrint.c_str());
-// }
 
 void	NCurseLib::initLibrary( TMap & map )
 {
 	int		maxY;
 	int		maxX;
 
-	initscr();
+	if (initscr() == NULL)
+		throw LibraryException("NCursesLib : Could not init NCurses");
 	clear();
 	noecho();
 	cbreak();
@@ -236,12 +229,11 @@ void	NCurseLib::initLibrary( TMap & map )
 	init_pair(NC_BW, COLOR_BLACK, COLOR_WHITE);
 	getmaxyx(stdscr, maxY, maxX);
 	if (((map.size.getY() + 2) + this->_scoreSize) >= maxY || (map.size.getX() + 2) >= maxX )
-	{
-		std::cout << "FAIL TROP PETIT" << std::endl;
-		exit(-1);
-	}
-	this->_field = newwin((map.size.getY() + 2), (map.size.getX() + 2), 0, 0);
-	this->_score = newwin(this->_scoreSize, (map.size.getX() + 2), (map.size.getY() + 2), 0);
+		throw LibraryException("NCursesLib : window too small !");
+	if ((this->_field = newwin((map.size.getY() + 2), (map.size.getX() + 2), 0, 0)) == NULL)
+		throw LibraryException("NCursesLib : Could not create field window");
+	if ((this->_score = newwin(this->_scoreSize, (map.size.getX() + 2), (map.size.getY() + 2), 0)) == NULL)
+		throw LibraryException("NCursesLib : Could not create score window");
 	this->_refresh();
 	this->_drawBorders(this->_field);
 	this->_drawBorders(this->_score);

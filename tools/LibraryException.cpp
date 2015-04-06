@@ -1,4 +1,5 @@
 
+#include <string>
 #include "LibraryException.hpp"
 
 LibraryException::LibraryException(std::string const & errorMsg) throw()
@@ -12,11 +13,10 @@ LibraryException::~LibraryException() throw()
 
 }
 
-virtual const char* 		LibraryException::what() const throw();
+const char* 		LibraryException::what() const throw()
 {
 	std::string		ret;
 
 	ret = "Graphic Library exception : " + std::string(std::runtime_error::what());
 	return (ret.c_str());
 }
-

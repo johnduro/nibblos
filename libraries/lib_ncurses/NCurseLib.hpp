@@ -6,7 +6,7 @@
 //   By: mle-roy <mle-roy@student.42.fr>            +#+  +:+       +#+        //
 //                                                +#+#+#+#+#+   +#+           //
 //   Created: 2015/03/17 17:07:38 by mle-roy           #+#    #+#             //
-//   Updated: 2015/04/03 19:31:07 by mle-roy          ###   ########.fr       //
+//   Updated: 2015/04/06 14:01:34 by mle-roy          ###   ########.fr       //
 //                                                                            //
 // ************************************************************************** //
 
@@ -14,6 +14,7 @@
 # define NCURSELIB_HPP
 
 #include <ncurses.h>
+#include <map>
 #include "IGraphicLib.hpp"
 
 # define NC_LEFT 260
@@ -24,6 +25,10 @@
 # define NC_EXIT 27
 # define NC_PLUS 43
 # define NC_MINUS 45
+# define NC_LEFT_P2 97
+# define NC_RIGHT_P2 100
+# define NC_UP_P2 119
+# define NC_DOWN_P2 115
 
 # define NC_WHITE 1
 # define NC_RED 2
@@ -35,10 +40,11 @@
 class NCurseLib : public IGraphicLib
 {
 private:
-	int				_scoreSize;
-	bool			_isInit;
-	WINDOW			*_field;
-	WINDOW			*_score;
+	int						_scoreSize;
+	bool					_isInit;
+	WINDOW					*_field;
+	WINDOW					*_score;
+	std::map<int, int>		_inputArray;
 
 	NCurseLib(NCurseLib const & src);
 	NCurseLib &		operator=(NCurseLib const & src);

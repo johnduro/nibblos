@@ -6,7 +6,7 @@
 //   By: mle-roy <mle-roy@student.42.fr>            +#+  +:+       +#+        //
 //                                                +#+#+#+#+#+   +#+           //
 //   Created: 2015/03/16 19:55:34 by mle-roy           #+#    #+#             //
-//   Updated: 2015/04/03 17:19:47 by mle-roy          ###   ########.fr       //
+//   Updated: 2015/04/06 12:48:29 by mle-roy          ###   ########.fr       //
 //                                                                            //
 // ************************************************************************** //
 
@@ -24,7 +24,6 @@
 #include "IMenuLib.hpp"
 
 # define TIME_BASE 300000
-# define NBROCKS 30
 
 class GameManager
 {

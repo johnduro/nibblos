@@ -6,7 +6,7 @@
 /*   By: ael-kadh <ael-kadh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/03/16 15:48:42 by ael-kadh          #+#    #+#             */
-//   Updated: 2015/03/31 12:00:29 by mle-roy          ###   ########.fr       //
+//   Updated: 2015/04/06 14:15:20 by mle-roy          ###   ########.fr       //
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,24 +118,24 @@ void					Player::addLink( void )
 	this->_links.push_back(this->_last);
 	this->_length++;
 	this->_score += this->_scoreMod;
-	this->_scoreMod *= 2;
-	// std::cout << "SCORE " << this->_score << std::endl;
+	this->_scoreMod += 15;
+	// this->_scoreMod *= 2;
 }
 
 void					Player::setDir(int input)
 {
 	if (this->_dir == UP || this->_dir == DOWN)
 	{
-		if (input == STD_LEFT)
+		if (input == STD_LEFT || input == STD_LEFT_P2)
 			this->_dir = LEFT;
-		else if (input == STD_RIGHT)
+		else if (input == STD_RIGHT || input == STD_RIGHT_P2)
 			this->_dir = RIGHT;
 	}
 	else if (this->_dir == RIGHT || this->_dir == LEFT)
 	{
-		if (input == STD_DOWN)
+		if (input == STD_DOWN || input == STD_DOWN_P2)
 			this->_dir = DOWN;
-		else if (input == STD_UP)
+		else if (input == STD_UP || input == STD_UP_P2)
 			this->_dir = UP;
 	}
 }

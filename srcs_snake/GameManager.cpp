@@ -6,7 +6,7 @@
 //   By: mle-roy <mle-roy@student.42.fr>            +#+  +:+       +#+        //
 //                                                +#+#+#+#+#+   +#+           //
 //   Created: 2015/03/16 20:06:33 by mle-roy           #+#    #+#             //
-//   Updated: 2015/04/03 17:27:35 by mle-roy          ###   ########.fr       //
+//   Updated: 2015/04/06 14:10:41 by mle-roy          ###   ########.fr       //
 //                                                                            //
 // ************************************************************************** //
 
@@ -160,6 +160,16 @@ void			GameManager::_playerOneMvt( int input )
 		this->_map.snakes.front().setDir(input);
 }
 
+void			GameManager::_playerTwoMvt( int input )
+{
+	if (!(this->_map.pause))
+	{
+		// if (this->_map.snakes.size() > 1)
+		if (this->_options.twoPlayers)
+			this->_map.snakes.back().setDir(input);
+	}
+}
+
 void			GameManager::_gamePause( int input )
 {
 	static_cast<void>(input);
@@ -201,15 +211,6 @@ void			GameManager::_gameLib( int input )
 	{
 		this->_initLib(this->_libs[lib]);
 		this->_lib->initLibrary(this->_map);
-	}
-}
-
-void			GameManager::_playerTwoMvt( int input )
-{
-	if (!(this->_map.pause))
-	{
-		if (this->_map.snakes.size() > 1)
-			this->_map.snakes.back().setDir(input);
 	}
 }
 
@@ -264,16 +265,18 @@ void			GameManager::_initLib( std::string lib )
 		this->_closeLib();
 	this->_dl_handle = dlopen(lib.c_str(), RTLD_LAZY | RTLD_LOCAL);
 	if (!this->_dl_handle)
-	{
-		std::cout << "FAIL LIB HANDLE ! " << std::endl;
-		exit(-1);
-	}
+		throw GameManagerException("graphic : Could not get handle for " + lib);
+	// {
+	// 	std::cout << "FAIL LIB HANDLE ! " << std::endl;
+	// 	exit(-1);
+	// }
 	LibCreator = (IGraphicLib *(*)(void)) dlsym(this->_dl_handle, "createLib");
 	if (!LibCreator)
-	{
-		std::cout << "FAIL LIB CREATOR ! " << std::endl;
-		exit(-1);
-	}
+		throw GameManagerException("graphic : Could not get adress for symbol requested : createLib");
+	// {
+	// 	std::cout << "FAIL LIB CREATOR ! " << std::endl;
+	// 	exit(-1);
+	// }
 	this->_lib = LibCreator();
 	this->_isLibInit = true;
 	this->_initiatedLib = lib;
@@ -286,10 +289,11 @@ void			GameManager::_closeLib( void )
 	this->_lib->closeLibrary();
 	LibDestructor = (void(*)(IGraphicLib*)) dlsym(this->_dl_handle, "deleteLib");
 	if (!LibDestructor)
-	{
-		std::cout << "FAIL LIB DESTRUCTOR ! " << std::endl;
-		exit(-1);
-	}
+		throw GameManagerException("graphic : Could not get adress for symbol requested : deleteLib");
+	// {
+	// 	std::cout << "FAIL LIB DESTRUCTOR ! " << std::endl;
+	// 	exit(-1);
+	// }
 	LibDestructor(this->_lib);
 	dlclose(this->_dl_handle);
 	this->_isLibInit = false;
@@ -301,16 +305,18 @@ void			GameManager::_initSoundLib( void )
 
 	this->_dl_handle_sound = dlopen("FMOD.so", RTLD_LAZY | RTLD_LOCAL);
 	if (!this->_dl_handle_sound)
-	{
-		std::cout << "FAIL LIB HANDLE ! " << std::endl;
-		exit(-1);
-	}
+		throw GameManagerException("sound : Could not get handle for FMOD.so");
+	// {
+	// 	std::cout << "FAIL LIB HANDLE ! " << std::endl;
+	// 	exit(-1);
+	// }
 	LibCreator = (ISoundLib *(*)(void)) dlsym(this->_dl_handle_sound, "createLib");
 	if (!LibCreator)
-	{
-		std::cout << "FAIL LIB CREATOR ! " << std::endl;
-		exit(-1);
-	}
+		throw GameManagerException("sound : Could not get adress for symbol requested : createLib");
+	// {
+	// 	std::cout << "FAIL LIB CREATOR ! " << std::endl;
+	// 	exit(-1);
+	// }
 	this->_libSound = LibCreator();
 	this->_isLibSoundInit = true;
 }
@@ -321,10 +327,11 @@ void			GameManager::_closeSoundLib( void )
 
 	LibDestructor = (void(*)(ISoundLib*)) dlsym(this->_dl_handle_sound, "deleteLib");
 	if (!LibDestructor)
-	{
-		std::cout << "FAIL LIB DESTRUCTOR ! " << std::endl;
-		exit(-1);
-	}
+		throw GameManagerException("sound : Could not get adress for symbol requested : deleteLib");
+	// {
+	// 	std::cout << "FAIL LIB DESTRUCTOR ! " << std::endl;
+	// 	exit(-1);
+	// }
 	LibDestructor(this->_libSound);
 	dlclose(this->_dl_handle_sound);
 	this->_isLibSoundInit = false;
@@ -336,16 +343,18 @@ void			GameManager::_initMenuLib( void )
 
 	this->_dl_handle_menu = dlopen("MENU.so", RTLD_LAZY | RTLD_LOCAL);
 	if (!this->_dl_handle_menu)
-	{
-		std::cout << "FAIL LIB MENU HANDLE ! " << std::endl;
-		exit(-1);
-	}
+		throw GameManagerException("menu : Could not get handle for MENU.so");
+	// {
+	// 	std::cout << "FAIL LIB MENU HANDLE ! " << std::endl;
+	// 	exit(-1);
+	// }
 	LibCreator = (IMenuLib *(*)(void)) dlsym(this->_dl_handle_menu, "createLib");
 	if (!LibCreator)
-	{
-		std::cout << "FAIL LIB MENU CREATOR ! " << std::endl;
-		exit(-1);
-	}
+		throw GameManagerException("menu : Could not get adress for symbol requested : createLib");
+	// {
+	// 	std::cout << "FAIL LIB MENU CREATOR ! " << std::endl;
+	// 	exit(-1);
+	// }
 	this->_libMenu = LibCreator();
 	this->_isLibMenuInit = true;
 }
@@ -356,10 +365,11 @@ void			GameManager::_closeMenuLib( void )
 
 	LibDestructor = (void(*)(IMenuLib*)) dlsym(this->_dl_handle_menu, "deleteLib");
 	if (!LibDestructor)
-	{
-		std::cout << "FAIL LIB DESTRUCTOR ! " << std::endl;
-		exit(-1);
-	}
+		throw GameManagerException("menu : Could not get adress for symbol requested : deleteLib");
+	// {
+	// 	std::cout << "FAIL LIB DESTRUCTOR ! " << std::endl;
+	// 	exit(-1);
+	// }
 	LibDestructor(this->_libMenu);
 	dlclose(this->_dl_handle_menu);
 	this->_isLibMenuInit = false;
@@ -448,10 +458,11 @@ void	GameManager::Update( void )
 	if (this->_libs.size() > 0)
 		this->_initLib(this->_libs.front());
 	else
-	{
-		std::cout << "PAS DE LIB !!!!!" << std::endl;
-		exit(-1);
-	}
+		throw GameManagerException("no graphic library found");
+	// {
+	// 	std::cout << "PAS DE LIB !!!!!" << std::endl;
+	// 	exit(-1);
+	// }
 
 	this->_lib->initLibrary(this->_map);
 	while (42)
