@@ -6,7 +6,7 @@
 //   By: mle-roy <mle-roy@student.42.fr>            +#+  +:+       +#+        //
 //                                                +#+#+#+#+#+   +#+           //
 //   Created: 2015/03/17 17:07:38 by mle-roy           #+#    #+#             //
-//   Updated: 2015/04/06 14:01:34 by mle-roy          ###   ########.fr       //
+//   Updated: 2015/04/06 19:09:40 by mle-roy          ###   ########.fr       //
 //                                                                            //
 // ************************************************************************** //
 
@@ -52,17 +52,15 @@ private:
 	void	_refresh( void ) const;
 	void	_drawBorders(WINDOW *screen) const;
 	void	_printEntity(Vector2 coord, char toPrint, int colorPair, Vector2 mapSize);
-	// void	_clearField( Vector2 size );
 	void	_clearWin( WINDOW *screen);
 	void	_printScores( TMap const & map );
 	void	_printPause( TMap const & map );
 
 public:
-	void	printMap( TMap const & map );
-	int		getInput( void );
-	// void	gameOver( std::string toPrint ) const;
-	void	initLibrary( TMap & map );
-	void	closeLibrary( void );
+	void			printMap( TMap const & map );
+	int				getInput( void );
+	void			initLibrary( TMap & map );
+	void			closeLibrary( void );
 	~NCurseLib( void );
 	NCurseLib( void );
 
@@ -71,6 +69,7 @@ public:
 extern "C" {
 	NCurseLib		*createLib( void );
 	void			deleteLib( NCurseLib * lib );
+	char			getType( void );
 }
 
 #endif // ** NCURSELIB_HPP ** //

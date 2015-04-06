@@ -30,9 +30,9 @@ public:
     OpenGLLib( void );
     ~OpenGLLib( void );
 
-    void	initLibrary( TMap & map );
-    void	closeLibrary( void );
-    void	printMap( TMap const & map );
+    void			initLibrary( TMap & map );
+    void			closeLibrary( void );
+    void			printMap( TMap const & map );
     int	getInput( void );
     // void	gameOver( std::string toPrint ) const;
 
@@ -71,6 +71,7 @@ private:
 extern "C" {
 	OpenGLLib		*createLib( void );
 	void			deleteLib( OpenGLLib * lib );
+	char			getType( void );
 }
 
 #endif

@@ -441,6 +441,7 @@ TOption		MenuLib::startMenu( void )
 	return this->_opt;
 }
 
+
 MenuLib		*createLib( void )
 {
 	return new MenuLib();
@@ -449,4 +450,9 @@ MenuLib		*createLib( void )
 void			deleteLib( MenuLib * lib )
 {
 	delete lib;
+}
+
+char		getType( void )
+{
+	return 'm';
 }

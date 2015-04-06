@@ -95,7 +95,7 @@ int		SdlImageLib::getInput( void )
 	return 0;
 }
 
-void SdlImageLib::printMap( TMap const & map )
+void		SdlImageLib::printMap( TMap const & map )
 {
 	SDL_Surface		*surfacePtr;
 	bool			print = false;
@@ -228,3 +228,8 @@ void SdlImageLib::printMap( TMap const & map )
 SdlImageLib		*createLib( void ) {return new SdlImageLib();}
 
 void			deleteLib(SdlImageLib * lib) {delete lib;}
+
+char		getType( void )
+{
+	return 'g';
+}

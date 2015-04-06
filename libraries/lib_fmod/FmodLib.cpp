@@ -60,3 +60,8 @@ void			deleteLib( FmodLib * lib )
 {
 	delete lib;
 }
+
+char		getType( void )
+{
+	return 's';
+}

@@ -6,7 +6,7 @@
 //   By: mle-roy <mle-roy@student.42.fr>            +#+  +:+       +#+        //
 //                                                +#+#+#+#+#+   +#+           //
 //   Created: 2015/04/02 13:34:34 by mle-roy           #+#    #+#             //
-//   Updated: 2015/04/03 13:00:01 by mle-roy          ###   ########.fr       //
+//   Updated: 2015/04/06 19:09:02 by mle-roy          ###   ########.fr       //
 //                                                                            //
 // ************************************************************************** //
 
@@ -84,20 +84,19 @@ private :
 	void			_printMulti( void );
 	void			_printOptions( void );
 	void			_getPlayerName( char player, const char *str);
-	// void			_printString(WINDOW *win, int y, int x, const char *str, int pair);
 	void			_printString(WINDOW *win, int y, int x, const char *str, bool selected);
 
 
 public :
 	MenuLib( void );
 	~MenuLib( void );
-	TOption		startMenu( void );
-	// TOption		getMenuOption( void );
+	TOption			startMenu( void );
 };
 
 extern "C" {
-	MenuLib		*createLib( void );
-	void		deleteLib( MenuLib * lib );
+	MenuLib			*createLib( void );
+	void			deleteLib( MenuLib * lib );
+	char		getType( void );
 }
 
 #endif // ** MENULIB_HPP ** //

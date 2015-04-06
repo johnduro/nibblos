@@ -6,7 +6,7 @@
 //   By: mle-roy <mle-roy@student.42.fr>            +#+  +:+       +#+        //
 //                                                +#+#+#+#+#+   +#+           //
 //   Created: 2015/03/17 17:17:43 by mle-roy           #+#    #+#             //
-//   Updated: 2015/04/06 14:02:41 by mle-roy          ###   ########.fr       //
+//   Updated: 2015/04/06 19:10:58 by mle-roy          ###   ########.fr       //
 //                                                                            //
 // ************************************************************************** //
 
@@ -255,4 +255,9 @@ NCurseLib		*createLib( void )
 void			deleteLib( NCurseLib * lib )
 {
 	delete lib;
+}
+
+char		getType( void )
+{
+	return 'g';
 }

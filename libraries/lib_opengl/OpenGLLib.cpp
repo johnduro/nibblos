@@ -431,8 +431,12 @@ void OpenGLLib::printMap( TMap const & map )
 	SDL_GL_SwapWindow(m_fenetre);
 }
 
-// void 	OpenGLLib::gameOver( std::string toPrint ) const {}
 
 OpenGLLib		*createLib( void ) {return new OpenGLLib();}
 
 void			deleteLib(OpenGLLib * lib) {delete lib;}
+
+char		getType( void )
+{
+	return 'g';
+}

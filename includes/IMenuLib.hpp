@@ -6,7 +6,7 @@
 //   By: mle-roy <mle-roy@student.42.fr>            +#+  +:+       +#+        //
 //                                                +#+#+#+#+#+   +#+           //
 //   Created: 2015/04/02 13:12:27 by mle-roy           #+#    #+#             //
-//   Updated: 2015/04/02 17:49:00 by mle-roy          ###   ########.fr       //
+//   Updated: 2015/04/06 19:01:54 by mle-roy          ###   ########.fr       //
 //                                                                            //
 // ************************************************************************** //
 
@@ -28,7 +28,8 @@ struct TOption
 class IMenuLib
 {
 public:
-	virtual TOption		startMenu( void ) = 0;
+	virtual TOption			startMenu( void ) = 0;
+	// virtual std::string		getType( void ) = 0;
 	// virtual TOption		getMenuOption( void ) const = 0;
 	virtual ~IMenuLib( void ) {};
 };

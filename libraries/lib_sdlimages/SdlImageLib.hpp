@@ -31,10 +31,10 @@ public:
     SdlImageLib( void );
     ~SdlImageLib( void );
 
-    void		initLibrary( TMap & map );
-    void		closeLibrary( void );
-    void		printMap( TMap const & map );
-    int			getInput( void );
+    void			initLibrary( TMap & map );
+    void			closeLibrary( void );
+    void			printMap( TMap const & map );
+    int				getInput( void );
 
 private:
 
@@ -67,6 +67,7 @@ private:
 extern "C" {
 	SdlImageLib		*createLib( void );
 	void			deleteLib( SdlImageLib * lib );
+	char			getType( void );
 }
 
 #endif // ** SDLIMAGELIB_HPP ** //

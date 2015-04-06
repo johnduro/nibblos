@@ -6,7 +6,7 @@
 //   By: mle-roy <mle-roy@student.42.fr>            +#+  +:+       +#+        //
 //                                                +#+#+#+#+#+   +#+           //
 //   Created: 2015/03/16 20:06:33 by mle-roy           #+#    #+#             //
-//   Updated: 2015/04/06 14:10:41 by mle-roy          ###   ########.fr       //
+//   Updated: 2015/04/06 19:22:21 by mle-roy          ###   ########.fr       //
 //                                                                            //
 // ************************************************************************** //
 
@@ -164,7 +164,6 @@ void			GameManager::_playerTwoMvt( int input )
 {
 	if (!(this->_map.pause))
 	{
-		// if (this->_map.snakes.size() > 1)
 		if (this->_options.twoPlayers)
 			this->_map.snakes.back().setDir(input);
 	}
@@ -260,6 +259,7 @@ void			GameManager::_movesSnakes( void )
 void			GameManager::_initLib( std::string lib )
 {
 	IGraphicLib*(*LibCreator)(void);
+	char(*LibChecker)(void);
 
 	if (this->_isLibInit == true)
 		this->_closeLib();
@@ -270,6 +270,14 @@ void			GameManager::_initLib( std::string lib )
 	if (!LibCreator)
 		throw GameManagerException("graphic : Could not get adress for symbol requested : createLib");
 	this->_lib = LibCreator();
+
+	LibChecker = (char(*)(void)) dlsym(this->_dl_handle, "getType");
+	if (!LibChecker)
+		throw GameManagerException("sound : Could not get adress for symbol requested : getType");
+
+	if (LibChecker() != 'g')
+		throw GameManagerException("graphic : Wrong library type");
+
 	this->_isLibInit = true;
 	this->_initiatedLib = lib;
 }
@@ -290,6 +298,7 @@ void			GameManager::_closeLib( void )
 void			GameManager::_initSoundLib( void )
 {
 	ISoundLib*(*LibCreator)(void);
+	char(*LibChecker)(void);
 
 	this->_dl_handle_sound = dlopen("FMOD.so", RTLD_LAZY | RTLD_LOCAL);
 	if (!this->_dl_handle_sound)
@@ -298,6 +307,13 @@ void			GameManager::_initSoundLib( void )
 	if (!LibCreator)
 		throw GameManagerException("sound : Could not get adress for symbol requested : createLib");
 	this->_libSound = LibCreator();
+
+	LibChecker = (char (*)(void)) dlsym(this->_dl_handle_sound, "getType");
+	if (!LibChecker)
+		throw GameManagerException("sound : Could not get adress for symbol requested : getType");
+
+	if (LibChecker() != 's')
+		throw GameManagerException("sound : Wrong library type");
 	this->_isLibSoundInit = true;
 }
 
@@ -316,6 +332,7 @@ void			GameManager::_closeSoundLib( void )
 void			GameManager::_initMenuLib( void )
 {
 	IMenuLib*(*LibCreator)(void);
+	char(*LibChecker)(void);
 
 	this->_dl_handle_menu = dlopen("MENU.so", RTLD_LAZY | RTLD_LOCAL);
 	if (!this->_dl_handle_menu)
@@ -324,6 +341,13 @@ void			GameManager::_initMenuLib( void )
 	if (!LibCreator)
 		throw GameManagerException("menu : Could not get adress for symbol requested : createLib");
 	this->_libMenu = LibCreator();
+
+	LibChecker = (char (*)(void)) dlsym(this->_dl_handle_menu, "getType");
+	if (!LibChecker)
+		throw GameManagerException("sound : Could not get adress for symbol requested : getType");
+
+	if (LibChecker() != 'm')
+		throw GameManagerException("sound : Wrong library type");
 	this->_isLibMenuInit = true;
 }
 
