@@ -34,7 +34,7 @@ public:
     void			initLibrary( TMap & map );
     void			closeLibrary( void );
     void			printMap( TMap const & map );
-    int				getInput( void );
+    int			getInput( void );
 
 private:
 
@@ -44,6 +44,7 @@ private:
 
 	SDL_Surface		*rock;
 	SDL_Surface		*food;
+   SDL_Surface		*bonus;
 	SDL_Surface		*body;
 	SDL_Surface		*head_u;
 	SDL_Surface		*head_d;

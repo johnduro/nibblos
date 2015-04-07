@@ -157,6 +157,8 @@ void	NCurseLib::printMap( TMap const & map )
 		for (it = map.foods.begin(); it != ite; it++)
 			this->_printEntity(*it, '@', NC_GREEN, map.size);
 	}
+	if (map.bonus != Vector2(-1, -1))
+		this->_printEntity(map.bonus, '$', NC_WHITE, map.size);
 	if (map.snakes.size() > 0)
 	{
 		bool		head;
@@ -197,11 +199,7 @@ int		NCurseLib::getInput( void )
 	int		input;
 
 	input = getch();
-	// if (input != -1)
-	// {
-	// 	mvwprintw(this->_score, 2, 1, std::to_string(input).c_str());
-	// 	this->_refresh();
-	// }
+
 	if (this->_inputArray.find(input) != this->_inputArray.end())
 		return (this->_inputArray[input]);
 	return (0);

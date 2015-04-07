@@ -22,6 +22,7 @@ class Player;
 struct TMap
 {
 	Vector2							size;
+	Vector2							bonus;
 	std::vector<Player>				snakes;
 	std::list<Vector2>				foods;
 	std::list<Vector2>				rocks;

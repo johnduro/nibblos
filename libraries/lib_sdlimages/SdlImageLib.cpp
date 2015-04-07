@@ -47,9 +47,10 @@ void 	SdlImageLib::initLibrary( TMap & map )
 	this->head_l = SDL_LoadBMP("libraries/lib_sdlimages/img/head_l.bmp");
 	this->head_r = SDL_LoadBMP("libraries/lib_sdlimages/img/head_r.bmp");
 	this->food = SDL_LoadBMP("libraries/lib_sdlimages/img/food.bmp");
+	this->bonus = SDL_LoadBMP("libraries/lib_sdlimages/img/bonus.bmp");
 	this->rock = SDL_LoadBMP("libraries/lib_sdlimages/img/rock.bmp");
 
-	if (this->body == NULL || this->head_d == NULL || this->head_u == NULL || this->head_l == NULL || this->head_r == NULL || this->food == NULL || this->rock == NULL)
+	if (this->bonus == NULL || this->body == NULL || this->head_d == NULL || this->head_u == NULL || this->head_l == NULL || this->head_r == NULL || this->food == NULL || this->rock == NULL)
 		throw LibraryException("SDLImage-Lib: SDL_LoadBMP could not load the picture(s)");
 
 	if( TTF_Init() == -1 )
@@ -111,6 +112,13 @@ void		SdlImageLib::printMap( TMap const & map )
 	SDL_Color RED = {255, 0, 0};
 	SDL_Color BLUE = {0, 0, 255};
 	SDL_Color GREEN = {0, 150, 0};
+
+	if (map.bonus != Vector2(-1, -1))
+	{
+		this->item_form.x = map.bonus._x * BLOCK_SIZE;
+		this->item_form.y = map.bonus._y * BLOCK_SIZE;
+		SDL_BlitSurface(this->bonus, NULL, this->m_windowsurface, &this->item_form);
+	}
 
 	if (map.foods.size() > 0)
 	{
@@ -189,23 +197,23 @@ void		SdlImageLib::printMap( TMap const & map )
 
 	if (map.isEnded)
 	{
-		position.x = 275;
-		position.y = 250;
+		position.x = ((m_largeurFenetre*BLOCK_SIZE) / 2) - 100;
+		position.y = ((m_hauteurFenetre*BLOCK_SIZE) / 2) - 100;
 		texte = TTF_RenderText_Blended(police_pause, "GameOver", GREEN);
 		SDL_BlitSurface(this->texte, NULL, this->m_windowsurface, &position);
 
-		position.x = 275;
+		position.x = ((m_largeurFenetre*BLOCK_SIZE) / 2) - 100;
 
 		if (!(map.snakes.front().isAlive()))
 		{
-			position.y = 350;
+			position.y = ((m_hauteurFenetre*BLOCK_SIZE) / 2);
 			std::string print = map.snakes.front().getName() + map.snakes.front().getDeathReason();
 			texte = TTF_RenderText_Blended(police, print.c_str(), RED);
 			SDL_BlitSurface(this->texte, NULL, this->m_windowsurface, &position);
 		}
 		if (map.snakes.size() > 1 && !(map.snakes.back().isAlive()))
 		{
-			position.y = 400;
+			position.y = ((m_hauteurFenetre*BLOCK_SIZE) / 2) + 50;
 			std::string print = map.snakes.back().getName() + map.snakes.back().getDeathReason();
 			texte = TTF_RenderText_Blended(police, print.c_str(), BLUE);
 			SDL_BlitSurface(this->texte, NULL, this->m_windowsurface, &position);
@@ -215,8 +223,8 @@ void		SdlImageLib::printMap( TMap const & map )
 	{
 		if (map.pause)
 		{
-			position.x = 300;
-			position.y = 250;
+			position.x = ((m_largeurFenetre*BLOCK_SIZE) / 2) - 50;
+			position.y = ((m_hauteurFenetre*BLOCK_SIZE) / 2) - 100;
 			texte = TTF_RenderText_Blended(police_pause, "PAUSE", GREEN);
 			SDL_BlitSurface(this->texte, NULL, this->m_windowsurface, &position);
 		}

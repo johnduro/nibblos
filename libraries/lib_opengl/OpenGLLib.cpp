@@ -39,8 +39,6 @@ void 	OpenGLLib::initLibrary( TMap & map )
 	glOrtho(0, 1, 0, 1, 0, 3);
 	glMatrixMode(GL_MODELVIEW);
 	glTranslatef(0.5, 0.48, -2.); // (0.8, 0.3, -2.)
-	// glRotatef(180, 0, 1, 0);
-	// glRotatef(60, 0, 0, 1);
 	glRotatef(180, 1, 0, 0);
 	glRotatef(45, 0, 0, 1);
 	glScalef(1/this->scale.getX(), 1/this->scale.getY(), 1/this->scale.getZ());
@@ -281,6 +279,9 @@ void OpenGLLib::drawVox(Vector3 p, int mmm) const
 		case 5:
 			color = getTheFucknColor(0, 0, 0, 1);
 			break;
+		case 6:
+			color = getTheFucknColor(1, 1, 1, 1);
+			break;
 	}
 
 	glEnableClientState(GL_VERTEX_ARRAY);
@@ -386,6 +387,9 @@ void OpenGLLib::printMap( TMap const & map )
 		for (it = map.rocks.begin(); it != ite; it++)
 			this->drawVox(Vector3(it->getX() - sX, it->getY() - sY, 1), 5);
 	}
+
+	if (map.bonus != Vector2(-1, -1))
+			this->drawVox(Vector3(map.bonus._x - sX, map.bonus._y - sY, 1), 6);
 
 	if (map.foods.size() > 0)
 	{

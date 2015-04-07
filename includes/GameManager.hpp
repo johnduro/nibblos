@@ -34,6 +34,8 @@ private:
 	TMap							_map;
 	int								_players;
 	ft_timer						_timer;
+	ft_timer						_timerBon;
+	ft_timer						_timerBonLife;
 	std::vector<std::string>		_libs;
 	IGraphicLib *					_lib;
 	ISoundLib *						_libSound;
@@ -47,7 +49,7 @@ private:
 	int								_input;
 	int								_timeTick;
 	bool							_isExited;
-	std::map<int, inputFunctionPtr>	_inputFunction;
+	std::map<int,inputFunctionPtr>	_inputFunction;
 	std::string						_initiatedLib;
 	TOption							_options;
 	unsigned long					_nbObstacles;
@@ -59,7 +61,7 @@ private:
 	void			_gameLib( int input );
 	void			_playerTwoMvt( int input );
 
-
+	void 			generateBonus();
 	void			_updateMap( void );
 	void			_eatFood( Player & play );
 	void			_initMap( Vector2 size );

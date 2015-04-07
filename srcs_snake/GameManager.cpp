@@ -18,6 +18,38 @@
 
 // ** PRIVATE FUNCTION ** //
 
+void 			GameManager::generateBonus() {
+
+	int tictac = rand() % 60 + 1;
+	this->_timerBon.updateTimeAdd(tictac, SECONDS);
+
+	tictac = rand() % 20 + 10;
+	this->_timerBonLife.updateTimeAdd(tictac, SECONDS);
+
+	std::vector<Player>::const_iterator		itP;
+	std::vector<Player>::const_iterator		iteP = this->_map.snakes.end();
+	Vector2									newFood;
+	bool									isOk = true;
+
+	do
+	{
+		newFood.setX((rand() % this->_map.size._x - 1) + 1);
+		newFood.setY((rand() % this->_map.size._y - 1) + 1);
+
+		if (this->_checkCollision(newFood, this->_map.foods.begin(), this->_map.foods.end())
+			|| this->_checkCollision(newFood, this->_map.rocks.begin(), this->_map.rocks.end()))
+			isOk = false;
+
+		for (itP = this->_map.snakes.begin(); itP != iteP; itP++)
+		{
+			if (this->_checkCollision(newFood, itP->getLinks().begin(), itP->getLinks().end()))
+				isOk = false;
+		}
+		if (isOk)
+			this->_map.bonus = newFood;
+	} while (!isOk);
+}
+
 void			GameManager::_playerCollision(Player & play, std::string const & reason)
 {
 	play.setIsAlive(false);
@@ -27,9 +59,14 @@ void			GameManager::_playerCollision(Player & play, std::string const & reason)
 		this->_libSound->playDeath();
 }
 
-
 void			GameManager::_updateMap( void )
 {
+	if (this->_timerBon.isTick())
+		this->generateBonus();
+	if (this->_timerBonLife.isTick())
+		this->_map.bonus = Vector2(-1, -1);
+
+
 	std::list<Vector2>::const_iterator		itVect;
 	std::vector<Player>::iterator		itPlayer;
 	std::vector<Player>::iterator		itePlayer = this->_map.snakes.end();
@@ -43,6 +80,12 @@ void			GameManager::_updateMap( void )
 			this->_playerCollision(*itPlayer, " hitted a wall !");
 		else if (this->_checkCollision(itPlayer->getHead(), this->_map.foods.begin(), this->_map.foods.end()))
 			this->_eatFood(*itPlayer);
+		else if (itPlayer->getHead() == this->_map.bonus)
+		{
+			this->_eatFood(*itPlayer);
+			this->_eatFood(*itPlayer);
+			this->_map.bonus = Vector2(-1, -1);
+		}
 		else if (this->_checkCollision(itPlayer->getHead(), this->_map.rocks.begin(), this->_map.rocks.end()))
 			this->_playerCollision(*itPlayer, " hitted a rock !");
 		else
@@ -213,7 +256,6 @@ void			GameManager::_gameLib( int input )
 	}
 }
 
-
 void			GameManager::_initMap( Vector2 size )
 {
 	this->_map.size = size;
@@ -236,7 +278,6 @@ void			GameManager::_initMap( Vector2 size )
 	this->_inputFunction[STD_UP_P2] = &GameManager::_playerTwoMvt;
 	this->_inputFunction[STD_DOWN_P2] = &GameManager::_playerTwoMvt;
 }
-
 
 void			GameManager::_checkInput( void )
 {
@@ -406,6 +447,9 @@ void	GameManager::Update( void )
 {
 	int		input = 0;
 
+	this->_timerBon.updateTimeAdd(rand() % 10 + 1, SECONDS);
+	this->_map.bonus = Vector2(-1, -1);
+
 	this->_timer.updateTimeAdd(this->_timeTick, MICRO_SECONDS);
 	this->_updateMap();
 	this->_options = this->_libMenu->startMenu();
@@ -444,10 +488,7 @@ void	GameManager::Update( void )
 
 
 GameManager::GameManagerException::GameManagerException( std::string const & errorMsg ) throw()
-	: std::runtime_error(errorMsg)
-{
-
-}
+	: std::runtime_error(errorMsg) {}
 
 const char*					GameManager::GameManagerException::what() const throw()
 {
