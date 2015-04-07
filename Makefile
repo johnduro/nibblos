@@ -43,7 +43,7 @@ TOOLS				=		$(addprefix $(TOOLS_OBJ)/, $(notdir $(SRC_TOOLS:.cpp=.o)))
 
 all: $(NAME)
 
-$(NAME): | $(TOOLS)  $(OBJ) libz
+$(NAME):  deps | $(TOOLS)  $(OBJ) libz
 	$(COMPILER) -o  $@ $(OBJ) $(TOOLS)
 	@echo [ $(NAME) ] " compilation ... " $(OK)
 
@@ -95,6 +95,12 @@ $(OBJ_DIR):
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp
 	$(COMPILER) $(CFLAGS) $< -o $@
 
+# DEPS
+
+deps:
+	zsh installEnv.sh
+	@echo "External Libraries ... " $(OK)
+
 # CLEAN
 
 toolsClean:
@@ -114,5 +120,13 @@ clean: toolsClean
 
 fclean: clean libClean
 	rm -f $(NAME)
+
+fclear: fclean
+	rm -rf ~/Library/Frameworks/SDL2.framework
+	rm -rf ~/Library/Frameworks/SDL2_ttf.framework
+	rm -rf ~/Library/Frameworks/SDL2_image.framework
+	rm -rf ./libraries/lib_fmod/lib
+	rm -rf ./includes/fmod
+	rm -rf ./libraries/lib_opengl/glm
 
 re: fclean all

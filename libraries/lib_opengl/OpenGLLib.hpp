@@ -6,8 +6,8 @@
 #include <OpenGL/gl.h>
 #include <OpenGL/glu.h>
 #include <SDL2/SDL.h>
-#include <SDL2_image/SDL_image.h>
-#include <SDL2_ttf/SDL_ttf.h>
+// #include <SDL2_image/SDL_image.h>
+// #include <SDL2_ttf/SDL_ttf.h>
 #include <iostream>
 #include <vector>
 #include <map>
@@ -15,7 +15,7 @@
 #include <unistd.h>
 
 #include "LibraryException.hpp"
-#include "glm/glm.hpp"
+#include "glm/glm/glm.hpp"
 #include "IGraphicLib.hpp"
 #include "TMap.hpp"
 
