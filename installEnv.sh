@@ -1,5 +1,5 @@
 
-#!/bin/sh
+#!/bin/zsh
 
 [ -d /tmp/nibbler_install_tmp_dir ] || mkdir /tmp/nibbler_install_tmp_dir
 
